@@ -1,0 +1,319 @@
+/* ============================================================
+   "Rock with you" skin (Attacca, 2021): the dark stage, hot-pink
+   curtain light, white LED strips, orbit rings and four-point
+   sparkles from the lyric card, telescopes and the rooftop at dusk
+   (public/themes/attacca/).
+   Switched on by theme tokens with skin: 'attacca'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "orbits" background pattern (works with any theme) ---------- */
+
+[data-pattern='orbits'] .bg-pattern {
+  opacity: 0.4;
+  background-image:
+    url('/themes/attacca/sparkle.svg'),
+    url('/themes/attacca/sparkle-pink.svg'),
+    url('/themes/attacca/sparkle.svg'),
+    url('/themes/attacca/sparkle-pink.svg'),
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 70% 70%, color-mix(in srgb, var(--accent) 70%, #fff) 0 1px, transparent 1.6px);
+  background-size: 22px, 16px, 14px, 26px, 170px 170px, 230px 230px;
+  background-position: 6% 22%, 93% 14%, 88% 78%, 12% 84%, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+}
+/* one big orbit turning slowly behind everything */
+[data-pattern='orbits'] .bg-pattern::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(1200px, 130vw);
+  aspect-ratio: 300 / 180;
+  translate: -50% -50%;
+  background: url('/themes/attacca/orbit.svg') center / contain no-repeat;
+  opacity: 0.45;
+  animation: at-orbit 60s linear infinite;
+}
+@keyframes at-orbit { to { rotate: 360deg; } }
+[data-dark='false'][data-pattern='orbits'] .bg-pattern { filter: invert(0.75); }
+
+/* ---------- the skin ---------- */
+
+[data-skin='attacca'] body {
+  background:
+    radial-gradient(900px 420px at 50% -8%, rgba(255, 45, 111, 0.28), transparent 70%),
+    radial-gradient(700px 500px at 100% 100%, rgba(122, 167, 255, 0.12), transparent 70%),
+    var(--bg);
+}
+
+/* headings: the Attacca script-serif, glowing like the stage lights, on an orbit */
+[data-skin='attacca'] .main h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 0 24px rgba(255, 45, 111, 0.55);
+}
+[data-skin='attacca'] .main h1::after {
+  content: '';
+  display: block;
+  width: 260px;
+  max-width: 90%;
+  height: 34px;
+  margin-top: 2px;
+  background: url('/themes/attacca/orbit-line.svg') left center / contain no-repeat;
+  opacity: 0.85;
+}
+[data-skin='attacca'] .main h2 { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #fff; }
+[data-skin='attacca'] .eyebrow { color: #ff7aa2; letter-spacing: 0.24em; }
+
+/* nav: dark glass with a strip of white LEDs along the bottom */
+[data-skin='attacca'] .nav {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0 14px, transparent 14px 26px) bottom / 100% 2px no-repeat,
+    rgba(18, 20, 38, 0.82);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 14px 34px -18px rgba(255, 45, 111, 0.55);
+}
+[data-skin='attacca'] .nav__links a { color: rgba(243, 240, 247, 0.7); }
+[data-skin='attacca'] .nav__links a:hover { color: #fff; }
+[data-skin='attacca'] .nav__links a.active { background: #ff2d6f; color: #fff; box-shadow: 0 0 18px rgba(255, 45, 111, 0.6); }
+[data-skin='attacca'] .nav__logo::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  background: url('/themes/attacca/sparkle-pink.svg') center / contain no-repeat;
+  animation: at-twinkle 2.6s ease-in-out infinite;
+}
+@keyframes at-twinkle {
+  50% { transform: scale(0.6) rotate(45deg); opacity: 0.6; }
+}
+
+[data-skin='attacca'] .main .card,
+[data-skin='attacca'] .auth {
+  background: rgba(23, 26, 46, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px -26px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 45, 111, 0.06);
+}
+[data-skin='attacca'] .main .btn,
+[data-skin='attacca'] .acct--signin {
+  color: #fff;
+  background: #ff2d6f;
+  box-shadow: 0 0 22px -4px rgba(255, 45, 111, 0.7);
+}
+[data-skin='attacca'] .main .btn:hover { background: #ff4d84; }
+[data-skin='attacca'] .main .btn--ghost {
+  color: #fff;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.7);
+}
+[data-skin='attacca'] .main .chip { color: #fff; background: rgba(255, 45, 111, 0.14); border: 1px solid rgba(255, 255, 255, 0.35); }
+
+/* ---------- home: silhouettes in front of the ROCK WITH YOU curtain ---------- */
+
+[data-skin='attacca'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(13, 15, 30, 0) 22%, rgba(13, 15, 30, 0.86) 62%, var(--bg)),
+    url('/themes/attacca/stage.jpg') center 28% / cover;
+  box-shadow: 0 30px 70px -34px rgba(255, 45, 111, 0.55);
+}
+/* the orbit and sparkles from the lyric card, circling the corner */
+[data-skin='attacca'] .hero::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  top: 14px;
+  width: 260px;
+  height: 156px;
+  background: url('/themes/attacca/orbit.svg') center / contain no-repeat;
+  animation: at-sway 9s ease-in-out infinite;
+}
+@keyframes at-sway {
+  50% { transform: rotate(10deg) translateY(6px); }
+}
+[data-skin='attacca'] .hero > * { position: relative; z-index: 1; }
+[data-skin='attacca'] .hero__equation { color: #ff2d6f; -webkit-text-fill-color: #ff2d6f; background: none; }
+[data-skin='attacca'] .hero__lede { color: rgba(243, 240, 247, 0.85); }
+@media (max-width: 720px) {
+  [data-skin='attacca'] .hero { padding: 120px 18px 40px; }
+  [data-skin='attacca'] .hero::after { width: 160px; height: 96px; right: -20px; top: 8px; }
+}
+
+/* ---------- photos on a lyric card beside page titles ---------- */
+
+[data-skin='attacca'] .page-head { position: relative; }
+[data-skin='attacca'] .page-head:has(~ .timeline) { --photo: url('/themes/attacca/telescope.jpg'); --at: center 40%; }
+[data-skin='attacca'] .page-head:has(~ .game-list) { --photo: url('/themes/attacca/balloons.jpg'); --at: 40% center; }
+[data-skin='attacca'] .page-head:has(.music__ctas) { --photo: url('/themes/attacca/synth.jpg'); --at: 45% center; }
+[data-skin='attacca'] .page-head:has(~ .unit),
+[data-skin='attacca'] .page-head:has(.tabs) { --photo: url('/themes/attacca/rooftop-backs.jpg'); --at: 50% 60%; }
+@media (min-width: 900px) {
+  [data-skin='attacca'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 270px;
+    padding-right: 300px;
+  }
+  [data-skin='attacca'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 34px;
+    top: 4px;
+    width: 216px;
+    height: 230px;
+    border-radius: 14px;
+    border: 12px solid #eeedef;
+    border-bottom-width: 44px;
+    background: var(--photo) var(--at, center) / cover;
+    box-shadow: 0 26px 44px -20px rgba(0, 0, 0, 0.75), 0 0 40px -10px rgba(255, 45, 111, 0.35);
+    transform: rotate(2deg);
+  }
+  /* the orbit rings looping around the card */
+  [data-skin='attacca'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: -6px;
+    top: 74px;
+    width: 300px;
+    height: 180px;
+    background: url('/themes/attacca/orbit.svg') center / contain no-repeat;
+    pointer-events: none;
+    transform: rotate(-8deg);
+  }
+}
+
+/* ---------- tracklists become the lyric card: "I wanna stay with you" ---------- */
+
+[data-skin='attacca'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 18px 20px 16px;
+  color: #1b1b1f;
+  background: #eeedef;
+  border-radius: 16px;
+  box-shadow: 0 22px 40px -24px rgba(0, 0, 0, 0.8);
+}
+[data-skin='attacca'] .main .tracks::before {
+  content: '';
+  position: absolute;
+  right: -26px;
+  bottom: -30px;
+  width: 92px;
+  height: 84px;
+  background: url('/themes/attacca/heart-wire.svg') center / contain no-repeat;
+  filter: invert(1) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+}
+[data-skin='attacca'] .main .tracks::after {
+  content: 'I wanna stay with you';
+  display: block;
+  margin-top: 12px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1b1b1f;
+}
+[data-skin='attacca'] .main .tracks .tracks__row,
+[data-skin='attacca'] .main .tracks button { border-bottom-color: rgba(27, 27, 31, 0.1); }
+[data-skin='attacca'] .main .tracks button:hover { background: rgba(255, 45, 111, 0.08); }
+[data-skin='attacca'] .main .tracks .tracks__num,
+[data-skin='attacca'] .main .tracks .tracks__title,
+[data-skin='attacca'] .main .tracks .tracks__native,
+[data-skin='attacca'] .main .tracks .tracks__note,
+[data-skin='attacca'] .main .tracks .tracks__nolink,
+[data-skin='attacca'] .main .tracks .tracks__play,
+[data-skin='attacca'] .main .tracks .tracks__disc,
+[data-skin='attacca'] .main .tracks .tracks__open,
+[data-skin='attacca'] .main .tracks .like-btn { color: #1b1b1f; }
+[data-skin='attacca'] .main .tracks .tracks__native,
+[data-skin='attacca'] .main .tracks .tracks__note,
+[data-skin='attacca'] .main .tracks .tracks__nolink { opacity: 0.6; }
+[data-skin='attacca'] .main .tracks .chip { color: #fff; background: #c8102e; border: 0; }
+[data-skin='attacca'] .main .tracks li.is-playing .tracks__title { color: #e0115f; }
+[data-skin='attacca'] .main .tracks .like-btn.is-liked { color: #e0115f; }
+
+/* ---------- sign in / register: the ATTACCA crossing signal ---------- */
+
+[data-skin='attacca'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(13, 15, 30, 0), rgba(13, 15, 30, 0.45)),
+    url('/themes/attacca/attacca-signal.jpg') center 30% / cover;
+}
+[data-skin='attacca'] .auth__glow { background: radial-gradient(circle, rgba(255, 45, 111, 0.4), transparent 65%); }
+[data-skin='attacca'] .auth__gem { content: url('/themes/attacca/sparkle-pink.svg'); width: 72px; height: 72px; }
+[data-skin='attacca'] .auth__switch a { color: #ff7aa2; }
+
+/* ---------- Now Playing: the red-lit curtain under the LED frame ---------- */
+
+[data-skin='attacca'] .np {
+  --np-bg: #0b0b14;
+  --np-ink: #f3f0f7;
+  --np-label: #ff2d6f;
+  --np-label2: #7aa7ff;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(5, 5, 12, 0.8)),
+    url('/themes/attacca/curtain.jpg') center / cover,
+    #0b0b14;
+}
+[data-skin='attacca'] .np__deck { background: #eeedef; color: #1b1b1f; box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.8), 0 0 50px -14px rgba(255, 45, 111, 0.5); }
+/* keeps the words readable over the photo */
+[data-skin='attacca'] .np__text {
+  padding: 22px 26px;
+  border-radius: 22px;
+  background: rgba(8, 8, 18, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='attacca'] .np__title { color: #fff; font-family: 'Cormorant Garamond', serif; font-style: italic; text-shadow: 0 0 26px rgba(255, 45, 111, 0.7); }
+[data-skin='attacca'] .np__album { color: #ff7aa2; font-family: 'Cormorant Garamond', serif; font-style: italic; }
+[data-skin='attacca'] .np__blurb { color: rgba(243, 240, 247, 0.85); }
+[data-skin='attacca'] .np__label { background: url('/themes/attacca/sparkle.svg') center / 56% no-repeat, radial-gradient(circle, #ff2d6f, #8e0d3a); }
+[data-skin='attacca'] .np-wave span { background: linear-gradient(#ff2d6f, #fff); }
+[data-skin='attacca'] .np-ctrl .np-ctrl__main { background: #ff2d6f; color: #fff; }
+
+/* ---------- footer: the rooftop at dusk ---------- */
+
+[data-skin='attacca'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 460px;
+  margin-top: 60px;
+  padding: 0 16px 100px;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(5, 5, 12, 0.9);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(13, 15, 30, 0.2) 30%, rgba(13, 15, 30, 0.1) 55%, rgba(13, 15, 30, 0.9) 92%),
+    url('/themes/attacca/rooftop-group.jpg') center 40% / cover;
+}
+[data-skin='attacca'] .footer a { color: #ff7aa2; }
+
+/* ---------- the little cursor sparkles turn hot pink and LED white ---------- */
+
+[data-skin='attacca'] .sparkle { color: #ff2d6f; }
+[data-skin='attacca'] .sparkle:nth-child(odd) { color: #fff; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--orbits::before {
+  background-image: url('/themes/attacca/orbit.svg'), url('/themes/attacca/sparkle-pink.svg');
+  background-size: 120px, 14px;
+  background-position: 70% 40%, 12% 76%;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+}
+.tp--attacca::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 48px;
+  width: 26px;
+  height: 26px;
+  background: url('/themes/attacca/sparkle-pink.svg') center / contain no-repeat;
+}
+.tp--attacca .tp__title { font-family: 'Cormorant Garamond', serif; font-style: italic; text-shadow: 0 0 14px rgba(255, 45, 111, 0.6); }

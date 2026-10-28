@@ -1,0 +1,315 @@
+/* ============================================================
+   "Hot" skin (Face the Sun, 2022): the desert night, the neon
+   flame sun with its windmill, the orange stage skyline, yellow
+   scribbled "FACE THE SUN" lettering, the Sun of Fate coin and
+   the iPhone now-playing card (public/themes/hot/).
+   Switched on by theme tokens with skin: 'hot'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "suns" background pattern (works with any theme) ---------- */
+
+[data-pattern='suns'] .bg-pattern {
+  opacity: 0.45;
+  background-image:
+    url('/themes/hot/star.svg'),
+    url('/themes/hot/sun.svg'),
+    url('/themes/hot/star.svg'),
+    url('/themes/hot/star.svg'),
+    radial-gradient(circle at 30% 40%, rgba(255, 140, 50, 0.8) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 70% 60%, rgba(255, 210, 63, 0.7) 0 1px, transparent 1.6px);
+  background-size: 34px, 84px, 22px, 28px, 160px 160px, 210px 210px;
+  background-position: 6% 20%, 94% 10%, 88% 80%, 10% 86%, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+}
+/* the neon sun turning slowly at the edge of the page */
+[data-pattern='suns'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  right: -52px;
+  top: 30%;
+  background: url('/themes/hot/sun.svg') center / contain no-repeat;
+  filter: drop-shadow(0 0 18px rgba(255, 59, 47, 0.55));
+  animation: hot-turn 40s linear infinite;
+}
+@keyframes hot-turn { to { rotate: 360deg; } }
+@media (max-width: 720px) {
+  [data-pattern='suns'] .bg-pattern::before { width: 104px; height: 104px; right: -40px; }
+}
+
+/* ---------- the skin ---------- */
+
+[data-skin='hot'] body {
+  background:
+    radial-gradient(1000px 460px at 50% -10%, rgba(255, 90, 31, 0.32), transparent 70%),
+    radial-gradient(800px 500px at 0% 100%, rgba(200, 52, 28, 0.2), transparent 70%),
+    var(--bg);
+}
+
+/* headings: yellow scribbled marker, like FACE THE SUN on the wall */
+[data-skin='hot'] .main h1 {
+  color: #ffd23f;
+  letter-spacing: 0.04em;
+  text-shadow: 2px 2px 0 rgba(200, 52, 28, 0.7), 0 0 26px rgba(255, 90, 31, 0.35);
+}
+[data-skin='hot'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(240px, 60%);
+  height: 8px;
+  margin-top: 8px;
+  background: repeating-linear-gradient(-60deg, #ffd23f 0 2px, transparent 2px 6px);
+  opacity: 0.85;
+}
+[data-skin='hot'] .eyebrow { color: #ff7a3d; }
+
+/* nav: black glass lit from behind by the sun */
+[data-skin='hot'] .nav {
+  background: rgba(18, 8, 6, 0.82);
+  border-color: rgba(255, 90, 31, 0.35);
+  box-shadow: 0 12px 34px -18px rgba(255, 90, 31, 0.6);
+}
+[data-skin='hot'] .nav__logo::after {
+  content: '';
+  width: 26px;
+  height: 26px;
+  margin-left: 2px;
+  background: url('/themes/hot/sun.svg') center / contain no-repeat;
+  animation: hot-turn 20s linear infinite;
+}
+
+/* cards: scorched black with an ember edge */
+[data-skin='hot'] .main .card,
+[data-skin='hot'] .auth {
+  background: linear-gradient(160deg, #24110b, #170a07);
+  border: 1px solid rgba(255, 90, 31, 0.28);
+  box-shadow: 0 18px 40px -24px rgba(255, 70, 20, 0.55);
+}
+[data-skin='hot'] .main .btn,
+[data-skin='hot'] .acct--signin {
+  color: #1a0b06;
+  background: linear-gradient(90deg, #ff5a1f, #ff9a2e);
+  box-shadow: 0 10px 24px -10px rgba(255, 90, 31, 0.85);
+}
+[data-skin='hot'] .main .btn:hover { background: linear-gradient(90deg, #ff6b33, #ffb347); }
+[data-skin='hot'] .main .btn--ghost {
+  color: #ffd23f;
+  background: transparent;
+  box-shadow: inset 0 0 0 2px #ffd23f;
+}
+[data-skin='hot'] .main .chip { border-color: rgba(255, 210, 63, 0.45); background: rgba(255, 90, 31, 0.14); }
+
+/* ---------- home: the stage skyline, then the MV stills ---------- */
+
+[data-skin='hot'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 150px 24px 56px;
+  border-radius: 34px;
+  overflow: hidden;
+  background: #120806;
+  box-shadow: 0 30px 60px -30px rgba(255, 70, 20, 0.6);
+}
+/* a slow slideshow of stills behind the words */
+[data-skin='hot'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --shade: linear-gradient(180deg, rgba(18, 8, 6, 0.05) 20%, rgba(18, 8, 6, 0.88) 76%, #120806);
+  background: var(--shade), url('/themes/hot/stage.jpg') center 35% / cover;
+  animation: hot-stills 36s infinite;
+}
+@keyframes hot-stills {
+  0%, 15%   { background-image: var(--shade), url('/themes/hot/stage.jpg'); }
+  17%, 32%  { background-image: var(--shade), url('/themes/hot/x-silhouette.jpg'); }
+  34%, 49%  { background-image: var(--shade), url('/themes/hot/desert-night.jpg'); }
+  51%, 65%  { background-image: var(--shade), url('/themes/hot/bullet.jpg'); }
+  67%, 82%  { background-image: var(--shade), url('/themes/hot/skeleton.jpg'); }
+  84%, 98%  { background-image: var(--shade), url('/themes/hot/mirror.jpg'); }
+  100%      { background-image: var(--shade), url('/themes/hot/stage.jpg'); }
+}
+/* the Sun of Fate coin, spinning */
+[data-skin='hot'] .hero::after {
+  content: '';
+  position: absolute;
+  width: 112px;
+  height: 112px;
+  right: 22px;
+  top: 18px;
+  border-radius: 50%;
+  background: url('/themes/hot/coin.jpg') center / 200% auto no-repeat;
+  box-shadow: 0 0 0 2px rgba(255, 190, 120, 0.5), 0 12px 30px -8px rgba(0, 0, 0, 0.8);
+  animation: hot-coin 6s ease-in-out infinite;
+}
+@keyframes hot-coin {
+  0%, 60% { transform: rotateY(0); }
+  80% { transform: rotateY(180deg); }
+  100% { transform: rotateY(360deg); }
+}
+[data-skin='hot'] .hero > * { position: relative; z-index: 1; }
+[data-skin='hot'] .hero__equation { color: #ffd23f; -webkit-text-fill-color: #ffd23f; background: none; }
+[data-skin='hot'] .hero__lede { color: #ffe9d2; }
+@media (max-width: 720px) {
+  [data-skin='hot'] .hero { padding: 110px 18px 40px; }
+  [data-skin='hot'] .hero::after { width: 70px; height: 70px; right: 10px; top: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-skin='hot'] .hero::before,
+  [data-skin='hot'] .hero::after,
+  [data-skin='hot'] .nav__logo::after,
+  [data-pattern='suns'] .bg-pattern::before { animation: none; }
+}
+
+/* ---------- film frames beside page titles ---------- */
+
+[data-skin='hot'] .page-head { position: relative; }
+[data-skin='hot'] .page-head:has(~ .timeline) { --photo: url('/themes/hot/desert-night.jpg'); }
+[data-skin='hot'] .page-head:has(~ .game-list) { --photo: url('/themes/hot/darling-neon.jpg'); }
+[data-skin='hot'] .page-head:has(.music__ctas) { --photo: url('/themes/hot/pioneer.jpg'); }
+[data-skin='hot'] .page-head:has(~ .member-grid) { --photo: url('/themes/hot/wings.jpg'); }
+[data-skin='hot'] .page-head:has(~ .unit) { --photo: url('/themes/hot/wings-walk.jpg'); }
+[data-skin='hot'] .page-head:has(.tabs) { --photo: url('/themes/hot/poster.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='hot'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .member-grid, ~ .unit, .tabs) {
+    min-height: 240px;
+    padding-right: 320px;
+  }
+  /* a strip of film: sprocket holes top and bottom */
+  [data-skin='hot'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .member-grid, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 0;
+    width: 280px;
+    height: 220px;
+    border-block: 22px solid #0b0504;
+    border-inline: 6px solid #0b0504;
+    border-radius: 4px;
+    background: var(--photo) center / cover;
+    transform: rotate(2deg);
+    box-shadow: 0 22px 40px -18px rgba(255, 70, 20, 0.55);
+  }
+  [data-skin='hot'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .member-grid, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 22px;
+    top: 0;
+    width: 268px;
+    height: 220px;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 8px, rgba(255, 233, 210, 0.75) 8px 18px, transparent 18px 26px) top 7px left 0 / 100% 8px no-repeat,
+      repeating-linear-gradient(90deg, transparent 0 8px, rgba(255, 233, 210, 0.75) 8px 18px, transparent 18px 26px) bottom 7px left 0 / 100% 8px no-repeat;
+    transform: rotate(2deg);
+    pointer-events: none;
+  }
+}
+
+/* ---------- tracklists become the phone's now-playing card ---------- */
+
+[data-skin='hot'] .main .tracks {
+  margin: 8px 2px 16px;
+  padding: 18px 16px 12px;
+  color: #f5f5f5;
+  background: #0d0d0d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  box-shadow: 0 24px 44px -24px rgba(0, 0, 0, 0.9);
+}
+[data-skin='hot'] .main .tracks .tracks__row,
+[data-skin='hot'] .main .tracks button { border-bottom-color: rgba(255, 255, 255, 0.06); }
+[data-skin='hot'] .main .tracks button:hover { background: rgba(255, 255, 255, 0.06); }
+[data-skin='hot'] .main .tracks .tracks__num,
+[data-skin='hot'] .main .tracks .tracks__native,
+[data-skin='hot'] .main .tracks .tracks__note,
+[data-skin='hot'] .main .tracks .tracks__nolink,
+[data-skin='hot'] .main .tracks .tracks__open { color: rgba(245, 245, 245, 0.55); }
+[data-skin='hot'] .main .tracks .tracks__title { color: #ffffff; font-weight: 600; }
+[data-skin='hot'] .main .tracks .chip { color: #ffd23f; background: transparent; border: 1.5px solid rgba(255, 210, 63, 0.6); }
+[data-skin='hot'] .main .tracks li.is-playing .tracks__title { color: #ff7a3d; }
+[data-skin='hot'] .main .tracks .like-btn.is-liked { color: #ff4b3a; }
+
+/* ---------- sign in / register: FACE THE SUN ---------- */
+
+[data-skin='hot'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(18, 8, 6, 0), rgba(18, 8, 6, 0.45)),
+    url('/themes/hot/face-the-sun.jpg') center / cover;
+}
+[data-skin='hot'] .auth__glow { background: radial-gradient(circle, rgba(255, 90, 31, 0.45), transparent 65%); }
+[data-skin='hot'] .auth__gem { content: url('/themes/hot/sun.svg'); width: 100px; height: 100px; }
+[data-skin='hot'] .auth__switch a { color: #ffd23f; }
+
+/* ---------- Now Playing: the neon sun at night ---------- */
+
+[data-skin='hot'] .np {
+  --np-bg: #120806;
+  --np-ink: #ffe9d2;
+  --np-label: #ff5a1f;
+  --np-label2: #ffd23f;
+  /* sun-sign.jpg is optional: drop it in and it covers the sun-burst still */
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(18, 8, 6, 0.75)),
+    url('/themes/hot/sun-sign.jpg') center / cover,
+    url('/themes/hot/sun-burst.jpg') center / cover,
+    #120806;
+}
+[data-skin='hot'] .np__deck { background: rgba(13, 13, 13, 0.9); color: #f5f5f5; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.8); }
+/* keeps the words readable over the photo */
+[data-skin='hot'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(18, 8, 6, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='hot'] .np__title { color: #ffd23f; text-shadow: 0 0 22px rgba(255, 90, 31, 0.6); }
+[data-skin='hot'] .np__album { color: #ff7a3d; letter-spacing: 0.06em; }
+[data-skin='hot'] .np__blurb { color: rgba(255, 233, 210, 0.85); }
+[data-skin='hot'] .np__label { background: url('/themes/hot/sun.svg') center / 104% no-repeat, #120806; }
+[data-skin='hot'] .np-wave span { background: linear-gradient(#ffd23f, #ff3b2f); }
+[data-skin='hot'] .np-ctrl .np-ctrl__main { background: #ff5a1f; color: #1a0b06; }
+
+/* ---------- footer: the skyline under the sun ---------- */
+
+[data-skin='hot'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #ffe9d2;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(18, 8, 6, 0) 28%, rgba(18, 8, 6, 0) 62%, rgba(10, 4, 3, 0.9) 92%),
+    url('/themes/hot/skyline-solo.jpg') center 60% / cover;
+}
+[data-skin='hot'] .footer a { color: #ffd23f; }
+
+/* ---------- the little cursor sparkles turn to embers ---------- */
+
+[data-skin='hot'] .sparkle { color: #ff5a1f; }
+[data-skin='hot'] .sparkle:nth-child(odd) { color: #ffd23f; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--suns::before {
+  background-image: url('/themes/hot/sun.svg'), url('/themes/hot/star.svg');
+  background-size: 34px, 20px;
+  background-position: 90% 26%, 10% 74%;
+  background-repeat: no-repeat;
+  opacity: 0.85;
+}
+.tp--hot::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 52px;
+  width: 54px;
+  height: 54px;
+  background: url('/themes/hot/sun.svg') center / contain no-repeat;
+}
+.tp--hot .tp__title { color: #ffd23f; }

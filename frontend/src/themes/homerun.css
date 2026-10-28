@@ -1,0 +1,331 @@
+/* ============================================================
+   "Home;Run" skin (; [Semicolon], 2020): the smoky pool hall,
+   blue felt and billiard balls, the "Forever DIAMOND" marquee,
+   1920s newspapers, the vintage ticket and the riverboat at night
+   (public/themes/homerun/).
+   Switched on by theme tokens with skin: 'homerun'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "billiards" background pattern (works with any theme) ---------- */
+
+[data-pattern='billiards'] .bg-pattern {
+  opacity: 0.55;
+  background-image:
+    url('/themes/homerun/ball-17.svg'),
+    url('/themes/homerun/ball-8.svg'),
+    url('/themes/homerun/ball-5.svg'),
+    url('/themes/homerun/ball-10.svg'),
+    url('/themes/homerun/ball-1.svg'),
+    url('/themes/homerun/diamond.svg'),
+    radial-gradient(circle at 40% 40%, color-mix(in srgb, var(--accent) 40%, transparent) 0 1px, transparent 1.6px);
+  background-size: 40px, 34px, 28px, 36px, 26px, 36px 29px, 180px 180px;
+  background-position: 1% 30%, 98.5% 16%, 98% 74%, 1.5% 88%, 50% 99%, 99% 46%, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+}
+/* a ball rolling slowly across the bottom of the felt */
+[data-pattern='billiards'] .bg-pattern::after {
+  content: '';
+  position: absolute;
+  bottom: 6%;
+  left: -60px;
+  width: 40px;
+  height: 40px;
+  background: url('/themes/homerun/ball-17.svg') center / contain no-repeat;
+  filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.4));
+  animation: hr-roll 26s linear infinite;
+}
+@keyframes hr-roll {
+  to { left: calc(100% + 60px); rotate: 900deg; }
+}
+
+/* ---------- the skin ---------- */
+
+[data-skin='homerun'] body {
+  background:
+    radial-gradient(1000px 520px at 50% -10%, rgba(255, 196, 120, 0.16), transparent 70%),
+    radial-gradient(800px 600px at 50% 120%, rgba(30, 82, 168, 0.28), transparent 70%),
+    var(--bg);
+}
+
+/* headings: the copper Home;Run script with a semicolon flourish */
+[data-skin='homerun'] .main h1 {
+  font-family: 'Pinyon Script', 'Cormorant Garamond', cursive;
+  font-weight: 400;
+  color: #d79a72;
+  letter-spacing: 0;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+}
+[data-skin='homerun'] .main h1::after {
+  content: '';
+  display: inline-block;
+  width: 0.28em;
+  height: 0.7em;
+  margin-left: 0.08em;
+  background: url('/themes/homerun/semicolon.svg') center / contain no-repeat;
+}
+/* the home page title keeps a readable serif, without the flourish */
+[data-skin='homerun'] .hero h1 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; }
+[data-skin='homerun'] .hero h1::after,
+[data-skin='homerun'] .np h1::after { display: none; }
+[data-skin='homerun'] .main h2 { font-family: 'Cormorant Garamond', serif; color: #f2e6d4; }
+[data-skin='homerun'] .eyebrow { color: #f2b632; letter-spacing: 0.22em; }
+
+/* nav: a strip of marquee bulbs along the bottom */
+[data-skin='homerun'] .nav {
+  background:
+    radial-gradient(circle, #ffd479 0 2.2px, transparent 3px) bottom 3px left / 18px 8px repeat-x,
+    rgba(24, 20, 18, 0.88);
+  border-color: rgba(242, 182, 50, 0.25);
+  box-shadow: 0 14px 34px -18px rgba(242, 182, 50, 0.45);
+  padding-bottom: 16px;
+}
+[data-skin='homerun'] .nav__links a { color: rgba(242, 230, 212, 0.7); }
+[data-skin='homerun'] .nav__links a:hover { color: #fff; }
+[data-skin='homerun'] .nav__links a.active { background: #1e52a8; color: #fff; }
+[data-skin='homerun'] .nav__logo::after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  margin-left: 2px;
+  background: url('/themes/homerun/ball-17.svg') center / contain no-repeat;
+}
+
+[data-skin='homerun'] .main .card,
+[data-skin='homerun'] .auth {
+  background: rgba(34, 29, 26, 0.88);
+  border: 1px solid rgba(242, 182, 50, 0.16);
+  box-shadow: 0 22px 40px -26px rgba(0, 0, 0, 0.85);
+}
+[data-skin='homerun'] .main .btn,
+[data-skin='homerun'] .acct--signin {
+  color: #fff;
+  background: #1e52a8;
+  box-shadow: 0 10px 22px -10px rgba(30, 82, 168, 0.9);
+}
+[data-skin='homerun'] .main .btn:hover { background: #2763c4; }
+[data-skin='homerun'] .main .btn--ghost {
+  color: #f2e6d4;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px #d79a72;
+}
+[data-skin='homerun'] .main .chip { color: #f2e6d4; background: rgba(215, 154, 114, 0.16); border: 1px solid rgba(215, 154, 114, 0.5); }
+
+/* ---------- home: the Forever DIAMOND marquee under the fireworks ---------- */
+
+[data-skin='homerun'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 70px 24px 300px;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(14, 11, 9, 0.55) 0%, rgba(14, 11, 9, 0.15) 55%, rgba(14, 11, 9, 0) 80%, rgba(14, 11, 9, 0.6) 100%),
+    url('/themes/homerun/marquee.jpg') center 43% / cover;
+  box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.8);
+}
+/* the vintage ticket, tucked in the corner */
+[data-skin='homerun'] .hero::after {
+  content: '';
+  position: absolute;
+  right: 22px;
+  top: 22px;
+  width: 190px;
+  height: 120px;
+  background: url('/themes/homerun/ticket.png') center / contain no-repeat;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.5));
+  transform: rotate(6deg);
+}
+[data-skin='homerun'] .hero > * { position: relative; z-index: 1; }
+[data-skin='homerun'] .hero__equation { color: #f2b632; -webkit-text-fill-color: #f2b632; background: none; }
+[data-skin='homerun'] .hero__lede { color: rgba(242, 230, 212, 0.88); }
+@media (max-width: 720px) {
+  [data-skin='homerun'] .hero { padding: 50px 18px 200px; }
+  [data-skin='homerun'] .hero::after { width: 110px; height: 70px; right: 10px; top: 12px; }
+}
+
+/* ---------- a newspaper clipping beside page titles ---------- */
+
+[data-skin='homerun'] .page-head { position: relative; }
+[data-skin='homerun'] .page-head:has(~ .timeline) { --photo: url('/themes/homerun/news-diamond.jpg'); --at: 40% 30%; }
+[data-skin='homerun'] .page-head:has(~ .game-list) { --photo: url('/themes/homerun/poker-table.jpg'); --at: center 82%; }
+[data-skin='homerun'] .page-head:has(.music__ctas) { --photo: url('/themes/homerun/box-office.jpg'); --at: center 40%; }
+[data-skin='homerun'] .page-head:has(~ .unit),
+[data-skin='homerun'] .page-head:has(.tabs) { --photo: url('/themes/homerun/brick-wall.jpg'); --at: center 60%; }
+@media (min-width: 900px) {
+  [data-skin='homerun'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 270px;
+    padding-right: 300px;
+  }
+  [data-skin='homerun'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 26px;
+    top: -2px;
+    width: 230px;
+    height: 240px;
+    background: var(--photo) var(--at, center) / cover;
+    filter: grayscale(0.15) sepia(0.2) contrast(1.05);
+    border: 10px solid #efe6d2;
+    box-shadow: 0 24px 40px -18px rgba(0, 0, 0, 0.8);
+    transform: rotate(-3deg);
+  }
+  /* "WHERE IS THE MISSING DIAMOND?" stamp */
+  [data-skin='homerun'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: 'WHERE IS THE MISSING DIAMOND?';
+    position: absolute;
+    z-index: 1;
+    right: 196px;
+    top: 186px;
+    width: 92px;
+    height: 92px;
+    display: grid;
+    place-items: center;
+    padding: 12px;
+    border-radius: 50%;
+    background: #6f6a63;
+    color: #efe6d2;
+    font: 700 0.62rem/1.15 'Cormorant Garamond', serif;
+    letter-spacing: 0.06em;
+    text-align: center;
+    transform: rotate(-14deg);
+    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* ---------- tracklists become the Weekly Diamond News ---------- */
+
+[data-skin='homerun'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 58px 22px 18px;
+  color: #1b1916;
+  background:
+    linear-gradient(#1b1916, #1b1916) 22px 44px / calc(100% - 44px) 2px no-repeat,
+    radial-gradient(circle at 30% 20%, rgba(0, 0, 0, 0.05) 0 1px, transparent 1.4px) 0 0 / 5px 5px,
+    #ece4d3;
+  border-radius: 3px;
+  box-shadow: 0 22px 40px -24px rgba(0, 0, 0, 0.85);
+  transform: rotate(-0.4deg);
+}
+[data-skin='homerun'] .main .tracks::before {
+  content: 'WEEKLY DIAMOND NEWS';
+  position: absolute;
+  left: 22px;
+  top: 12px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  color: #1b1916;
+}
+[data-skin='homerun'] .main .tracks::after {
+  content: '\201CThe Diamond Disappeared!\201D \2014 page 17';
+  display: block;
+  margin-top: 12px;
+  text-align: right;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: #4a443c;
+}
+[data-skin='homerun'] .main .tracks .tracks__row,
+[data-skin='homerun'] .main .tracks button { border-bottom-color: rgba(27, 25, 22, 0.15); }
+[data-skin='homerun'] .main .tracks button:hover { background: rgba(30, 82, 168, 0.08); }
+[data-skin='homerun'] .main .tracks .tracks__num,
+[data-skin='homerun'] .main .tracks .tracks__title,
+[data-skin='homerun'] .main .tracks .tracks__native,
+[data-skin='homerun'] .main .tracks .tracks__note,
+[data-skin='homerun'] .main .tracks .tracks__nolink,
+[data-skin='homerun'] .main .tracks .tracks__play,
+[data-skin='homerun'] .main .tracks .tracks__disc,
+[data-skin='homerun'] .main .tracks .tracks__open,
+[data-skin='homerun'] .main .tracks .like-btn { color: #1b1916; }
+[data-skin='homerun'] .main .tracks .tracks__title { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.12rem; }
+[data-skin='homerun'] .main .tracks .tracks__native,
+[data-skin='homerun'] .main .tracks .tracks__note,
+[data-skin='homerun'] .main .tracks .tracks__nolink { opacity: 0.6; }
+[data-skin='homerun'] .main .tracks .chip { color: #ece4d3; background: #1b1916; border: 0; }
+[data-skin='homerun'] .main .tracks li.is-playing .tracks__title { color: #1e52a8; }
+[data-skin='homerun'] .main .tracks .like-btn.is-liked { color: #c7262e; }
+
+/* ---------- sign in / register: the train corridor ---------- */
+
+[data-skin='homerun'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(20, 17, 15, 0), rgba(20, 17, 15, 0.4)),
+    url('/themes/homerun/train-hall.jpg') center 40% / cover;
+}
+[data-skin='homerun'] .auth__glow { background: radial-gradient(circle, rgba(255, 196, 120, 0.4), transparent 65%); }
+[data-skin='homerun'] .auth__gem { content: url('/themes/homerun/diamond.svg'); width: 96px; height: 77px; }
+[data-skin='homerun'] .auth__switch a { color: #d79a72; }
+
+/* ---------- Now Playing: the boys leaning over the pool table ---------- */
+
+[data-skin='homerun'] .np {
+  --np-bg: #120e0c;
+  --np-ink: #f2e6d4;
+  --np-label: #f2b632;
+  --np-label2: #1e52a8;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(10, 8, 6, 0.8)),
+    url('/themes/homerun/pool-group.jpg') center 100% / cover,
+    #120e0c;
+}
+[data-skin='homerun'] .np__deck { background: #ece4d3; color: #1b1916; box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.8), 0 0 50px -16px rgba(242, 182, 50, 0.5); }
+/* keeps the words readable over the photo */
+[data-skin='homerun'] .np__text {
+  padding: 22px 26px;
+  border-radius: 22px;
+  background: rgba(14, 11, 9, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='homerun'] .np__title { color: #d79a72; font-family: 'Pinyon Script', cursive; font-weight: 400; }
+[data-skin='homerun'] .np__album { color: #f2b632; font-family: 'Cormorant Garamond', serif; font-style: italic; }
+[data-skin='homerun'] .np__blurb { color: rgba(242, 230, 212, 0.85); }
+[data-skin='homerun'] .np__label { background: url('/themes/homerun/ball-17.svg') center / 100% no-repeat, #c7262e; }
+[data-skin='homerun'] .np-wave span { background: linear-gradient(#f2b632, #d79a72); }
+[data-skin='homerun'] .np-ctrl .np-ctrl__main { background: #1e52a8; color: #fff; }
+
+/* ---------- footer: the riverboat at night ---------- */
+
+[data-skin='homerun'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 100px;
+  color: #f2e6d4;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(20, 17, 15, 0.1) 30%, rgba(20, 17, 15, 0.1) 55%, rgba(10, 8, 6, 0.9) 92%),
+    url('/themes/homerun/boat-deck.jpg') center 40% / cover;
+}
+[data-skin='homerun'] .footer a { color: #f2b632; }
+
+/* ---------- the little cursor sparkles turn marquee gold and copper ---------- */
+
+[data-skin='homerun'] .sparkle { color: #f2b632; }
+[data-skin='homerun'] .sparkle:nth-child(odd) { color: #d79a72; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--billiards::before {
+  background-image: url('/themes/homerun/ball-17.svg'), url('/themes/homerun/ball-8.svg');
+  background-size: 22px, 16px;
+  background-position: 88% 28%, 10% 74%;
+  background-repeat: no-repeat;
+  opacity: 0.9;
+}
+.tp--homerun::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 46px;
+  width: 30px;
+  height: 24px;
+  background: url('/themes/homerun/diamond.svg') center / contain no-repeat;
+}
+.tp--homerun .tp__title { font-family: 'Pinyon Script', cursive; color: #d79a72; }

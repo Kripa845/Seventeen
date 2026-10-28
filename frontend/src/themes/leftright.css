@@ -1,0 +1,346 @@
+/* ============================================================
+   "Left & Right" skin (Heng:garæ, 2020): summer sky, the brick wall,
+   white road signs with black arrows, traffic lights, the blue
+   "#GO RIGHT" foam hand and the poster's red italic lettering
+   (public/themes/leftright/).
+   Switched on by theme tokens with skin: 'leftright'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "signs" background pattern (works with any theme) ---------- */
+
+[data-pattern='signs'] .bg-pattern {
+  opacity: 0.5;
+  background-image:
+    url('/themes/leftright/sign-left.svg'),
+    url('/themes/leftright/turn-diamond.svg'),
+    url('/themes/leftright/sign-right.svg'),
+    url('/themes/leftright/sign-left.svg'),
+    url('/themes/leftright/turn-diamond.svg'),
+    linear-gradient(90deg, transparent 0 calc(50% - 1px), color-mix(in srgb, var(--accent2) 14%, transparent) calc(50% - 1px) calc(50% + 1px), transparent 0);
+  background-size: 92px, 64px, 84px, 70px, 52px, 220px 100%;
+  background-position: 3% 16%, 94% 12%, 90% 72%, 7% 82%, 52% 94%, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat-x;
+}
+/* a traffic light on the right edge that runs through red, green and yellow
+   (outside .bg-pattern so its faded opacity doesn't dim the lamps) */
+[data-pattern='signs'] body::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  right: 10px;
+  top: 30%;
+  width: 42px;
+  height: 112px;
+  border-radius: 9px;
+  border: 3px solid #1d1d1d;
+  background-color: #f6c22b;
+  background-image:
+    radial-gradient(circle at 50% 18%, var(--lamp-r, #ff3b30) 0 9px, transparent 10px),
+    radial-gradient(circle at 50% 50%, var(--lamp-y, #5a4d12) 0 9px, transparent 10px),
+    radial-gradient(circle at 50% 82%, var(--lamp-g, #123d22) 0 9px, transparent 10px),
+    linear-gradient(#262626, #262626);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 26px 96px;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 14px 24px -12px rgba(20, 40, 80, 0.5);
+  animation: lr-lights 9s steps(1) infinite;
+}
+@keyframes lr-lights {
+  0% { --lamp-r: #ff3b30; --lamp-y: #5a4d12; --lamp-g: #123d22; }
+  40% { --lamp-r: #4a1412; --lamp-y: #5a4d12; --lamp-g: #34c759; }
+  80% { --lamp-r: #4a1412; --lamp-y: #ffd60a; --lamp-g: #123d22; }
+}
+@property --lamp-r { syntax: '<color>'; inherits: false; initial-value: #ff3b30; }
+@property --lamp-y { syntax: '<color>'; inherits: false; initial-value: #5a4d12; }
+@property --lamp-g { syntax: '<color>'; inherits: false; initial-value: #123d22; }
+@media (max-width: 720px) {
+  [data-pattern='signs'] body::after { transform: scale(0.7); transform-origin: right center; right: 4px; }
+}
+
+/* ---------- the skin ---------- */
+
+[data-skin='leftright'] body {
+  background:
+    linear-gradient(180deg, #8fc6ec 0, #bfe0f5 260px, var(--bg) 640px),
+    var(--bg);
+}
+
+/* headings: the poster's red italic capitals, with an arrow pointing both ways */
+[data-skin='leftright'] .main h1 {
+  color: #e3262e;
+  font-style: italic;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+[data-skin='leftright'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(260px, 70%);
+  height: 18px;
+  margin-top: 8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 18'%3E%3Cpath d='M16 9h228' stroke='%23e3262e' stroke-width='5'/%3E%3Cpath d='M0 9 20 0v18zM260 9 240 0v18z' fill='%23e3262e'/%3E%3C/svg%3E") left center / contain no-repeat;
+}
+[data-skin='leftright'] .main h2 { color: #1c2433; }
+[data-skin='leftright'] .eyebrow {
+  display: inline-block;
+  padding: 3px 9px;
+  color: #1d1d1d;
+  background: #fff;
+  border: 2px solid #1d1d1d;
+  border-radius: 6px;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/* nav: a white road sign with a black border and a little traffic light */
+[data-skin='leftright'] .nav {
+  background: rgba(255, 255, 255, 0.94);
+  border: 3px solid #1d1d1d;
+  box-shadow: 0 0 0 3px #fff, 0 14px 30px -18px rgba(20, 40, 80, 0.6);
+}
+[data-skin='leftright'] .nav__links a.active { background: #e3262e; color: #fff; }
+[data-skin='leftright'] .nav__logo::after {
+  content: '';
+  width: 12px;
+  height: 28px;
+  margin-left: 2px;
+  background: url('/themes/leftright/traffic-light.svg') center / contain no-repeat;
+}
+
+/* cards are road signs: white face, black border just inside the edge */
+[data-skin='leftright'] .main .card,
+[data-skin='leftright'] .auth {
+  background: #fff;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 9px #1d1d1d, 0 18px 32px -22px rgba(20, 40, 80, 0.55);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+[data-skin='leftright'] .main .btn,
+[data-skin='leftright'] .acct--signin {
+  color: #fff;
+  background: #e3262e;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  box-shadow: 0 10px 22px -10px rgba(227, 38, 46, 0.8);
+}
+[data-skin='leftright'] .main .btn:hover { background: #c81d25; }
+[data-skin='leftright'] .main .btn--ghost {
+  color: #1d1d1d;
+  background: #fff;
+  box-shadow: inset 0 0 0 2.5px #1d1d1d;
+}
+/* chips are yellow warning signs */
+[data-skin='leftright'] .main .chip { color: #1d1d1d; background: #f6c22b; border: 2px solid #1d1d1d; }
+
+/* ---------- home: the wall where the boys sit ---------- */
+
+[data-skin='leftright'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 150px 24px 56px;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(217, 236, 247, 0) 30%, rgba(217, 236, 247, 0.9) 74%, var(--bg)),
+    url('/themes/leftright/group-wall.jpg') center 30% / cover;
+  box-shadow: 0 30px 60px -34px rgba(20, 40, 80, 0.6);
+}
+/* the "#GO RIGHT" foam hand, waving */
+[data-skin='leftright'] .hero::after {
+  content: '';
+  position: absolute;
+  right: 22px;
+  top: 22px;
+  width: 190px;
+  height: 80px;
+  background: url('/themes/leftright/go-right.svg') center / contain no-repeat;
+  filter: drop-shadow(0 10px 14px rgba(20, 40, 80, 0.35));
+  transform-origin: 0 50%;
+  animation: lr-wave 3.4s ease-in-out infinite;
+}
+@keyframes lr-wave {
+  50% { transform: rotate(-7deg) translateY(-4px); }
+}
+[data-skin='leftright'] .hero > * { position: relative; z-index: 1; }
+[data-skin='leftright'] .hero__equation { color: #e3262e; -webkit-text-fill-color: #e3262e; background: none; font-style: italic; }
+[data-skin='leftright'] .hero__lede { color: #1c2433; }
+@media (max-width: 720px) {
+  [data-skin='leftright'] .hero { padding: 110px 18px 40px; }
+  [data-skin='leftright'] .hero::after { width: 120px; height: 52px; right: 10px; top: 12px; }
+}
+
+/* ---------- a photo on a sign post beside page titles ---------- */
+
+[data-skin='leftright'] .page-head { position: relative; }
+[data-skin='leftright'] .page-head:has(~ .timeline) { --photo: url('/themes/leftright/scoreboard.jpg'); --at: center 40%; }
+[data-skin='leftright'] .page-head:has(~ .game-list) { --photo: url('/themes/leftright/crash.jpg'); --at: 45% center; }
+[data-skin='leftright'] .page-head:has(.music__ctas) { --photo: url('/themes/leftright/sign-stack.jpg'); --at: center 30%; }
+[data-skin='leftright'] .page-head:has(~ .unit),
+[data-skin='leftright'] .page-head:has(.tabs) { --photo: url('/themes/leftright/looking-up.jpg'); --at: 50% 70%; }
+@media (min-width: 900px) {
+  [data-skin='leftright'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 280px;
+    padding-right: 290px;
+  }
+  [data-skin='leftright'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 22px;
+    top: -6px;
+    width: 220px;
+    height: 220px;
+    border-radius: 14px;
+    background: var(--photo) var(--at, center) / cover;
+    box-shadow: 0 0 0 7px #fff, 0 0 0 10px #1d1d1d, 0 0 0 12px #fff, 0 22px 34px -16px rgba(20, 40, 80, 0.6);
+    transform: rotate(-2deg);
+  }
+  /* the green post it's bolted to */
+  [data-skin='leftright'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    right: 126px;
+    top: 200px;
+    width: 12px;
+    height: 110px;
+    border-radius: 3px;
+    background: repeating-linear-gradient(180deg, #2b8a4a 0 8px, #24753f 8px 10px);
+    box-shadow: 0 10px 14px -8px rgba(20, 40, 80, 0.5);
+  }
+}
+
+/* ---------- tracklists become a green highway sign ---------- */
+
+[data-skin='leftright'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 20px 20px 16px;
+  color: #fff;
+  background: #1f6f43;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 5px #1f6f43, inset 0 0 0 8px #fff, 0 18px 30px -20px rgba(20, 40, 80, 0.7);
+}
+[data-skin='leftright'] .main .tracks::after {
+  content: '\2190  LEFT & RIGHT  \2192';
+  display: block;
+  margin-top: 12px;
+  text-align: center;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  color: #f6c22b;
+}
+[data-skin='leftright'] .main .tracks .tracks__row,
+[data-skin='leftright'] .main .tracks button { border-bottom-color: rgba(255, 255, 255, 0.18); }
+[data-skin='leftright'] .main .tracks button:hover { background: rgba(255, 255, 255, 0.1); }
+[data-skin='leftright'] .main .tracks .tracks__num,
+[data-skin='leftright'] .main .tracks .tracks__title,
+[data-skin='leftright'] .main .tracks .tracks__native,
+[data-skin='leftright'] .main .tracks .tracks__note,
+[data-skin='leftright'] .main .tracks .tracks__nolink,
+[data-skin='leftright'] .main .tracks .tracks__play,
+[data-skin='leftright'] .main .tracks .tracks__disc,
+[data-skin='leftright'] .main .tracks .tracks__open,
+[data-skin='leftright'] .main .tracks .like-btn { color: #fff; }
+[data-skin='leftright'] .main .tracks .tracks__native,
+[data-skin='leftright'] .main .tracks .tracks__note,
+[data-skin='leftright'] .main .tracks .tracks__nolink { opacity: 0.75; }
+[data-skin='leftright'] .main .tracks .chip { color: #1d1d1d; background: #f6c22b; border: 1.5px solid #1d1d1d; }
+[data-skin='leftright'] .main .tracks li.is-playing .tracks__title { color: #f6c22b; }
+[data-skin='leftright'] .main .tracks .like-btn.is-liked { color: #ff8a8f; }
+
+/* ---------- sign in / register: the graffiti wall at night ---------- */
+
+[data-skin='leftright'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(10, 12, 20, 0.1), rgba(10, 12, 20, 0.45)),
+    url('/themes/leftright/night-wall.jpg') 30% center / cover;
+}
+[data-skin='leftright'] .auth__glow { background: radial-gradient(circle, rgba(246, 194, 43, 0.35), transparent 65%); }
+[data-skin='leftright'] .auth__gem { content: url('/themes/leftright/traffic-light.svg'); width: 44px; height: 110px; }
+[data-skin='leftright'] .auth__switch a { color: #e3262e; }
+
+/* ---------- Now Playing: the crane with the car, at dusk ---------- */
+
+[data-skin='leftright'] .np {
+  --np-bg: #101a2c;
+  --np-ink: #f4f8ff;
+  --np-label: #f6c22b;
+  --np-label2: #e3262e;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 30%, rgba(10, 18, 34, 0.75)),
+    linear-gradient(180deg, rgba(10, 18, 34, 0.25), rgba(10, 18, 34, 0.6)),
+    url('/themes/leftright/poster-crane.jpg') center / cover,
+    #101a2c;
+}
+[data-skin='leftright'] .np__deck { background: rgba(255, 255, 255, 0.9); color: #1c2433; box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 8px #1d1d1d, 0 30px 60px -28px rgba(0, 0, 0, 0.6); }
+/* keeps the words readable over the photo */
+[data-skin='leftright'] .np__text {
+  padding: 22px 26px;
+  border-radius: 22px;
+  background: rgba(10, 18, 34, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='leftright'] .np__title {
+  color: #e3262e;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 0 #fff, 0 10px 24px rgba(0, 0, 0, 0.45);
+}
+[data-skin='leftright'] .np__album { color: #f6c22b; font-family: 'Unbounded', sans-serif; font-style: italic; font-size: 1rem; letter-spacing: 0.04em; }
+[data-skin='leftright'] .np__blurb { color: rgba(244, 248, 255, 0.85); }
+[data-skin='leftright'] .np__label { background: url('/themes/leftright/turn-diamond.svg') center / 80% no-repeat, #fff; }
+[data-skin='leftright'] .np-wave span { background: linear-gradient(#e3262e, #f6c22b); }
+[data-skin='leftright'] .np-ctrl .np-ctrl__main { background: #e3262e; color: #fff; }
+
+/* ---------- footer: everyone looking up at the signs ---------- */
+
+[data-skin='leftright'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 100px;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(10, 18, 34, 0.85);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(217, 236, 247, 0) 26%, rgba(217, 236, 247, 0) 56%, rgba(20, 24, 34, 0.85) 90%),
+    url('/themes/leftright/looking-up.jpg') center 60% / cover;
+}
+[data-skin='leftright'] .footer a { color: #f6c22b; }
+
+/* ---------- the little cursor sparkles turn traffic-light red and yellow ---------- */
+
+[data-skin='leftright'] .sparkle { color: #e3262e; }
+[data-skin='leftright'] .sparkle:nth-child(odd) { color: #f6c22b; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--signs::before {
+  background-image: url('/themes/leftright/sign-left.svg'), url('/themes/leftright/turn-diamond.svg');
+  background-size: 34px, 22px;
+  background-position: 88% 26%, 10% 74%;
+  background-repeat: no-repeat;
+  opacity: 0.85;
+}
+.tp--leftright::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 44px;
+  width: 18px;
+  height: 46px;
+  background: url('/themes/leftright/traffic-light.svg') center / contain no-repeat;
+}
+.tp--leftright .tp__title { color: #e3262e; font-style: italic; }

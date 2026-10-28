@@ -1,0 +1,317 @@
+/* ============================================================
+   "Seventeenth Heaven" skin: night sky, smiley daisies,
+   neon-yellow marker lettering, pink sparkles, receipt
+   tracklists and polaroid photos (public/themes/heaven/).
+   Switched on by theme tokens with skin: 'heaven'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+.font-marker { font-family: 'Permanent Marker', 'Caveat', cursive; }
+
+/* ---------- the "daisies" background pattern (works with any theme) ---------- */
+
+[data-pattern='daisies'] .bg-pattern {
+  opacity: 1;
+  background-image:
+    url('/themes/heaven/sparkle-pink.svg'),
+    url('/themes/heaven/sparkle-yellow.svg'),
+    url('/themes/heaven/sparkle-red.svg'),
+    url('/themes/heaven/sparkle-yellow.svg'),
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.85) 1px, transparent 1.6px),
+    radial-gradient(circle at 60% 70%, rgba(255, 255, 255, 0.55) 0.8px, transparent 1.4px),
+    radial-gradient(circle at 80% 15%, rgba(255, 228, 92, 0.8) 1.1px, transparent 1.8px);
+  background-size: 34px, 22px, 26px, 16px, 170px 170px, 120px 120px, 260px 260px;
+  background-position: 5% 24%, 90% 12%, 94% 70%, 12% 82%, 0 0, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, repeat;
+}
+[data-dark='false'][data-pattern='daisies'] .bg-pattern { background-image: url('/themes/heaven/sparkle-pink.svg'), url('/themes/heaven/sparkle-yellow.svg'), url('/themes/heaven/sparkle-red.svg'), url('/themes/heaven/sparkle-yellow.svg'); }
+[data-pattern='daisies'] .bg-pattern::before,
+[data-pattern='daisies'] .bg-pattern::after {
+  content: '';
+  position: absolute;
+  background: url('/themes/heaven/daisy.svg') center / contain no-repeat;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  animation: daisy-float 9s ease-in-out infinite;
+}
+[data-pattern='daisies'] .bg-pattern::before { width: 170px; height: 170px; right: -46px; top: 22%; }
+[data-pattern='daisies'] .bg-pattern::after { width: 100px; height: 100px; left: -28px; bottom: 14%; animation-delay: -4.5s; }
+@keyframes daisy-float {
+  50% { transform: translateY(-18px) rotate(10deg); }
+}
+@media (max-width: 720px) {
+  [data-pattern='daisies'] .bg-pattern::before { width: 110px; height: 110px; right: -40px; }
+  [data-pattern='daisies'] .bg-pattern::after { display: none; }
+}
+
+/* ---------- the skin ---------- */
+
+[data-skin='heaven'] body {
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(40, 60, 190, 0.55), transparent 70%),
+    radial-gradient(900px 500px at 100% 100%, rgba(255, 79, 160, 0.16), transparent 70%),
+    var(--bg);
+}
+
+/* neon marker lettering */
+[data-skin='heaven'] .main h1,
+[data-skin='heaven'] .np__title {
+  color: #ffe45c;
+  text-shadow: 0 0 4px rgba(255, 228, 92, 0.85), 0 0 18px rgba(255, 196, 0, 0.55), 0 0 42px rgba(255, 150, 0, 0.3);
+  letter-spacing: 0.01em;
+}
+[data-skin='heaven'] .main h1 { transform: rotate(-1.5deg); }
+[data-skin='heaven'] .main h2 { color: #fff1a8; }
+[data-skin='heaven'] .eyebrow { color: #ff8cc2; }
+
+/* nav: night glass with a pink glow */
+[data-skin='heaven'] .nav {
+  background: rgba(14, 22, 70, 0.72);
+  border-color: rgba(255, 95, 162, 0.35);
+  box-shadow: 0 0 0 1px rgba(255, 228, 92, 0.08), 0 12px 40px -18px rgba(255, 95, 162, 0.6);
+}
+[data-skin='heaven'] .nav__logo::after {
+  content: '';
+  width: 26px;
+  height: 26px;
+  margin-left: 2px;
+  background: url('/themes/heaven/daisy.svg') center / contain no-repeat;
+  animation: daisy-spin 12s linear infinite;
+}
+@keyframes daisy-spin { to { transform: rotate(360deg); } }
+
+/* cards, buttons, chips */
+[data-skin='heaven'] .main .card,
+[data-skin='heaven'] .auth {
+  background: rgba(23, 32, 90, 0.72);
+  border: 1.5px solid rgba(255, 95, 162, 0.28);
+  box-shadow: 0 18px 44px -24px rgba(255, 95, 162, 0.55);
+}
+[data-skin='heaven'] .main .btn,
+[data-skin='heaven'] .acct--signin {
+  color: #141a4d;
+  background: #ffd93d;
+  box-shadow: 0 0 0 3px rgba(255, 95, 162, 0.35), 0 10px 26px -8px rgba(255, 217, 61, 0.75);
+}
+[data-skin='heaven'] .main .btn:hover { box-shadow: 0 0 0 3px rgba(255, 95, 162, 0.6), 0 14px 30px -8px rgba(255, 217, 61, 0.9); }
+[data-skin='heaven'] .main .btn--ghost {
+  color: #fff7e0;
+  background: transparent;
+  box-shadow: inset 0 0 0 2px rgba(255, 228, 92, 0.65);
+}
+[data-skin='heaven'] .main .chip { border-color: rgba(255, 95, 162, 0.5); background: rgba(255, 95, 162, 0.14); }
+
+/* member cards: keep the "Profile →" link readable on the night cards */
+[data-skin='heaven'] .mcard__go { color: #141a4d; background: #ffd93d; }
+
+/* ---------- home: the neon sign at night ---------- */
+
+[data-skin='heaven'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 96px 24px 64px;
+  border-radius: 34px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(11, 18, 56, 0.35), rgba(11, 18, 56, 0.92) 78%),
+    url('/themes/heaven/night-sign.jpg') center 42% / cover;
+  box-shadow: 0 30px 70px -36px rgba(255, 95, 162, 0.7), inset 0 0 0 1.5px rgba(255, 228, 92, 0.25);
+}
+[data-skin='heaven'] .hero::after {
+  content: '';
+  position: absolute;
+  width: 132px;
+  height: 132px;
+  right: 22px;
+  top: 18px;
+  background: url('/themes/heaven/daisy.svg') center / contain no-repeat;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.45));
+  animation: daisy-float 8s ease-in-out infinite;
+}
+[data-skin='heaven'] .hero > * { position: relative; z-index: 1; }
+[data-skin='heaven'] .hero__equation { color: #ff8cc2; -webkit-text-fill-color: #ff8cc2; background: none; }
+[data-skin='heaven'] .hero__lede { color: #fff7e0; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6); }
+@media (max-width: 720px) {
+  [data-skin='heaven'] .hero { padding: 72px 18px 48px; }
+  [data-skin='heaven'] .hero::after { width: 78px; height: 78px; right: 10px; top: 10px; }
+}
+
+/* ---------- polaroid photos beside page titles ---------- */
+
+[data-skin='heaven'] .page-head { position: relative; }
+[data-skin='heaven'] .page-head:has(~ .timeline) { --photo: url('/themes/heaven/times-square.jpg'); }
+[data-skin='heaven'] .page-head:has(~ .game-list) { --photo: url('/themes/heaven/shibuya.jpg'); }
+[data-skin='heaven'] .page-head:has(.music__ctas) { --photo: url('/themes/heaven/vinyl-doodles.jpg'); }
+[data-skin='heaven'] .page-head:has(~ .unit),
+[data-skin='heaven'] .page-head:has(.tabs) { --photo: url('/themes/heaven/field.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='heaven'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 250px;
+    padding-right: 290px;
+  }
+  [data-skin='heaven'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: -8px;
+    width: 220px;
+    height: 250px;
+    border: 10px solid #fffdf5;
+    border-bottom-width: 36px;
+    border-radius: 4px;
+    background: var(--photo) center / cover;
+    transform: rotate(3.5deg);
+    box-shadow: 0 22px 40px -16px rgba(0, 0, 0, 0.65);
+  }
+  [data-skin='heaven'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 208px;
+    top: -18px;
+    width: 46px;
+    height: 46px;
+    background: url('/themes/heaven/sparkle-pink.svg') center / contain no-repeat;
+    filter: drop-shadow(0 0 8px rgba(255, 79, 160, 0.8));
+    animation: daisy-float 6s ease-in-out infinite;
+  }
+}
+
+/* ---------- tracklists become the album receipt ---------- */
+
+[data-skin='heaven'] .main .tracks {
+  --ink: #d8262f;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 18px 18px 14px;
+  color: var(--ink);
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 4px),
+    linear-gradient(170deg, #dcebf8, #c8def3);
+  border-radius: 3px;
+  box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.7);
+  transform: rotate(-0.35deg);
+  font-family: 'Space Mono', ui-monospace, monospace;
+}
+[data-skin='heaven'] .main .tracks::before {
+  content: 'QTY   ITEM';
+  display: block;
+  padding: 0 10px 8px;
+  margin-bottom: 4px;
+  border-bottom: 2px dashed var(--ink);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  white-space: pre;
+}
+[data-skin='heaven'] .main .tracks::after {
+  content: 'THANK YOU FOR LISTENING!';
+  display: block;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px dashed var(--ink);
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+}
+[data-skin='heaven'] .main .tracks .tracks__row,
+[data-skin='heaven'] .main .tracks button { border-bottom-color: rgba(216, 38, 47, 0.35); border-bottom-style: dashed; }
+[data-skin='heaven'] .main .tracks button:hover { background: rgba(216, 38, 47, 0.08); }
+[data-skin='heaven'] .main .tracks .tracks__num,
+[data-skin='heaven'] .main .tracks .tracks__title,
+[data-skin='heaven'] .main .tracks .tracks__native,
+[data-skin='heaven'] .main .tracks .tracks__note,
+[data-skin='heaven'] .main .tracks .tracks__nolink,
+[data-skin='heaven'] .main .tracks .tracks__play,
+[data-skin='heaven'] .main .tracks .tracks__disc,
+[data-skin='heaven'] .main .tracks .tracks__open,
+[data-skin='heaven'] .main .tracks .like-btn { color: var(--ink); }
+[data-skin='heaven'] .main .tracks .tracks__title { text-transform: uppercase; letter-spacing: 0.02em; }
+[data-skin='heaven'] .main .tracks .tracks__native,
+[data-skin='heaven'] .main .tracks .tracks__note,
+[data-skin='heaven'] .main .tracks .tracks__nolink { opacity: 0.75; }
+[data-skin='heaven'] .main .tracks .tracks__num { width: 3ch; }
+[data-skin='heaven'] .main .tracks .chip { color: var(--ink); background: transparent; border: 1.5px solid var(--ink); }
+[data-skin='heaven'] .main .tracks li.is-playing .tracks__title { color: #1c2a8c; }
+[data-skin='heaven'] .main .tracks .like-btn.is-liked { color: #e0456b; }
+
+/* ---------- sign in / register: Shibuya daisies ---------- */
+
+[data-skin='heaven'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(11, 18, 56, 0.1), rgba(11, 18, 56, 0.55)),
+    url('/themes/heaven/shibuya.jpg') center / cover;
+}
+[data-skin='heaven'] .auth__glow { background: radial-gradient(circle, rgba(255, 228, 92, 0.35), transparent 65%); }
+[data-skin='heaven'] .auth__gem { content: url('/themes/heaven/daisy.svg'); width: 96px; height: 96px; }
+[data-skin='heaven'] .auth__field input { background: rgba(11, 18, 56, 0.6); }
+[data-skin='heaven'] .auth__switch a { color: #ffd93d; }
+
+/* ---------- Now Playing: the planet with headphones ---------- */
+
+[data-skin='heaven'] .np {
+  --np-bg: #070b24;
+  --np-ink: #fff7e0;
+  --np-label: #ffd93d;
+  --np-label2: #ff5fa2;
+  background:
+    radial-gradient(60% 60% at 50% 50%, transparent 40%, rgba(7, 11, 36, 0.75)),
+    url('/themes/heaven/planet.jpg') center / cover,
+    #070b24;
+}
+[data-skin='heaven'] .np__deck { background: rgba(14, 22, 70, 0.78); box-shadow: 0 0 0 1.5px rgba(255, 95, 162, 0.35), 0 30px 60px -28px rgba(0, 0, 0, 0.8); }
+/* keeps the words readable over the fireworks */
+[data-skin='heaven'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(7, 11, 36, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 0 1px rgba(255, 228, 92, 0.12);
+}
+[data-skin='heaven'] .np__blurb { color: rgba(255, 247, 224, 0.82); }
+[data-skin='heaven'] .np__title { font-family: 'Permanent Marker', 'Caveat', cursive; font-size: clamp(2.8rem, 6.5vw, 5.4rem); transform: rotate(-2deg); }
+[data-skin='heaven'] .np__album { font-family: 'Permanent Marker', 'Caveat', cursive; color: #ff8cc2; font-size: clamp(1.3rem, 2.4vw, 1.8rem); }
+[data-skin='heaven'] .np__label { background: url('/themes/heaven/daisy.svg') center / 112% no-repeat, #ffd233; }
+[data-skin='heaven'] .np-wave span { background: linear-gradient(#ffe45c, #ff5fa2); }
+[data-skin='heaven'] .np-ctrl .np-ctrl__main { background: #ffd93d; color: #141a4d; }
+
+/* ---------- footer: the white-grass field ---------- */
+
+[data-skin='heaven'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 460px;
+  margin-top: 60px;
+  padding: 0 16px 110px;
+  color: #fff7e0;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(11, 18, 56, 0) 34%, rgba(11, 18, 56, 0) 58%, rgba(11, 18, 56, 0.92) 82%),
+    url('/themes/heaven/field.jpg') center 40% / cover;
+}
+[data-skin='heaven'] .footer a { color: #ffd93d; }
+
+/* ---------- the little cursor sparkles turn pink and yellow ---------- */
+
+[data-skin='heaven'] .sparkle { color: #ff8cc2; text-shadow: 0 0 6px #ff4fa0; }
+[data-skin='heaven'] .sparkle:nth-child(odd) { color: #ffe45c; text-shadow: 0 0 6px #ffc400; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--daisies::before {
+  background-image: url('/themes/heaven/sparkle-pink.svg'), url('/themes/heaven/sparkle-yellow.svg');
+  background-size: 18px, 12px;
+  background-position: 88% 30%, 12% 70%;
+  background-repeat: no-repeat;
+  opacity: 0.9;
+}
+.tp--heaven::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 52px;
+  width: 54px;
+  height: 54px;
+  background: url('/themes/heaven/daisy.svg') center / contain no-repeat;
+}
+.tp--heaven .tp__title { color: #ffe45c; text-shadow: 0 0 6px rgba(255, 228, 92, 0.8), 0 0 18px rgba(255, 196, 0, 0.5); transform: rotate(-2deg); }

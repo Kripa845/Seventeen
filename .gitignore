@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+backend/db.sqlite3
+backend/media/
+backend/images/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

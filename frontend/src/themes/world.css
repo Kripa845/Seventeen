@@ -1,0 +1,285 @@
+/* ============================================================
+   "World" skin: the CARAT Flower Market street from the MV,
+   with royal-blue shop fronts, a lit sign, buckets of flowers
+   and the neon Sector 17 night (public/themes/world/).
+   Switched on by theme tokens with skin: 'world'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "flowers" background pattern (works with any theme) ---------- */
+
+[data-pattern='flowers'] .bg-pattern {
+  opacity: 0.5;
+  background-image:
+    url('/themes/world/tulip.svg'),
+    url('/themes/world/bloom.svg'),
+    url('/themes/world/bloom.svg'),
+    url('/themes/world/tulip.svg'),
+    radial-gradient(circle at 30% 40%, color-mix(in srgb, var(--accent2) 35%, transparent) 1.4px, transparent 2.2px);
+  background-size: 74px, 58px, 46px, 60px, 140px 140px;
+  background-position: 5% 16%, 93% 12%, 87% 78%, 8% 84%, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+}
+[data-pattern='flowers'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  right: -36px;
+  top: 34%;
+  background: url('/themes/world/badge.svg') center / contain no-repeat;
+  filter: drop-shadow(0 10px 16px rgba(20, 40, 90, 0.25));
+  animation: world-swing 9s ease-in-out infinite;
+}
+@keyframes world-swing {
+  50% { transform: translateY(-10px) rotate(-8deg); }
+}
+@media (max-width: 720px) {
+  [data-pattern='flowers'] .bg-pattern::before { width: 90px; height: 90px; right: -30px; }
+}
+
+/* ---------- the skin ---------- */
+
+[data-skin='world'] body {
+  background:
+    radial-gradient(1100px 520px at 15% -10%, rgba(125, 147, 201, 0.3), transparent 70%),
+    radial-gradient(900px 500px at 100% 100%, rgba(242, 140, 171, 0.14), transparent 70%),
+    var(--bg);
+}
+
+/* headings: navy with a blue-and-pink sign stripe */
+[data-skin='world'] .main h1 { color: #1f2a44; letter-spacing: 0.01em; }
+[data-skin='world'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(220px, 60%);
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #1f4fa8 0 62%, #f28cab 62%);
+}
+[data-skin='world'] .eyebrow { color: #1f4fa8; }
+
+/* nav: the lit shop sign */
+[data-skin='world'] .nav {
+  background: rgba(240, 246, 255, 0.86);
+  border-color: rgba(31, 79, 168, 0.3);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7) inset, 0 12px 34px -18px rgba(31, 79, 168, 0.6);
+}
+[data-skin='world'] .nav__logo::after {
+  content: '';
+  width: 26px;
+  height: 26px;
+  margin-left: 2px;
+  background: url('/themes/world/badge.svg') center / contain no-repeat;
+  animation: world-swing 8s ease-in-out infinite;
+}
+
+/* cards: white plaster with a blue trim */
+[data-skin='world'] .main .card,
+[data-skin='world'] .auth {
+  background: #ffffff;
+  border: 1px solid rgba(31, 79, 168, 0.18);
+  border-top: 4px solid #1f4fa8;
+  box-shadow: 0 16px 34px -22px rgba(20, 40, 90, 0.45);
+}
+[data-skin='world'] .main .btn,
+[data-skin='world'] .acct--signin {
+  color: #ffffff;
+  background: #1f4fa8;
+  box-shadow: 0 10px 22px -10px rgba(31, 79, 168, 0.75);
+}
+[data-skin='world'] .main .btn:hover { background: #183f88; }
+[data-skin='world'] .main .btn--ghost {
+  color: #1f2a44;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 0 0 2px #f28cab;
+}
+[data-skin='world'] .main .chip { border-color: rgba(31, 79, 168, 0.4); background: rgba(242, 140, 171, 0.14); }
+
+/* ---------- home: the flower market at dusk ---------- */
+
+[data-skin='world'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 140px 24px 56px;
+  border-radius: 34px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(244, 247, 252, 0) 25%, rgba(244, 247, 252, 0.9) 74%, #f4f7fc),
+    url('/themes/world/shopfront.jpg') center 40% / cover;
+  box-shadow: 0 30px 60px -34px rgba(20, 40, 90, 0.6);
+}
+[data-skin='world'] .hero::after {
+  content: '';
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  right: 22px;
+  top: 18px;
+  background: url('/themes/world/badge.svg') center / contain no-repeat;
+  filter: drop-shadow(0 8px 14px rgba(20, 40, 90, 0.35));
+  animation: world-swing 9s ease-in-out infinite;
+}
+[data-skin='world'] .hero > * { position: relative; z-index: 1; }
+[data-skin='world'] .hero__equation { color: #1f4fa8; -webkit-text-fill-color: #1f4fa8; background: none; }
+[data-skin='world'] .hero__lede { color: #1f2a44; }
+@media (max-width: 720px) {
+  [data-skin='world'] .hero { padding: 100px 18px 40px; }
+  [data-skin='world'] .hero::after { width: 68px; height: 68px; right: 10px; top: 10px; }
+}
+
+/* ---------- shop-window photos beside page titles ---------- */
+
+[data-skin='world'] .page-head { position: relative; }
+[data-skin='world'] .page-head:has(~ .timeline) { --photo: url('/themes/world/market-door.jpg'); }
+[data-skin='world'] .page-head:has(~ .game-list) { --photo: url('/themes/world/coffee-door.jpg'); }
+[data-skin='world'] .page-head:has(.music__ctas) { --photo: url('/themes/world/sector17.jpg'); }
+[data-skin='world'] .page-head:has(~ .unit),
+[data-skin='world'] .page-head:has(.tabs) { --photo: url('/themes/world/shopfront.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='world'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 250px;
+    padding-right: 290px;
+  }
+  /* a framed window with a blue frame */
+  [data-skin='world'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 0;
+    width: 230px;
+    height: 240px;
+    border: 8px solid #1f4fa8;
+    border-radius: 6px;
+    background: var(--photo) center / cover;
+    box-shadow: 0 0 0 3px #ffffff, 0 20px 34px -18px rgba(20, 40, 90, 0.6);
+  }
+  /* the little OPEN sign hanging on it */
+  [data-skin='world'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: 'OPEN';
+    position: absolute;
+    z-index: 1;
+    right: 96px;
+    top: -14px;
+    padding: 3px 12px;
+    font: 700 0.8rem/1.4 'Plus Jakarta Sans', system-ui, sans-serif;
+    letter-spacing: 0.12em;
+    color: #ffffff;
+    background: #1f2a44;
+    border: 2px solid #ffffff;
+    border-radius: 3px;
+    transform: rotate(-3deg);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18);
+  }
+}
+
+/* ---------- tracklists become the OPENING HOURS board ---------- */
+
+[data-skin='world'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 44px 18px 14px;
+  background: #fbfcfe;
+  border: 2px solid #1f2a44;
+  border-radius: 6px;
+  box-shadow: 0 16px 28px -18px rgba(20, 40, 90, 0.55);
+}
+[data-skin='world'] .main .tracks::before {
+  content: 'NOW PLAYING · OPEN EVERY DAY';
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  padding: 2px 10px;
+  white-space: nowrap;
+  font: 700 0.75rem/1.4 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: 0.1em;
+  color: #1f2a44;
+  border: 1.5px solid #1f2a44;
+}
+[data-skin='world'] .main .tracks button:hover { background: rgba(125, 147, 201, 0.16); }
+[data-skin='world'] .main .tracks .chip { color: #1f4fa8; background: transparent; border: 1.5px solid #1f4fa8; }
+[data-skin='world'] .main .tracks li.is-playing .tracks__title { color: #1f4fa8; }
+[data-skin='world'] .main .tracks .like-btn.is-liked { color: #e0507e; }
+
+/* ---------- sign in / register: the café door ---------- */
+
+[data-skin='world'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(244, 247, 252, 0), rgba(125, 147, 201, 0.3)),
+    url('/themes/world/coffee-door.jpg') center / cover;
+}
+[data-skin='world'] .auth__glow { background: radial-gradient(circle, rgba(242, 140, 171, 0.35), transparent 65%); }
+[data-skin='world'] .auth__gem { content: url('/themes/world/badge.svg'); width: 96px; height: 96px; }
+[data-skin='world'] .auth__switch a { color: #1f4fa8; }
+
+/* ---------- Now Playing: Sector 17 after dark ---------- */
+
+[data-skin='world'] .np {
+  --np-bg: #0d1230;
+  --np-ink: #f4f7fc;
+  --np-label: #f28cab;
+  --np-label2: #5fd6e8;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(13, 18, 48, 0.75)),
+    url('/themes/world/sector17.jpg') center / cover,
+    #0d1230;
+}
+[data-skin='world'] .np__deck { background: rgba(244, 247, 252, 0.88); color: #1f2a44; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); }
+/* keeps the words readable over the photo */
+[data-skin='world'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(13, 18, 48, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='world'] .np__title { color: #f4f7fc; text-shadow: 0 0 18px rgba(95, 214, 232, 0.55); }
+[data-skin='world'] .np__album { color: #5fd6e8; letter-spacing: 0.08em; }
+[data-skin='world'] .np__blurb { color: rgba(244, 247, 252, 0.85); }
+[data-skin='world'] .np__label { background: url('/themes/world/badge.svg') center / 100% no-repeat, #ffffff; }
+[data-skin='world'] .np-wave span { background: linear-gradient(#f28cab, #5fd6e8); }
+[data-skin='world'] .np-ctrl .np-ctrl__main { background: #1f4fa8; color: #ffffff; }
+
+/* ---------- footer: the flower buckets on the pavement ---------- */
+
+[data-skin='world'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 100px;
+  color: #ffffff;
+  text-shadow: 0 1px 8px rgba(10, 20, 50, 0.85);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(244, 247, 252, 0) 30%, rgba(244, 247, 252, 0) 55%, rgba(15, 25, 60, 0.85) 90%),
+    url('/themes/world/market-door.jpg') center 72% / cover;
+}
+[data-skin='world'] .footer a { color: #ffd0de; }
+
+/* ---------- the little cursor sparkles turn pink and shop blue ---------- */
+
+[data-skin='world'] .sparkle { color: #f28cab; }
+[data-skin='world'] .sparkle:nth-child(odd) { color: #1f4fa8; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--flowers::before {
+  background-image: url('/themes/world/tulip.svg'), url('/themes/world/bloom.svg');
+  background-size: 28px, 22px;
+  background-position: 90% 28%, 10% 74%;
+  background-repeat: no-repeat;
+  opacity: 0.85;
+}
+.tp--world::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 52px;
+  width: 50px;
+  height: 50px;
+  background: url('/themes/world/badge.svg') center / contain no-repeat;
+}
+.tp--world .tp__title { color: #1f2a44; }

@@ -1,0 +1,296 @@
+/* ============================================================
+   "Darl+ing" skin: sunlit cream walls, crayon smileys,
+   sunflowers, taped polaroids and the golden-grass field
+   (public/themes/darling/).
+   Switched on by theme tokens with skin: 'darling'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "smileys" background pattern (works with any theme) ---------- */
+
+[data-pattern='smileys'] .bg-pattern {
+  opacity: 0.55;
+  background-image:
+    url('/themes/darling/smiley-blue.svg'),
+    url('/themes/darling/smiley-orange.svg'),
+    url('/themes/darling/smiley-blue.svg'),
+    url('/themes/darling/smiley-orange.svg'),
+    radial-gradient(circle at 30% 40%, color-mix(in srgb, var(--accent) 30%, transparent) 1.2px, transparent 2px);
+  background-size: 96px, 54px, 62px, 70px, 150px 150px;
+  background-position: 4% 18%, 92% 10%, 88% 76%, 9% 86%, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+}
+[data-pattern='smileys'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -40px;
+  top: 34%;
+  background: url('/themes/darling/sunflower.svg') center / contain no-repeat;
+  filter: drop-shadow(0 10px 16px rgba(120, 70, 20, 0.25));
+  animation: sunflower-sway 10s ease-in-out infinite;
+}
+@keyframes sunflower-sway {
+  50% { transform: translateY(-14px) rotate(14deg); }
+}
+@media (max-width: 720px) {
+  [data-pattern='smileys'] .bg-pattern::before { width: 96px; height: 96px; right: -34px; }
+}
+
+/* ---------- the skin ---------- */
+
+[data-skin='darling'] body {
+  background:
+    radial-gradient(1100px 520px at 15% -10%, rgba(255, 196, 70, 0.32), transparent 70%),
+    radial-gradient(900px 500px at 100% 100%, rgba(240, 122, 46, 0.12), transparent 70%),
+    var(--bg);
+}
+
+/* headings: warm brown serif with a crayon underline */
+[data-skin='darling'] .main h1 { color: #4a2d17; letter-spacing: 0.01em; }
+[data-skin='darling'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(220px, 60%);
+  height: 10px;
+  margin-top: 6px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #ffb627, #f07a2e 60%, #4f86d9);
+  opacity: 0.75;
+  transform: rotate(-1deg);
+}
+[data-skin='darling'] .eyebrow { color: #c85f1c; }
+
+/* nav: cream paper with a sunflower */
+[data-skin='darling'] .nav {
+  background: rgba(255, 250, 238, 0.82);
+  border-color: rgba(240, 160, 60, 0.35);
+  box-shadow: 0 12px 34px -20px rgba(200, 110, 30, 0.55);
+}
+[data-skin='darling'] .nav__logo::after {
+  content: '';
+  width: 24px;
+  height: 24px;
+  margin-left: 2px;
+  background: url('/themes/darling/sunflower.svg') center / contain no-repeat;
+  animation: sunflower-sway 8s ease-in-out infinite;
+}
+
+/* cards look like notes taped to the wall */
+[data-skin='darling'] .main .card,
+[data-skin='darling'] .auth {
+  background: #fffcf4;
+  border: 1px solid rgba(200, 140, 60, 0.22);
+  box-shadow: 0 16px 34px -22px rgba(140, 80, 20, 0.45);
+}
+[data-skin='darling'] .main .btn,
+[data-skin='darling'] .acct--signin {
+  color: #fffaf0;
+  background: #d8661f;
+  box-shadow: 0 10px 22px -10px rgba(216, 102, 31, 0.75);
+}
+[data-skin='darling'] .main .btn:hover { background: #c4561a; }
+[data-skin='darling'] .main .btn--ghost {
+  color: #4a2d17;
+  background: rgba(255, 252, 244, 0.7);
+  box-shadow: inset 0 0 0 2px #4f86d9;
+}
+[data-skin='darling'] .main .chip { border-color: rgba(79, 134, 217, 0.45); background: rgba(255, 182, 39, 0.16); }
+
+/* ---------- home: the sunlit house ---------- */
+
+[data-skin='darling'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 120px 24px 56px;
+  border-radius: 34px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 246, 230, 0) 20%, rgba(255, 246, 230, 0.9) 72%, #fff6e6),
+    url('/themes/darling/house-arch.jpg') center 30% / cover;
+  box-shadow: 0 30px 60px -34px rgba(160, 90, 20, 0.6);
+}
+[data-skin='darling'] .hero::after {
+  content: '';
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  right: 22px;
+  top: 18px;
+  background: url('/themes/darling/smiley-blue.svg') center / contain no-repeat;
+  animation: sunflower-sway 9s ease-in-out infinite;
+}
+[data-skin='darling'] .hero > * { position: relative; z-index: 1; }
+[data-skin='darling'] .hero__equation { color: #d8661f; -webkit-text-fill-color: #d8661f; background: none; }
+[data-skin='darling'] .hero__lede { color: #4a2d17; }
+@media (max-width: 720px) {
+  [data-skin='darling'] .hero { padding: 90px 18px 40px; }
+  [data-skin='darling'] .hero::after { width: 68px; height: 68px; right: 10px; top: 10px; }
+}
+
+/* ---------- taped polaroids beside page titles ---------- */
+
+[data-skin='darling'] .page-head { position: relative; }
+[data-skin='darling'] .page-head:has(~ .timeline) { --photo: url('/themes/darling/sunflower-clock.jpg'); }
+[data-skin='darling'] .page-head:has(~ .game-list) { --photo: url('/themes/darling/kitchen.jpg'); }
+[data-skin='darling'] .page-head:has(.music__ctas) { --photo: url('/themes/darling/sunflower-poster.jpg'); }
+[data-skin='darling'] .page-head:has(~ .unit),
+[data-skin='darling'] .page-head:has(.tabs) { --photo: url('/themes/darling/field-run.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='darling'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 250px;
+    padding-right: 290px;
+  }
+  [data-skin='darling'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: -4px;
+    width: 220px;
+    height: 250px;
+    border: 10px solid #fffdf7;
+    border-bottom-width: 36px;
+    border-radius: 3px;
+    background: var(--photo) center / cover;
+    transform: rotate(-3deg);
+    box-shadow: 0 20px 34px -18px rgba(120, 70, 20, 0.6);
+  }
+  /* a strip of washi tape */
+  [data-skin='darling'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 90px;
+    top: -16px;
+    width: 86px;
+    height: 26px;
+    background: rgba(180, 225, 205, 0.75);
+    transform: rotate(4deg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* ---------- tracklists become a handwritten note ---------- */
+
+[data-skin='darling'] .main .tracks {
+  --ink: #3a5fa8;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 18px 18px 14px;
+  color: var(--ink);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 31px, rgba(79, 134, 217, 0.18) 31px 32px),
+    linear-gradient(170deg, #f6e2bf, #efd4a6);
+  border-radius: 4px;
+  box-shadow: 0 16px 28px -18px rgba(120, 70, 20, 0.6);
+  transform: rotate(0.3deg);
+}
+[data-skin='darling'] .main .tracks::after {
+  content: 'Everything is you · You\2019re my everything';
+  display: block;
+  margin-top: 10px;
+  text-align: right;
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+}
+[data-skin='darling'] .main .tracks .tracks__row,
+[data-skin='darling'] .main .tracks button { border-bottom-color: transparent; }
+[data-skin='darling'] .main .tracks button:hover { background: rgba(255, 182, 39, 0.2); }
+[data-skin='darling'] .main .tracks .tracks__num,
+[data-skin='darling'] .main .tracks .tracks__title,
+[data-skin='darling'] .main .tracks .tracks__native,
+[data-skin='darling'] .main .tracks .tracks__note,
+[data-skin='darling'] .main .tracks .tracks__nolink,
+[data-skin='darling'] .main .tracks .tracks__play,
+[data-skin='darling'] .main .tracks .tracks__disc,
+[data-skin='darling'] .main .tracks .tracks__open,
+[data-skin='darling'] .main .tracks .like-btn { color: var(--ink); }
+[data-skin='darling'] .main .tracks .tracks__title { font-family: 'Caveat', cursive; font-size: 1.3rem; }
+[data-skin='darling'] .main .tracks .tracks__native,
+[data-skin='darling'] .main .tracks .tracks__note,
+[data-skin='darling'] .main .tracks .tracks__nolink { opacity: 0.75; }
+[data-skin='darling'] .main .tracks .chip { color: #c85f1c; background: transparent; border: 1.5px solid #c85f1c; }
+[data-skin='darling'] .main .tracks li.is-playing .tracks__title { color: #c85f1c; }
+[data-skin='darling'] .main .tracks .like-btn.is-liked { color: #e0456b; }
+
+/* ---------- sign in / register: the sunflower wall ---------- */
+
+[data-skin='darling'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(255, 246, 230, 0), rgba(255, 210, 120, 0.35)),
+    url('/themes/darling/sunflower-poster.jpg') center / cover;
+}
+[data-skin='darling'] .auth__glow { background: radial-gradient(circle, rgba(255, 182, 39, 0.4), transparent 65%); }
+[data-skin='darling'] .auth__gem { content: url('/themes/darling/sunflower.svg'); width: 96px; height: 96px; }
+[data-skin='darling'] .auth__switch a { color: #c85f1c; }
+
+/* ---------- Now Playing: daisies in the light through the window ---------- */
+
+[data-skin='darling'] .np {
+  --np-bg: #3a2416;
+  --np-ink: #fff6e6;
+  --np-label: #ffb627;
+  --np-label2: #4f86d9;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(58, 36, 22, 0.7)),
+    url('/themes/darling/glass-daisies.jpg') center / cover,
+    #3a2416;
+}
+[data-skin='darling'] .np__deck { background: rgba(255, 250, 238, 0.86); color: #4a2d17; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); }
+/* keeps the words readable over the photo */
+[data-skin='darling'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(58, 36, 22, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='darling'] .np__title { color: #fff6e6; }
+[data-skin='darling'] .np__album { font-family: 'Caveat', cursive; color: #ffcf6e; font-size: clamp(1.3rem, 2.4vw, 1.8rem); }
+[data-skin='darling'] .np__blurb { color: rgba(255, 246, 230, 0.85); }
+[data-skin='darling'] .np__label { background: url('/themes/darling/sunflower.svg') center / 112% no-repeat, #ffb627; }
+[data-skin='darling'] .np-wave span { background: linear-gradient(#ffb627, #4f86d9); }
+[data-skin='darling'] .np-ctrl .np-ctrl__main { background: #d8661f; color: #fffaf0; }
+
+/* ---------- footer: the golden-grass field ---------- */
+
+[data-skin='darling'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 100px;
+  color: #fff6e6;
+  text-shadow: 0 1px 8px rgba(60, 30, 10, 0.8);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(255, 246, 230, 0) 30%, rgba(255, 246, 230, 0) 58%, rgba(90, 50, 20, 0.85) 88%),
+    url('/themes/darling/field-line.jpg') center 30% / cover;
+}
+[data-skin='darling'] .footer a { color: #ffd27a; }
+
+/* ---------- the little cursor sparkles turn sunflower and crayon blue ---------- */
+
+[data-skin='darling'] .sparkle { color: #f0a020; }
+[data-skin='darling'] .sparkle:nth-child(odd) { color: #4f86d9; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--smileys::before {
+  background-image: url('/themes/darling/smiley-blue.svg'), url('/themes/darling/smiley-orange.svg');
+  background-size: 30px, 20px;
+  background-position: 90% 28%, 10% 74%;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+}
+.tp--darling::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 52px;
+  width: 50px;
+  height: 50px;
+  background: url('/themes/darling/sunflower.svg') center / contain no-repeat;
+}
+.tp--darling .tp__title { color: #4a2d17; }

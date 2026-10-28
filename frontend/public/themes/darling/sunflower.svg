@@ -1,0 +1,12 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+  <g transform='translate(50 50)'>
+    <g fill='#FFB627' stroke='#E8891C' stroke-width='1.2'>
+      <ellipse rx='8' ry='22' cy='-26'/><ellipse rx='8' ry='22' cy='-26' transform='rotate(30)'/><ellipse rx='8' ry='22' cy='-26' transform='rotate(60)'/>
+      <ellipse rx='8' ry='22' cy='-26' transform='rotate(90)'/><ellipse rx='8' ry='22' cy='-26' transform='rotate(120)'/><ellipse rx='8' ry='22' cy='-26' transform='rotate(150)'/>
+      <ellipse rx='8' ry='22' cy='-26' transform='rotate(180)'/><ellipse rx='8' ry='22' cy='-26' transform='rotate(210)'/><ellipse rx='8' ry='22' cy='-26' transform='rotate(240)'/>
+      <ellipse rx='8' ry='22' cy='-26' transform='rotate(270)'/><ellipse rx='8' ry='22' cy='-26' transform='rotate(300)'/><ellipse rx='8' ry='22' cy='-26' transform='rotate(330)'/>
+    </g>
+    <circle r='17' fill='#6B3A1E'/>
+    <circle r='12' fill='#4A2814' stroke='#8A5226' stroke-width='2' stroke-dasharray='2 3'/>
+  </g>
+</svg>

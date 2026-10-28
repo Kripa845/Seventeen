@@ -1,0 +1,14 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>
+  <circle cx='100' cy='100' r='94' fill='#FFFFFF' stroke='#C9CED8' stroke-width='8'/>
+  <defs>
+    <path id='top' d='M38 100a62 62 0 0 1 124 0'/>
+    <path id='bot' d='M30 100a70 70 0 0 0 140 0'/>
+  </defs>
+  <text font-family='Georgia, serif' font-size='30' font-weight='700' letter-spacing='4' fill='#1F2A44'><textPath href='#top' startOffset='50%' text-anchor='middle'>CARAT</textPath></text>
+  <text font-family='Georgia, serif' font-size='22' font-style='italic' letter-spacing='2' fill='#1F2A44'><textPath href='#bot' startOffset='50%' text-anchor='middle'>flower market</textPath></text>
+  <g transform='translate(100 108)'>
+    <ellipse cx='-12' cy='-4' rx='16' ry='22' fill='#F28CAB' opacity='0.85' transform='rotate(-20)'/>
+    <ellipse cx='12' cy='-4' rx='16' ry='22' fill='#7D93C9' opacity='0.85' transform='rotate(20)'/>
+    <circle r='7' fill='#FFFFFF' stroke='#1F2A44' stroke-width='2.5'/>
+  </g>
+</svg>

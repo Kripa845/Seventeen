@@ -167,3 +167,198 @@ export const HOMERUN_THEME: ThemeTokens = {
   dark: true,
   skin: 'homerun',
 }
+
+/** Maestro (17 Is Right Here): the black stage under one spotlight, the orchestra, laser-red strings and the score. */
+export const MAESTRO_THEME: ThemeTokens = {
+  bg: '#0B0D12',
+  surface: '#13161D',
+  text: '#EEF2F7',
+  accent: '#E3263A',
+  accent2: '#8FB8D8',
+  font: 'serif',
+  pattern: 'staves',
+  dark: true,
+  skin: 'maestro',
+}
+
+/** Aju Nice (Very Nice): summer sky, the striped school building, the basketball hoop and the orange piano. */
+export const AJUNICE_THEME: ThemeTokens = {
+  bg: '#EAF6FB',
+  surface: '#FFFDF7',
+  text: '#1F3442',
+  accent: '#1FA9C0',
+  accent2: '#FF7A3D',
+  font: 'display',
+  pattern: 'hoops',
+  dark: false,
+  skin: 'ajunice',
+}
+
+/** S.Coups aesthetics: his camera roll. Warm film grain, charcoal and cream, an amber date stamp, Milan at night. */
+export const SCOUPS_THEME: ThemeTokens = {
+  bg: '#141210',
+  surface: '#1E1B18',
+  text: '#F2E8D8',
+  accent: '#E8A04A',
+  accent2: '#8FA7B8',
+  font: 'serif',
+  pattern: 'film',
+  dark: true,
+  skin: 'scoups',
+}
+
+/** Jeonghan Aesthetics: quiet film photos, charcoal blue, the dusty sky, beige plaid and a white butterfly. */
+export const JEONGHAN_THEME: ThemeTokens = {
+  bg: '#15171B',
+  surface: '#1F232A',
+  text: '#ECE8E0',
+  accent: '#C9B79A',
+  accent2: '#8FA0B4',
+  font: 'serif',
+  pattern: 'butterflies',
+  dark: true,
+  skin: 'jeonghan',
+}
+
+/** Joshua Aesthetics: soft and unhurried. Cream and white, sage and latte, guitar picks and strings, the white studio. */
+export const JOSHUA_THEME: ThemeTokens = {
+  bg: '#F6F3EE',
+  surface: '#FFFFFF',
+  text: '#1E1D1B',
+  accent: '#6E8B74',
+  accent2: '#D9B48F',
+  font: 'sans',
+  pattern: 'picks',
+  dark: false,
+  skin: 'joshua',
+}
+
+/** Jun Aesthetics: a walk through the seasons. Stone and cream, sea-mist blue, ginkgo gold, blossoms, the sea and a clear umbrella in the rain. */
+export const JUN_THEME: ThemeTokens = {
+  bg: '#EEEDE9',
+  surface: '#FBFAF7',
+  text: '#1B1C1F',
+  accent: '#4F6B7D',
+  accent2: '#C9A43F',
+  font: 'serif',
+  pattern: 'umbrellas',
+  dark: false,
+  skin: 'jun',
+}
+
+/** DK Aesthetics: a black-and-white photo show. Gallery white and ink black, denim blue, round glasses and a white rose. */
+export const DK_THEME: ThemeTokens = {
+  bg: '#F3F2EF',
+  surface: '#FFFFFF',
+  text: '#141416',
+  accent: '#3F6A99',
+  accent2: '#9C7A5B',
+  font: 'sans',
+  pattern: 'roses',
+  dark: false,
+  skin: 'dk',
+}
+
+/** Wonwoo Aesthetics: a quiet reading room at night. Graphite and paper cream, sage and dusty mauve, square glasses, an open book and a library card. */
+export const WONWOO_THEME: ThemeTokens = {
+  bg: '#121314',
+  surface: '#1C1D1F',
+  text: '#E9E6DF',
+  accent: '#9DB09A',
+  accent2: '#B99AA6',
+  font: 'serif',
+  pattern: 'books',
+  dark: true,
+  skin: 'wonwoo',
+}
+
+/** Woozi Aesthetics: the producer's booth and the encore. Stage black, confetti pink, stage-light blue, a red mic and thick black frames. */
+export const WOOZI_THEME: ThemeTokens = {
+  bg: '#14141B',
+  surface: '#1C1C26',
+  text: '#F3EFF4',
+  accent: '#F29BB8',
+  accent2: '#8FB0D9',
+  font: 'sans',
+  pattern: 'confetti',
+  dark: true,
+  skin: 'woozi',
+}
+
+/** The8 Aesthetics: the painter's gallery. Gallery white, charcoal ink, olive and butterfly blue, ink-brush circles, round glasses and framed photos. */
+export const THE8_THEME: ThemeTokens = {
+  bg: '#F2F1EE',
+  surface: '#FFFFFF',
+  text: '#1A1A1A',
+  accent: '#5F6340',
+  accent2: '#7FA7C9',
+  font: 'sans',
+  pattern: 'ink',
+  dark: false,
+  skin: 'the8',
+}
+
+/** Dino Aesthetics: black-and-white portraits warming into colour, café lights, the green hoodie and the orange sleeve. */
+export const DINO_THEME: ThemeTokens = {
+  bg: '#111111',
+  surface: '#1B1B1A',
+  text: '#F2EDE4',
+  accent: '#E8642C',
+  accent2: '#2F5A3F',
+  font: 'sans',
+  pattern: 'footprints',
+  dark: true,
+  skin: 'dino',
+}
+
+/** Seungkwan Aesthetics: a night walk over the bridges. Midnight navy, the mint of the green bridge, city lights and a Jeju tangerine. */
+export const SEUNGKWAN_THEME: ThemeTokens = {
+  bg: '#0F1626',
+  surface: '#172036',
+  text: '#F4EFE6',
+  accent: '#7FD3BE',
+  accent2: '#FF9B3D',
+  font: 'sans',
+  pattern: 'tangerines',
+  dark: true,
+  skin: 'seungkwan',
+}
+
+/** Vernon Aesthetics: a summer afternoon. Pale sky and white, sky-blue shirts, lemon yellow, the stripes of a knit tie and gold wire glasses. */
+export const VERNON_THEME: ThemeTokens = {
+  bg: '#F4F7FA',
+  surface: '#FFFFFF',
+  text: '#1A2433',
+  accent: '#4A7FB8',
+  accent2: '#E8B92E',
+  font: 'sans',
+  pattern: 'lemons',
+  dark: false,
+  skin: 'vernon',
+}
+
+/** Mingyu Aesthetics: summer, a little out of focus. Cream film paper, grass and vine green, the Capri sea, white linen and a puppy. */
+export const MINGYU_THEME: ThemeTokens = {
+  bg: '#F1EEE6',
+  surface: '#FBFAF5',
+  text: '#1B211A',
+  accent: '#3F7A3A',
+  accent2: '#1F4E8C',
+  font: 'serif',
+  pattern: 'leaves',
+  dark: false,
+  skin: 'mingyu',
+}
+
+/** Hoshi Aesthetics: the tiger in the pines. Deep forest green, tiger orange and leaf green, stripes and paw prints, the willow by the river. */
+export const HOSHI_THEME: ThemeTokens = {
+  bg: '#0F1712',
+  surface: '#18221A',
+  text: '#F4F1E6',
+  accent: '#F29A38',
+  accent2: '#9CC27A',
+  font: 'display',
+  pattern: 'tiger',
+  dark: true,
+  skin: 'hoshi',
+}

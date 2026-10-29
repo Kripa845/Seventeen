@@ -518,6 +518,128 @@ class HeavenThemeTests(StaffTestCase):
         # the ; [Semicolon] era wears it too
         self.assertEqual(self.client.get("/api/albums/semicolon/").data["theme"]["skin"], "homerun")
 
+    def test_maestro_skin_and_staves_pattern(self):
+        self.client.force_authenticate(self.staff)
+        maestro = {**self.HEAVEN, "bg": "#0B0D12", "surface": "#13161D", "text": "#EEF2F7", "accent": "#E3263A",
+                   "accent2": "#8FB8D8", "font": "serif", "pattern": "staves", "dark": True, "skin": "maestro"}
+        theme = self.client.patch("/api/site/", {"theme": maestro}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("maestro", "staves"))
+        # the 17 Is Right Here era (Maestro) wears it too
+        self.assertEqual(self.client.get("/api/albums/17-is-right-here/").data["theme"]["skin"], "maestro")
+
+    def test_aju_nice_skin_and_hoops_pattern(self):
+        self.client.force_authenticate(self.staff)
+        ajunice = {**self.HEAVEN, "bg": "#EAF6FB", "surface": "#FFFDF7", "text": "#1F3442", "accent": "#1FA9C0",
+                   "accent2": "#FF7A3D", "font": "display", "pattern": "hoops", "dark": False, "skin": "ajunice"}
+        theme = self.client.patch("/api/site/", {"theme": ajunice}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("ajunice", "hoops"))
+        # the Love & Letter Repackage era (Very Nice) wears it too
+        self.assertEqual(self.client.get("/api/albums/love-and-letter-repackage/").data["theme"]["skin"], "ajunice")
+
+    def test_scoups_aesthetics_skin_and_film_pattern(self):
+        self.client.force_authenticate(self.staff)
+        scoups = {**self.HEAVEN, "bg": "#141210", "surface": "#1E1B18", "text": "#F2E8D8", "accent": "#E8A04A",
+                  "accent2": "#8FA7B8", "font": "serif", "pattern": "film", "dark": True, "skin": "scoups"}
+        theme = self.client.patch("/api/site/", {"theme": scoups}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("scoups", "film"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "scoups")
+
+    def test_jeonghan_aesthetics_skin_and_butterflies_pattern(self):
+        self.client.force_authenticate(self.staff)
+        jeonghan = {**self.HEAVEN, "bg": "#15171B", "surface": "#1F232A", "text": "#ECE8E0", "accent": "#C9B79A",
+                    "accent2": "#8FA0B4", "font": "serif", "pattern": "butterflies", "dark": True, "skin": "jeonghan"}
+        theme = self.client.patch("/api/site/", {"theme": jeonghan}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("jeonghan", "butterflies"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "jeonghan")
+
+    def test_joshua_aesthetics_skin_and_picks_pattern(self):
+        self.client.force_authenticate(self.staff)
+        joshua = {**self.HEAVEN, "bg": "#F6F3EE", "surface": "#FFFFFF", "text": "#1E1D1B", "accent": "#6E8B74",
+                  "accent2": "#D9B48F", "font": "sans", "pattern": "picks", "dark": False, "skin": "joshua"}
+        theme = self.client.patch("/api/site/", {"theme": joshua}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("joshua", "picks"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "joshua")
+
+    def test_dk_aesthetics_skin_and_roses_pattern(self):
+        self.client.force_authenticate(self.staff)
+        dk = {**self.HEAVEN, "bg": "#F3F2EF", "surface": "#FFFFFF", "text": "#141416", "accent": "#3F6A99",
+              "accent2": "#9C7A5B", "font": "sans", "pattern": "roses", "dark": False, "skin": "dk"}
+        theme = self.client.patch("/api/site/", {"theme": dk}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("dk", "roses"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "dk")
+
+    def test_woozi_aesthetics_skin_and_confetti_pattern(self):
+        self.client.force_authenticate(self.staff)
+        woozi = {**self.HEAVEN, "bg": "#14141B", "surface": "#1C1C26", "text": "#F3EFF4", "accent": "#F29BB8",
+                 "accent2": "#8FB0D9", "font": "sans", "pattern": "confetti", "dark": True, "skin": "woozi"}
+        theme = self.client.patch("/api/site/", {"theme": woozi}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("woozi", "confetti"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "woozi")
+
+    def test_jun_aesthetics_skin_and_umbrellas_pattern(self):
+        self.client.force_authenticate(self.staff)
+        jun = {**self.HEAVEN, "bg": "#EEEDE9", "surface": "#FBFAF7", "text": "#1B1C1F", "accent": "#4F6B7D",
+               "accent2": "#C9A43F", "font": "serif", "pattern": "umbrellas", "dark": False, "skin": "jun"}
+        theme = self.client.patch("/api/site/", {"theme": jun}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("jun", "umbrellas"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "jun")
+
+    def test_wonwoo_aesthetics_skin_and_books_pattern(self):
+        self.client.force_authenticate(self.staff)
+        wonwoo = {**self.HEAVEN, "bg": "#121314", "surface": "#1C1D1F", "text": "#E9E6DF", "accent": "#9DB09A",
+                  "accent2": "#B99AA6", "font": "serif", "pattern": "books", "dark": True, "skin": "wonwoo"}
+        theme = self.client.patch("/api/site/", {"theme": wonwoo}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("wonwoo", "books"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "wonwoo")
+
+    def test_the8_aesthetics_skin_and_ink_pattern(self):
+        self.client.force_authenticate(self.staff)
+        the8 = {**self.HEAVEN, "bg": "#F2F1EE", "surface": "#FFFFFF", "text": "#1A1A1A", "accent": "#5F6340",
+                "accent2": "#7FA7C9", "font": "sans", "pattern": "ink", "dark": False, "skin": "the8"}
+        theme = self.client.patch("/api/site/", {"theme": the8}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("the8", "ink"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "the8")
+
+    def test_dino_aesthetics_skin_and_footprints_pattern(self):
+        self.client.force_authenticate(self.staff)
+        dino = {**self.HEAVEN, "bg": "#111111", "surface": "#1B1B1A", "text": "#F2EDE4", "accent": "#E8642C",
+                "accent2": "#2F5A3F", "font": "sans", "pattern": "footprints", "dark": True, "skin": "dino"}
+        theme = self.client.patch("/api/site/", {"theme": dino}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("dino", "footprints"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "dino")
+
+    def test_seungkwan_aesthetics_skin_and_tangerines_pattern(self):
+        self.client.force_authenticate(self.staff)
+        seungkwan = {**self.HEAVEN, "bg": "#0F1626", "surface": "#172036", "text": "#F4EFE6", "accent": "#7FD3BE",
+                     "accent2": "#FF9B3D", "font": "sans", "pattern": "tangerines", "dark": True, "skin": "seungkwan"}
+        theme = self.client.patch("/api/site/", {"theme": seungkwan}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("seungkwan", "tangerines"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "seungkwan")
+
+    def test_vernon_aesthetics_skin_and_lemons_pattern(self):
+        self.client.force_authenticate(self.staff)
+        vernon = {**self.HEAVEN, "bg": "#F4F7FA", "surface": "#FFFFFF", "text": "#1A2433", "accent": "#4A7FB8",
+                  "accent2": "#E8B92E", "font": "sans", "pattern": "lemons", "dark": False, "skin": "vernon"}
+        theme = self.client.patch("/api/site/", {"theme": vernon}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("vernon", "lemons"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "vernon")
+
+    def test_mingyu_aesthetics_skin_and_leaves_pattern(self):
+        self.client.force_authenticate(self.staff)
+        mingyu = {**self.HEAVEN, "bg": "#F1EEE6", "surface": "#FBFAF5", "text": "#1B211A", "accent": "#3F7A3A",
+                  "accent2": "#1F4E8C", "font": "serif", "pattern": "leaves", "dark": False, "skin": "mingyu"}
+        theme = self.client.patch("/api/site/", {"theme": mingyu}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("mingyu", "leaves"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "mingyu")
+
+    def test_hoshi_aesthetics_skin_and_tiger_pattern(self):
+        self.client.force_authenticate(self.staff)
+        hoshi = {**self.HEAVEN, "bg": "#0F1712", "surface": "#18221A", "text": "#F4F1E6", "accent": "#F29A38",
+                 "accent2": "#9CC27A", "font": "display", "pattern": "tiger", "dark": True, "skin": "hoshi"}
+        theme = self.client.patch("/api/site/", {"theme": hoshi}, format="json").data["theme"]
+        self.assertEqual((theme["skin"], theme["pattern"]), ("hoshi", "tiger"))
+        self.assertEqual(self.client.get("/api/site/").data["theme"]["skin"], "hoshi")
+
 
 class ContentSyncTests(StaffTestCase):
     """Covers changed by an admin reach viewers: new URLs every upload, and a version stamp pages can watch."""
@@ -619,3 +741,84 @@ class LandingAccessTests(StaffTestCase):
             self.assertEqual(self.client.get(path).status_code, 200, path)
         res = self.client.post("/api/scores/", {"game": "memory", "player": "fan", "score": 12}, format="json")
         self.assertEqual(res.status_code, 201)
+
+
+class DiaryWritersTests(StaffTestCase):
+    """Viewers write the diary: they add pages and change their own; admins change any page.
+    Photo albums stay admin-made."""
+
+    def setUp(self):
+        super().setUp()
+        from django.contrib.auth.models import User
+
+        self.other = User.objects.create_user("other-fan", password="diamond-17")
+
+    def page(self, **extra):
+        return self.client.post("/api/diary/", {"date": "2026-10-28", "title": "Fan meeting", **extra}, format="json")
+
+    def test_viewers_add_and_edit_their_own_pages(self):
+        self.client.force_authenticate(self.fan)
+        res = self.page()
+        self.assertEqual(res.status_code, 201)
+        page = res.data
+        self.assertEqual((page["author_name"], page["can_edit"]), ("fan", True))
+        url = f"/api/diary/{page['id']}/"
+        self.assertEqual(self.client.patch(url, {"title": "Fan meeting ♡"}, format="json").status_code, 200)
+        photo = self.client.post(f"{url}photos/", {"image": self.image()}, format="multipart")
+        self.assertEqual(photo.status_code, 201)
+
+        # another viewer reads it but can't change it
+        self.client.force_authenticate(self.other)
+        self.assertFalse(self.client.get(url).data["can_edit"])
+        self.assertEqual(self.client.patch(url, {"title": "x"}, format="json").status_code, 403)
+        self.assertEqual(self.client.post(f"{url}photos/", {"image": self.image()}, format="multipart").status_code, 403)
+        self.assertEqual(self.client.delete(url).status_code, 403)
+
+        # admins can change any page
+        self.client.force_authenticate(self.staff)
+        self.assertTrue(self.client.get(url).data["can_edit"])
+        self.assertEqual(self.client.patch(url, {"title": "Checked"}, format="json").status_code, 200)
+
+        self.client.force_authenticate(self.fan)
+        self.assertEqual(self.client.delete(url).status_code, 204)
+
+    def test_private_pages_are_for_their_writer_and_admins(self):
+        self.client.force_authenticate(self.fan)
+        secret = self.page(is_private=True).data
+        self.page()
+        self.assertEqual(len(self.client.get("/api/diary/").data), 2)
+        self.client.force_authenticate(self.other)
+        self.assertEqual([p["id"] for p in self.client.get("/api/diary/").data if p["id"] == secret["id"]], [])
+        self.assertEqual(self.client.get(f"/api/diary/{secret['id']}/").status_code, 404)
+        self.client.force_authenticate(self.staff)
+        self.assertEqual(len(self.client.get("/api/diary/").data), 2)
+
+    def test_photo_albums_stay_admin_made(self):
+        self.client.force_authenticate(self.staff)
+        album = self.client.post("/api/diary/", {"book": "album", "title": "Tour"}, format="json").data
+        self.client.force_authenticate(self.fan)
+        self.assertEqual(self.client.post("/api/diary/", {"book": "album", "title": "Mine"}, format="json").status_code, 403)
+        self.assertEqual(self.client.patch(f"/api/diary/{album['id']}/", {"title": "x"}, format="json").status_code, 403)
+        self.assertEqual(self.client.post(f"/api/diary/{album['id']}/photos/", {"image": self.image()}, format="multipart").status_code, 403)
+        self.assertEqual(self.client.post("/api/diary/reorder/", {"ids": [album["id"]]}, format="json").status_code, 403)
+        self.assertFalse(self.client.get(f"/api/diary/{album['id']}/").data["can_edit"])
+
+
+class DiaryKitTests(StaffTestCase):
+    """The newer fonts, word stickers and doodles save like the first ones."""
+
+    def test_new_fonts_and_stickers_save(self):
+        self.client.force_authenticate(self.fan)
+        page = self.client.post("/api/diary/", {"date": "2026-10-28"}, format="json").data
+        items = [
+            {"id": "t1", "kind": "text", "text": "오늘 진짜 행복했다", "font": "pen", "style": "note", "size": 4, "color": "#2B2B2B", "x": 50, "y": 50, "w": 26, "r": 0, "z": 1},
+            {"id": "t2", "kind": "text", "text": "LEVEL 17", "font": "pixel", "style": "label", "size": 2.6, "color": "#2B2B2B", "x": 30, "y": 30, "w": 24, "r": 0, "z": 2},
+            {"id": "s1", "kind": "sticker", "sticker": "shape:lightstick", "x": 20, "y": 20, "w": 9, "r": 0, "z": 3},
+            {"id": "s2", "kind": "sticker", "sticker": "label:encore", "x": 70, "y": 70, "w": 22, "r": 0, "z": 4},
+            {"id": "s3", "kind": "sticker", "sticker": "🪩", "x": 80, "y": 20, "w": 9, "r": 0, "z": 5},
+        ]
+        res = self.client.patch(f"/api/diary/{page['id']}/", {"items": items}, format="json")
+        self.assertEqual(res.status_code, 200, res.data)
+        saved = {i["id"]: i for i in res.data["items"]}
+        self.assertEqual((saved["t1"]["font"], saved["t2"]["font"]), ("pen", "pixel"))
+        self.assertEqual(saved["s1"]["sticker"], "shape:lightstick")

@@ -285,3 +285,6 @@ a.dash-stat:hover { transform: translateY(-3px); }
   .dash-stats { grid-template-columns: 1fr; }
   .dash-games { grid-template-columns: 1fr; }
 }
+
+/* your bias's colour, as a tint on the welcome card (the site keeps its chosen theme) */
+.dash-hero[style] { background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--m) 26%, transparent), transparent 60%), color-mix(in srgb, var(--surface) 85%, transparent); }

@@ -211,7 +211,12 @@ class DiaryPage(models.Model):
     paper = models.CharField(max_length=10, choices=Paper.choices, default=Paper.PLAIN)
     # Everything on the spread; positions are % of the spread (see DiaryPageSerializer.validate_items).
     items = models.JSONField(default=list, blank=True)
-    is_private = models.BooleanField(default=False, help_text="Only signed-in staff can see it")
+    is_private = models.BooleanField(default=False, help_text="Only its writer and admins can see it")
+    # Who wrote it. Viewers add diary pages and change their own; admins change any page.
+    # Empty for pages made before pages had writers (admins look after those).
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, related_name="diary_pages"
+    )
     # Photo album pages keep this order (set in Studio, Album management); diary pages go by date.
     position = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

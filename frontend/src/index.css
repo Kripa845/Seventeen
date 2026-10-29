@@ -435,6 +435,51 @@ a.stat:hover { transform: translateY(-3px); }
 .landing-unit li small { color: var(--muted); font-size: 0.78rem; }
 .landing-unit__leader { font-weight: 500; font-size: 0.78rem; color: var(--m, var(--accent)); }
 .landing-today { margin-top: 20px; }
+.landing-today__more { margin-top: 8px; padding: 0; border: 0; background: none; font: inherit; font-weight: 700; cursor: pointer; }
+.landing-hint { margin-left: auto; }
+/* members open their details */
+.landing-unit li { display: block; }
+.landing-unit__member { width: 100%; display: flex; align-items: center; gap: 12px; padding: 6px 8px; margin: -6px -8px; border: 0; border-radius: 14px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background 0.2s; }
+.landing-unit__member:hover,
+.landing-unit__member:focus-visible { background: color-mix(in srgb, var(--m, var(--accent)) 14%, transparent); }
+.landing-unit__member > span:nth-child(2) { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.landing-unit__more { color: var(--muted); font-size: 1.3rem; transition: transform 0.2s var(--ease), color 0.2s; }
+.landing-unit__member:hover .landing-unit__more { color: var(--m, var(--accent)); transform: translateX(3px); }
+
+/* ---------- Member details pop-up (landing page) ---------- */
+
+.mdialog { width: min(640px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); padding: 0; border: 0; border-radius: 28px; color: var(--text); background: var(--surface); box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.55); overflow-y: auto; overscroll-behavior: contain; }
+.mdialog::backdrop { background: color-mix(in srgb, #000 45%, transparent); backdrop-filter: blur(4px); }
+.mdialog[open] { animation: mdialog-in 0.3s var(--ease); }
+@keyframes mdialog-in { from { opacity: 0; transform: translateY(16px) scale(0.98); } }
+.mdialog__body { position: relative; display: flex; flex-direction: column; gap: 18px; padding: 24px; }
+.mdialog__close { position: absolute; top: 14px; right: 14px; z-index: 1; width: 36px; height: 36px; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--text) 8%, transparent); color: inherit; cursor: pointer; }
+.mdialog__close:hover { background: color-mix(in srgb, var(--text) 14%, transparent); }
+.mdialog__hero { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 22px; align-items: center; margin: -24px -24px 0; padding: 28px 24px 22px; background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--m) 34%, transparent), transparent 65%); }
+.mdialog__photo { aspect-ratio: 1; border-radius: 24px; overflow: hidden; display: grid; place-items: center; background: color-mix(in srgb, var(--m) 22%, var(--surface)); box-shadow: 0 20px 40px -22px var(--m); }
+.mdialog__photo img { width: 100%; height: 100%; object-fit: cover; }
+.mdialog__photo .avatar { width: 84% !important; height: 84% !important; box-shadow: none; }
+.mdialog__name { margin: 0; font-size: clamp(2rem, 6vw, 2.8rem); line-height: 1.05; }
+.mdialog__birthname { margin: 2px 0 0; font-weight: 600; color: var(--muted); }
+.mdialog__tagline { margin: 8px 0 0; font-family: var(--font-head); font-style: italic; font-size: 1.1rem; }
+.mdialog__stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.mdialog__stats li { display: flex; flex-direction: column; gap: 2px; padding: 12px; border-radius: 16px; text-align: center; background: color-mix(in srgb, var(--m) 12%, transparent); }
+.mdialog__stats b { font-family: var(--font-head); font-size: 1.5rem; line-height: 1.1; color: var(--accent-strong); }
+[data-dark='true'] .mdialog__stats b { color: var(--accent); }
+.mdialog__stats span { color: var(--muted); font-size: 0.78rem; }
+.mdialog__section h3 { margin: 0 0 8px; font-size: 1.1rem; }
+.mdialog__funfacts { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px; }
+.mdialog__funfacts li::marker { content: '✦  '; color: var(--m); }
+.mdialog .service { margin: 0; box-shadow: none; }
+.mdialog__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding-top: 14px; border-top: 1px solid var(--line); }
+@media (max-width: 560px) {
+  .mdialog__hero { grid-template-columns: 1fr; text-align: center; }
+  .mdialog__photo { width: 140px; margin: 0 auto; }
+  .mdialog__foot { justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mdialog[open] { animation: none; }
+}
 
 .landing-tracks { list-style: none; margin: 0; padding: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 18px; }
 .landing-tracks li { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 12px; }
@@ -559,6 +604,11 @@ a.stat:hover { transform: translateY(-3px); }
 .profile__ctas { justify-content: flex-start; margin-top: 18px; }
 .profile__stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
 .profile__stats .stat__num { font-size: 2.4rem; }
+/* an album's own colours stay inside its header; the site keeps the chosen theme */
+.album__hero .album__orb,
+.song__hero .song__orb { background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--a2, var(--accent2)) 80%, #fff), transparent 55%), conic-gradient(from 120deg, var(--a, var(--accent)), var(--a2, var(--accent2)), var(--a, var(--accent))); box-shadow: 0 0 80px -10px var(--a, var(--accent)); }
+.album__hero .album__facts li { background: color-mix(in srgb, var(--a, var(--accent)) 14%, transparent); }
+.song__hero[style] { background: radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--a) 24%, transparent), transparent 60%), color-mix(in srgb, var(--surface) 85%, transparent); }
 .profile__swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; box-shadow: 0 0 0 1px var(--line); }
 .profile__name { font-size: clamp(3rem, 9vw, 6rem); margin: 0; color: var(--accent-strong); }
 .profile__tagline { font-family: var(--font-head); font-style: italic; font-size: 1.5rem; margin: 6px 0 0; }
@@ -733,8 +783,11 @@ a.stat:hover { transform: translateY(-3px); }
 .pager__link--next { text-align: right; }
 
 .mini-members { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.mini-members a { display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.88rem; border: 1px solid var(--line); background: var(--surface); transition: border-color 0.2s; }
-.mini-members a:hover { border-color: var(--m, var(--accent)); }
+.mini-members button { color: inherit; font: inherit; cursor: pointer; }
+.mini-members a,
+.mini-members button { display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.88rem; border: 1px solid var(--line); background: var(--surface); transition: border-color 0.2s; }
+.mini-members a:hover,
+.mini-members button:hover { border-color: var(--m, var(--accent)); }
 .mini-members .avatar { width: 32px !important; height: 32px !important; font-size: 1rem; box-shadow: none; }
 .mini-members small { font-weight: 500; color: var(--muted); }
 .mini-members--tight a { padding: 2px; }
@@ -822,6 +875,25 @@ a.stat:hover { transform: translateY(-3px); }
 .song__grid h3 { margin-top: 0; }
 
 .music__search { display: block; max-width: 360px; margin-top: 16px; }
+/* the search boxes on Members and Music: a pill in the theme's colours */
+.members__search,
+.music__search {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--text);
+  background:
+    no-repeat 15px 50% / 16px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-4-4'/%3E%3C/svg%3E"),
+    color-mix(in srgb, var(--surface) 88%, transparent);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.members__search::placeholder,
+.music__search::placeholder { color: var(--muted); }
+.members__search:focus,
+.music__search:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
 .music__results { margin-bottom: 28px; }
 .music__results h3 { margin-top: 0; }
 .music-album__title a { color: inherit; text-decoration: none; }

@@ -1,0 +1,329 @@
+/* ============================================================
+   "Hoshi Aesthetics" skin: the tiger in the pines. Deep forest
+   green, tiger orange and leaf green, bold display type, tiger
+   stripes and paw prints, the willow by the Han River, the palace
+   pines, the park in summer and the warm night shots
+   (public/themes/hoshi/).
+   Switched on by theme tokens with skin: 'hoshi'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "tiger" background pattern (works with any theme) ---------- */
+
+[data-pattern='tiger'] .bg-pattern {
+  opacity: 0.32;
+  background-image:
+    url('/themes/hoshi/stripes.svg'),
+    url('/themes/hoshi/paw.svg'),
+    url('/themes/hoshi/pine.svg'),
+    url('/themes/hoshi/paw.svg'),
+    url('/themes/hoshi/stripes.svg'),
+    url('/themes/hoshi/pine.svg');
+  background-size: 120px, 28px, 54px, 22px, 90px, 40px;
+  background-position: -20px 16%, 90% 12%, 94% 60%, 12% 82%, calc(100% + 20px) 88%, 6% 46%;
+  background-repeat: no-repeat;
+}
+/* paw prints walking up the side of the page */
+[data-pattern='tiger'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  right: 3%;
+  bottom: 6%;
+  width: 60px;
+  height: 260px;
+  background:
+    url('/themes/hoshi/paw.svg') 0 100% / 26px no-repeat,
+    url('/themes/hoshi/paw.svg') 30px 72% / 26px no-repeat,
+    url('/themes/hoshi/paw.svg') 0 44% / 26px no-repeat,
+    url('/themes/hoshi/paw.svg') 30px 16% / 26px no-repeat;
+  opacity: 0.8;
+  animation: hoshi-walk 6s steps(4) infinite;
+}
+@keyframes hoshi-walk {
+  0% { clip-path: inset(100% 0 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+[data-dark='false'][data-pattern='tiger'] .bg-pattern { opacity: 0.4; }
+@media (max-width: 720px) {
+  [data-pattern='tiger'] .bg-pattern::before { display: none; }
+}
+
+/* ---------- the skin ---------- */
+
+/* sun through the pine needles */
+[data-skin='hoshi'] body {
+  background:
+    radial-gradient(900px 520px at 20% -10%, rgba(242, 154, 56, 0.2), transparent 70%),
+    radial-gradient(800px 520px at 100% 100%, rgba(156, 194, 122, 0.14), transparent 70%),
+    var(--bg);
+}
+
+/* headings: bold, with a tiger stripe underneath */
+[data-skin='hoshi'] .main h1 { color: #f4f1e6; letter-spacing: 0.01em; }
+[data-skin='hoshi'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(220px, 60%);
+  height: 12px;
+  margin-top: 8px;
+  border-radius: 99px;
+  background: repeating-linear-gradient(-55deg, #f29a38 0 14px, #1a1a16 14px 22px);
+}
+[data-skin='hoshi'] .eyebrow { color: #f29a38; letter-spacing: 0.18em; }
+
+/* nav: the forest at dusk */
+[data-skin='hoshi'] .nav {
+  background: rgba(15, 23, 18, 0.84);
+  border-color: rgba(156, 194, 122, 0.22);
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.85);
+}
+[data-skin='hoshi'] .nav__logo::after {
+  content: '';
+  width: 26px;
+  height: 26px;
+  margin-left: 2px;
+  background: url('/themes/hoshi/tiger.svg') center / contain no-repeat;
+  animation: hoshi-nod 4s ease-in-out infinite;
+}
+@keyframes hoshi-nod { 50% { transform: rotate(-10deg) translateY(-2px); } }
+
+/* cards: deep green with an orange edge on hover */
+[data-skin='hoshi'] .main .card,
+[data-skin='hoshi'] .auth {
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(156, 194, 122, 0.08), transparent 60%),
+    #18221a;
+  border: 1px solid rgba(156, 194, 122, 0.16);
+  box-shadow: 0 20px 44px -26px rgba(0, 0, 0, 0.85);
+}
+[data-skin='hoshi'] .main .btn,
+[data-skin='hoshi'] .acct--signin {
+  color: #14110c;
+  background: #f29a38;
+  box-shadow: 0 10px 24px -10px rgba(242, 154, 56, 0.8);
+}
+[data-skin='hoshi'] .main .btn:hover { background: #ffad52; }
+[data-skin='hoshi'] .main .btn--ghost {
+  color: #f4f1e6;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px #9cc27a;
+}
+[data-skin='hoshi'] .main .chip { border-color: rgba(156, 194, 122, 0.3); background: rgba(242, 154, 56, 0.12); }
+
+/* ---------- home: a slideshow from the woods to the river at night ---------- */
+
+[data-skin='hoshi'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #0f1712;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.85);
+}
+[data-skin='hoshi'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --shade: linear-gradient(180deg, rgba(15, 23, 18, 0.05) 20%, rgba(15, 23, 18, 0.88) 74%, #0f1712);
+  background: var(--shade), url('/themes/hoshi/park-smile.jpg') center 30% / cover;
+  animation: hoshi-roll 36s infinite;
+}
+@keyframes hoshi-roll {
+  0%, 18%   { background-image: var(--shade), url('/themes/hoshi/park-smile.jpg'); }
+  20%, 38%  { background-image: var(--shade), url('/themes/hoshi/willow-river.jpg'); }
+  40%, 58%  { background-image: var(--shade), url('/themes/hoshi/palace-pine.jpg'); }
+  60%, 78%  { background-image: var(--shade), url('/themes/hoshi/pine-night.jpg'); }
+  80%, 98%  { background-image: var(--shade), url('/themes/hoshi/boat-night.jpg'); }
+  100%      { background-image: var(--shade), url('/themes/hoshi/park-smile.jpg'); }
+}
+/* the tiger badge: 호랑해 */
+[data-skin='hoshi'] .hero::after {
+  content: '호랑해 🐯';
+  position: absolute;
+  right: 26px;
+  top: 22px;
+  padding: 6px 16px;
+  font: 800 1rem/1.2 'Unbounded', sans-serif;
+  color: #14110c;
+  background: #f29a38;
+  border-radius: 999px;
+  transform: rotate(4deg);
+  box-shadow: 0 0 0 3px #14110c, 0 10px 22px -10px rgba(242, 154, 56, 0.8);
+  animation: hoshi-nod 4s ease-in-out infinite;
+}
+[data-skin='hoshi'] .hero > * { position: relative; z-index: 1; }
+[data-skin='hoshi'] .hero__title { background: linear-gradient(120deg, #ffffff 25%, #f29a38 60%, #9cc27a); -webkit-background-clip: text; background-clip: text; }
+[data-skin='hoshi'] .hero__equation { color: #9cc27a; -webkit-text-fill-color: #9cc27a; background: none; }
+[data-skin='hoshi'] .hero__lede { color: #e6e9dc; }
+@media (max-width: 720px) {
+  [data-skin='hoshi'] .hero { padding: 120px 18px 40px; }
+  [data-skin='hoshi'] .hero::after { right: 12px; top: 12px; font-size: 0.8rem; }
+}
+
+/* ---------- photos with a striped tiger-tape frame beside page titles ---------- */
+
+[data-skin='hoshi'] .page-head { position: relative; }
+[data-skin='hoshi'] .page-head:has(~ .timeline) { --photo: url('/themes/hoshi/palace-pine.jpg'); }
+[data-skin='hoshi'] .page-head:has(~ .game-list) { --photo: url('/themes/hoshi/park-smile.jpg'); }
+[data-skin='hoshi'] .page-head:has(.music__ctas) { --photo: url('/themes/hoshi/boat-night.jpg'); }
+[data-skin='hoshi'] .page-head:has(~ .unit),
+[data-skin='hoshi'] .page-head:has(.tabs) { --photo: url('/themes/hoshi/willow-river.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='hoshi'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 270px;
+    padding-right: 250px;
+  }
+  [data-skin='hoshi'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: -4px;
+    width: 190px;
+    height: 254px;
+    border-radius: 18px;
+    background: var(--photo) center 30% / cover;
+    box-shadow: 0 0 0 6px #f29a38, 0 0 0 10px #14110c, 0 26px 44px -22px rgba(0, 0, 0, 0.9);
+    transform: rotate(2deg);
+  }
+  /* a paw print stamped on the corner */
+  [data-skin='hoshi'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 6px;
+    top: 224px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: url('/themes/hoshi/paw.svg') center / 62% no-repeat, #14110c;
+    box-shadow: 0 0 0 3px #f29a38;
+    transform: rotate(-12deg);
+  }
+}
+
+/* ---------- tracklists become a dance-practice cue sheet ---------- */
+
+[data-skin='hoshi'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 46px 16px 14px;
+  background: #141d16;
+  border: 1px solid rgba(156, 194, 122, 0.18);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.85);
+}
+[data-skin='hoshi'] .main .tracks::before {
+  content: '5, 6, 7, 8 →';
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  padding-bottom: 8px;
+  font: 800 0.78rem/1.2 'Unbounded', sans-serif;
+  letter-spacing: 0.14em;
+  color: #f29a38;
+  border-bottom: 4px solid transparent;
+  border-image: repeating-linear-gradient(-55deg, #f29a38 0 10px, #14110c 10px 16px) 4;
+}
+[data-skin='hoshi'] .main .tracks .tracks__row,
+[data-skin='hoshi'] .main .tracks button { border-bottom-color: rgba(156, 194, 122, 0.1); }
+[data-skin='hoshi'] .main .tracks button:hover { background: rgba(242, 154, 56, 0.1); }
+[data-skin='hoshi'] .main .tracks .tracks__num { color: #f29a38; font-weight: 700; }
+[data-skin='hoshi'] .main .tracks .tracks__title { color: #f4f1e6; }
+[data-skin='hoshi'] .main .tracks .tracks__native,
+[data-skin='hoshi'] .main .tracks .tracks__note,
+[data-skin='hoshi'] .main .tracks .tracks__nolink,
+[data-skin='hoshi'] .main .tracks .tracks__disc,
+[data-skin='hoshi'] .main .tracks .tracks__open { color: rgba(230, 233, 220, 0.6); }
+[data-skin='hoshi'] .main .tracks .chip { color: #9cc27a; background: transparent; border: 1.5px solid rgba(156, 194, 122, 0.6); }
+[data-skin='hoshi'] .main .tracks li.is-playing .tracks__title { color: #f29a38; }
+[data-skin='hoshi'] .main .tracks .like-btn.is-liked { color: #ff7a5c; }
+
+/* ---------- sign in / register: under the streetlight pine ---------- */
+
+[data-skin='hoshi'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(15, 23, 18, 0), rgba(15, 23, 18, 0.45)),
+    url('/themes/hoshi/pine-night.jpg') center 45% / cover;
+}
+[data-skin='hoshi'] .auth__glow { background: radial-gradient(circle, rgba(242, 154, 56, 0.4), transparent 65%); }
+[data-skin='hoshi'] .auth__gem { content: url('/themes/hoshi/tiger.svg'); width: 96px; height: 96px; }
+[data-skin='hoshi'] .auth__switch a { color: #f29a38; }
+
+/* ---------- Now Playing: on the boat at night ---------- */
+
+[data-skin='hoshi'] .np {
+  --np-bg: #0f1712;
+  --np-ink: #f4f1e6;
+  --np-label: #f29a38;
+  --np-label2: #9cc27a;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(15, 23, 18, 0.78)),
+    url('/themes/hoshi/boat-night.jpg') center 30% / cover,
+    #0f1712;
+}
+[data-skin='hoshi'] .np__deck { background: rgba(24, 34, 26, 0.9); color: #f4f1e6; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.9); }
+/* keeps the words readable over the photo */
+[data-skin='hoshi'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(15, 23, 18, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='hoshi'] .np__title { color: #f4f1e6; }
+[data-skin='hoshi'] .np__album { font-family: 'Unbounded', sans-serif; font-weight: 800; color: #f29a38; letter-spacing: 0.06em; }
+[data-skin='hoshi'] .np__blurb { color: rgba(244, 241, 230, 0.84); }
+[data-skin='hoshi'] .np__label { background: url('/themes/hoshi/tiger.svg') center / 70% no-repeat, #14110c; }
+[data-skin='hoshi'] .np-wave span { background: linear-gradient(#f29a38, #9cc27a); }
+[data-skin='hoshi'] .np-ctrl .np-ctrl__main { background: #f29a38; color: #14110c; }
+
+/* ---------- footer: the willow by the river ---------- */
+
+[data-skin='hoshi'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #f4f1e6;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(15, 23, 18, 0) 28%, rgba(15, 23, 18, 0) 56%, rgba(10, 15, 12, 0.92) 92%),
+    url('/themes/hoshi/willow-river.jpg') center 30% / cover;
+}
+[data-skin='hoshi'] .footer a { color: #f29a38; }
+
+/* ---------- the little cursor sparkles turn tiger orange and leaf green ---------- */
+
+[data-skin='hoshi'] .sparkle { color: #f29a38; }
+[data-skin='hoshi'] .sparkle:nth-child(odd) { color: #9cc27a; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='tiger'] .bg-pattern::before,
+  [data-skin='hoshi'] .nav__logo::after,
+  [data-skin='hoshi'] .hero::before,
+  [data-skin='hoshi'] .hero::after { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--tiger::before {
+  background-image: url('/themes/hoshi/stripes.svg'), url('/themes/hoshi/paw.svg'), url('/themes/hoshi/pine.svg');
+  background-size: 70px, 16px, 26px;
+  background-position: -10px 30%, 90% 72%, 12% 80%;
+  background-repeat: no-repeat;
+  opacity: 0.55;
+}
+.tp--hoshi::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50px;
+  width: 50px;
+  height: 50px;
+  background: url('/themes/hoshi/tiger.svg') center / contain no-repeat;
+}
+.tp--hoshi .tp__title { color: #f4f1e6; }

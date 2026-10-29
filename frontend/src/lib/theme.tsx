@@ -10,13 +10,27 @@ import '../themes/world.css'
 import '../themes/attacca.css'
 import '../themes/hot.css'
 import '../themes/homerun.css'
+import '../themes/maestro.css'
+import '../themes/ajunice.css'
+import '../themes/scoups.css'
+import '../themes/jeonghan.css'
+import '../themes/joshua.css'
+import '../themes/jun.css'
+import '../themes/dk.css'
+import '../themes/woozi.css'
+import '../themes/wonwoo.css'
+import '../themes/the8.css'
+import '../themes/dino.css'
+import '../themes/seungkwan.css'
+import '../themes/vernon.css'
+import '../themes/mingyu.css'
+import '../themes/hoshi.css'
 
 /**
- * Two layers of theme:
- *  - pinned:   the era the visitor chose to "wear" site-wide (saved in localStorage)
- *  - override: a page's own look while you're on it (a member or album page)
- * The page override wins; leaving the page falls back to the pinned era, then to
- * the site's default theme (set in the Studio).
+ * One look for every page: the theme the visitor chose to "wear" (Themes page or an
+ * album's button, saved in localStorage), else the site's theme (set in the Studio).
+ * Member, album and song pages don't change it; they only tint their own content.
+ *  - override: the Studio's live preview while an admin edits the site theme
  */
 interface Pinned {
   label: string
@@ -117,7 +131,7 @@ export function useTheme() {
   return ctx
 }
 
-/** Give the current page its own look; it is removed when the page unmounts. */
+/** The Studio's live preview of a theme being edited; removed when the editor unmounts. */
 export function usePageTheme(tokens: ThemeTokens | null | undefined) {
   const { setOverride } = useTheme()
   const key = tokens ? JSON.stringify(tokens) : ''

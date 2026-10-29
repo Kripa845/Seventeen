@@ -1,0 +1,323 @@
+/* ============================================================
+   "Wonwoo Aesthetics" skin: a quiet reading room at night.
+   Graphite and paper cream, sage leaves and dusty mauve from the
+   flowers by the white shirt, black square glasses, an open book
+   and a bookmark ribbon, black-and-white photos that come into
+   focus like the one caught in a moving crowd, and a library
+   card for every tracklist (public/themes/wonwoo/).
+   Switched on by theme tokens with skin: 'wonwoo'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "books" background pattern (works with any theme) ---------- */
+
+[data-pattern='books'] .bg-pattern {
+  opacity: 0.4;
+  background-image:
+    url('/themes/wonwoo/book.svg'),
+    url('/themes/wonwoo/glasses.svg'),
+    url('/themes/wonwoo/sprig.svg'),
+    url('/themes/wonwoo/book.svg'),
+    url('/themes/wonwoo/glasses.svg'),
+    url('/themes/wonwoo/sprig.svg');
+  background-size: 48px 32px, 40px 17px, 26px 39px, 34px 23px, 30px 13px, 20px 30px;
+  background-position: 6% 18%, 91% 12%, 88% 80%, 11% 84%, 94% 50%, 4% 52%;
+  background-repeat: no-repeat;
+}
+/* one bookmark ribbon swaying from the top of the page */
+[data-pattern='books'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 56px;
+  right: 7%;
+  top: 0;
+  background: url('/themes/wonwoo/bookmark.svg') center / contain no-repeat;
+  transform-origin: 50% 0;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.25));
+  animation: ww-sway 9s ease-in-out infinite;
+}
+@keyframes ww-sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+/* the decorations are drawn in cream for the dark room; darken them on light themes */
+[data-dark='false'][data-pattern='books'] .bg-pattern { filter: brightness(0.3); opacity: 0.35; }
+@media (max-width: 720px) {
+  [data-pattern='books'] .bg-pattern::before { width: 16px; height: 40px; right: 4%; }
+}
+
+/* ---------- the skin ---------- */
+
+/* one reading lamp on in a dark room */
+[data-skin='wonwoo'] body {
+  background:
+    radial-gradient(900px 520px at 85% -10%, rgba(233, 230, 223, 0.08), transparent 70%),
+    radial-gradient(820px 540px at 0% 100%, rgba(157, 176, 154, 0.1), transparent 70%),
+    var(--bg);
+}
+
+/* headings: a quiet serif on a fine line that ends in a bookmark */
+[data-skin='wonwoo'] .main h1 { color: #e9e6df; letter-spacing: -0.005em; }
+[data-skin='wonwoo'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(240px, 60%);
+  height: 20px;
+  margin-top: 6px;
+  background:
+    url('/themes/wonwoo/bookmark.svg') right top / 8px 20px no-repeat,
+    linear-gradient(#9db09a, #9db09a) left top / calc(100% - 4px) 1px no-repeat;
+}
+[data-skin='wonwoo'] .eyebrow { color: #9db09a; letter-spacing: 0.22em; text-transform: uppercase; }
+
+/* nav: graphite glass, his black square glasses on the logo */
+[data-skin='wonwoo'] .nav {
+  background: rgba(18, 19, 20, 0.78);
+  border-color: rgba(233, 230, 223, 0.08);
+  box-shadow: 0 14px 34px -22px rgba(0, 0, 0, 0.8);
+}
+[data-skin='wonwoo'] .nav__logo::after {
+  content: '';
+  width: 32px;
+  height: 14px;
+  margin-left: 4px;
+  background: url('/themes/wonwoo/glasses.svg') center / contain no-repeat;
+}
+
+/* cards: graphite, a thin cream rule like the edge of a page */
+[data-skin='wonwoo'] .main .card,
+[data-skin='wonwoo'] .auth {
+  background: #1c1d1f;
+  border: 1px solid rgba(233, 230, 223, 0.09);
+  box-shadow: 0 18px 40px -26px rgba(0, 0, 0, 0.8);
+}
+[data-skin='wonwoo'] .main .btn,
+[data-skin='wonwoo'] .acct--signin {
+  color: #121314;
+  background: #e9e6df;
+  box-shadow: 0 10px 22px -12px rgba(0, 0, 0, 0.7);
+}
+[data-skin='wonwoo'] .main .btn:hover { background: #ffffff; }
+[data-skin='wonwoo'] .main .btn--ghost {
+  color: #e9e6df;
+  background: rgba(28, 29, 31, 0.6);
+  box-shadow: inset 0 0 0 1.5px #9db09a;
+}
+[data-skin='wonwoo'] .main .chip { border-color: rgba(157, 176, 154, 0.3); background: rgba(157, 176, 154, 0.08); }
+
+/* ---------- home: a slideshow where each photo comes into focus ---------- */
+
+[data-skin='wonwoo'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #121314;
+  box-shadow: 0 30px 60px -34px rgba(0, 0, 0, 0.9);
+}
+[data-skin='wonwoo'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: -12px; /* room for the blur so the edges never go soft */
+  --shade: linear-gradient(180deg, rgba(18, 19, 20, 0) 22%, rgba(18, 19, 20, 0.88) 72%, #121314);
+  background: var(--shade), url('/themes/wonwoo/crowd-blur.jpg') center 30% / cover;
+  /* each photo changes at 7.6s into its 8s turn, so the blur peaks right then */
+  animation: ww-show 40s infinite, ww-focus 8s -0.4s infinite;
+}
+@keyframes ww-show {
+  0%, 18%   { background-image: var(--shade), url('/themes/wonwoo/crowd-blur.jpg'); }
+  20%, 38%  { background-image: var(--shade), url('/themes/wonwoo/white-shirt.jpg'); }
+  40%, 58%  { background-image: var(--shade), url('/themes/wonwoo/sofa-lean.jpg'); }
+  60%, 78%  { background-image: var(--shade), url('/themes/wonwoo/glasses-smile.jpg'); }
+  80%, 98%  { background-image: var(--shade), url('/themes/wonwoo/white-shirt.jpg'); }
+  100%      { background-image: var(--shade), url('/themes/wonwoo/crowd-blur.jpg'); }
+}
+@keyframes ww-focus {
+  0%, 100% { filter: blur(8px); }
+  14%, 88% { filter: blur(0); }
+}
+/* a handwritten signature in the corner */
+[data-skin='wonwoo'] .hero::after {
+  content: 'Wonwoo · 원우 ✎';
+  position: absolute;
+  right: 28px;
+  top: 22px;
+  padding: 4px 14px;
+  font: 700 1.35rem/1.2 'Caveat', cursive;
+  color: #121314;
+  background: rgba(233, 230, 223, 0.88);
+  border-radius: 999px;
+  transform: rotate(-3deg);
+  box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.7);
+}
+[data-skin='wonwoo'] .hero > * { position: relative; z-index: 1; }
+[data-skin='wonwoo'] .hero__title { background: linear-gradient(120deg, #e9e6df 30%, #9db09a); -webkit-background-clip: text; background-clip: text; }
+[data-skin='wonwoo'] .hero__equation { color: #b99aa6; -webkit-text-fill-color: #b99aa6; background: none; }
+[data-skin='wonwoo'] .hero__lede { color: #c9c5bd; }
+@media (max-width: 720px) {
+  [data-skin='wonwoo'] .hero { padding: 120px 18px 40px; }
+  [data-skin='wonwoo'] .hero::after { right: 14px; top: 14px; font-size: 1.05rem; }
+}
+
+/* ---------- photos tucked between the pages beside page titles, a ribbon to keep the place ---------- */
+
+[data-skin='wonwoo'] .page-head { position: relative; }
+[data-skin='wonwoo'] .page-head:has(~ .timeline) { --photo: url('/themes/wonwoo/crowd-blur.jpg'); }
+[data-skin='wonwoo'] .page-head:has(~ .game-list) { --photo: url('/themes/wonwoo/glasses-smile.jpg'); }
+[data-skin='wonwoo'] .page-head:has(.music__ctas) { --photo: url('/themes/wonwoo/sofa-lean.jpg'); }
+[data-skin='wonwoo'] .page-head:has(~ .unit),
+[data-skin='wonwoo'] .page-head:has(.tabs) { --photo: url('/themes/wonwoo/white-shirt.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='wonwoo'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 280px;
+    padding-right: 250px;
+  }
+  [data-skin='wonwoo'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: -4px;
+    width: 190px;
+    height: 254px;
+    border: 10px solid #ece7dc;
+    border-radius: 3px;
+    background: var(--photo) center 25% / cover;
+    transform: rotate(-1.5deg);
+    box-shadow: 0 24px 40px -22px rgba(0, 0, 0, 0.85);
+  }
+  [data-skin='wonwoo'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 52px;
+    top: -14px;
+    width: 22px;
+    height: 70px;
+    background: url('/themes/wonwoo/bookmark.svg') center / contain no-repeat;
+    transform: rotate(-1.5deg);
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.35));
+  }
+}
+
+/* ---------- tracklists become a library card, typed and due back ---------- */
+
+[data-skin='wonwoo'] .main .tracks {
+  --ink: #1d1d1f;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 54px 18px 14px 34px;
+  color: var(--ink);
+  background:
+    linear-gradient(#c98d9b, #c98d9b) 22px 0 / 1px 100% no-repeat,
+    #ece7dc;
+  border-radius: 6px;
+  box-shadow: 0 16px 30px -22px rgba(0, 0, 0, 0.8);
+}
+[data-skin='wonwoo'] .main .tracks::before {
+  content: 'READING LIST · due back soon';
+  position: absolute;
+  top: 16px;
+  left: 34px;
+  right: 18px;
+  padding-bottom: 8px;
+  font: 400 0.82rem/1.3 'Special Elite', monospace;
+  letter-spacing: 0.08em;
+  color: #1d1d1f;
+  border-bottom: 2px solid #1d1d1f;
+}
+[data-skin='wonwoo'] .main .tracks .tracks__row,
+[data-skin='wonwoo'] .main .tracks button { border-bottom-color: rgba(95, 125, 160, 0.3); }
+[data-skin='wonwoo'] .main .tracks button:hover { background: rgba(157, 176, 154, 0.2); }
+[data-skin='wonwoo'] .main .tracks .tracks__num { color: #7a5c68; font-family: 'Special Elite', monospace; }
+[data-skin='wonwoo'] .main .tracks .tracks__title { color: var(--ink); }
+[data-skin='wonwoo'] .main .tracks .chip { color: #4f6450; background: transparent; border: 1.5px solid rgba(79, 100, 80, 0.5); }
+[data-skin='wonwoo'] .main .tracks li.is-playing .tracks__title { color: #4f6450; }
+[data-skin='wonwoo'] .main .tracks .like-btn.is-liked { color: #b4566f; }
+
+/* ---------- sign in / register: the white shirt and the flowers ---------- */
+
+[data-skin='wonwoo'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(18, 19, 20, 0), rgba(18, 19, 20, 0.35)),
+    url('/themes/wonwoo/white-shirt.jpg') center 45% / cover;
+}
+[data-skin='wonwoo'] .auth__glow { background: radial-gradient(circle, rgba(185, 154, 166, 0.3), transparent 65%); }
+[data-skin='wonwoo'] .auth__gem { content: url('/themes/wonwoo/book.svg'); width: 96px; height: 64px; }
+[data-skin='wonwoo'] .auth__switch a { color: #9db09a; }
+
+/* ---------- Now Playing: leaning back, half a smile, in black and white ---------- */
+
+[data-skin='wonwoo'] .np {
+  --np-bg: #121314;
+  --np-ink: #e9e6df;
+  --np-label: #b8c9b5;
+  --np-label2: #d4b9c3;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(18, 19, 20, 0.8)),
+    url('/themes/wonwoo/sofa-lean.jpg') center 30% / cover,
+    #121314;
+}
+[data-skin='wonwoo'] .np__deck { background: rgba(236, 231, 220, 0.94); color: #1d1d1f; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.7); }
+/* keeps the words readable over the photo */
+[data-skin='wonwoo'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(18, 19, 20, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='wonwoo'] .np__title { color: #e9e6df; }
+[data-skin='wonwoo'] .np__album { font-family: 'Caveat', cursive; font-size: clamp(1.3rem, 2.4vw, 1.8rem); color: #b8c9b5; }
+[data-skin='wonwoo'] .np__blurb { color: rgba(233, 230, 223, 0.85); }
+[data-skin='wonwoo'] .np__label { background: url('/themes/wonwoo/book.svg') center / 62% no-repeat, #121314; }
+[data-skin='wonwoo'] .np-wave span { background: linear-gradient(#b8c9b5, #d4b9c3); }
+[data-skin='wonwoo'] .np-ctrl .np-ctrl__main { background: #e9e6df; color: #121314; }
+
+/* ---------- footer: a face in the crowd, everyone else rushing past ---------- */
+
+[data-skin='wonwoo'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #e9e6df;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(18, 19, 20, 0) 30%, rgba(18, 19, 20, 0) 56%, rgba(12, 12, 13, 0.92) 92%),
+    url('/themes/wonwoo/crowd-blur.jpg') 60% 30% / cover;
+}
+[data-skin='wonwoo'] .footer a { color: #b8c9b5; }
+
+/* ---------- the little cursor sparkles turn sage and mauve ---------- */
+
+[data-skin='wonwoo'] .sparkle { color: #9db09a; }
+[data-skin='wonwoo'] .sparkle:nth-child(odd) { color: #b99aa6; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='books'] .bg-pattern::before,
+  [data-skin='wonwoo'] .hero::before { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--books::before {
+  background-image: url('/themes/wonwoo/book.svg'), url('/themes/wonwoo/glasses.svg'), url('/themes/wonwoo/sprig.svg');
+  background-size: 24px 16px, 22px 9px, 12px 18px;
+  background-position: 90% 26%, 12% 74%, 70% 84%;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+}
+.tp--wonwoo::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 56px;
+  width: 52px;
+  height: 22px;
+  background: url('/themes/wonwoo/glasses.svg') center / contain no-repeat;
+}
+.tp--wonwoo .tp__title { color: #e9e6df; }

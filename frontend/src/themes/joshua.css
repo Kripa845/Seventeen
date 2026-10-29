@@ -1,0 +1,313 @@
+/* ============================================================
+   "Joshua Aesthetics" skin: soft and unhurried. Cream and white,
+   sage and latte, clean type, guitar picks and strings, the
+   white studio, a café in Paris, city lights at night and the
+   guitar on the rooftop (public/themes/joshua/).
+   Switched on by theme tokens with skin: 'joshua'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "picks" background pattern (works with any theme) ---------- */
+
+[data-pattern='picks'] .bg-pattern {
+  opacity: 0.45;
+  background-image:
+    url('/themes/joshua/pick.svg'),
+    url('/themes/joshua/pick-sage.svg'),
+    url('/themes/joshua/pick.svg'),
+    url('/themes/joshua/pick-sage.svg'),
+    url('/themes/joshua/strings.svg'),
+    url('/themes/joshua/strings.svg');
+  background-size: 34px, 28px, 22px, 40px, 420px 64px, 360px 54px;
+  background-position: 6% 20%, 92% 14%, 88% 80%, 10% 86%, -60px 32%, calc(100% + 80px) 66%;
+  background-repeat: no-repeat;
+}
+/* one pick drifting down, as if dropped mid-song */
+[data-pattern='picks'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 46px;
+  height: 50px;
+  right: 6%;
+  top: 30%;
+  background: url('/themes/joshua/pick.svg') center / contain no-repeat;
+  filter: drop-shadow(0 8px 10px rgba(80, 60, 40, 0.25));
+  animation: joshua-drift 12s ease-in-out infinite;
+}
+@keyframes joshua-drift {
+  50% { transform: translate(-14px, 26px) rotate(28deg); }
+}
+[data-dark='true'][data-pattern='picks'] .bg-pattern { opacity: 0.3; }
+@media (max-width: 720px) {
+  [data-pattern='picks'] .bg-pattern::before { width: 32px; height: 36px; right: 4%; }
+}
+
+/* ---------- the skin ---------- */
+
+/* soft daylight from the studio window */
+[data-skin='joshua'] body {
+  background:
+    radial-gradient(900px 520px at 85% -10%, rgba(217, 180, 143, 0.28), transparent 70%),
+    radial-gradient(800px 520px at 0% 100%, rgba(110, 139, 116, 0.16), transparent 70%),
+    var(--bg);
+}
+
+/* headings: clean and calm, with a guitar string and a pick underneath */
+[data-skin='joshua'] .main h1 { color: #1e1d1b; letter-spacing: -0.01em; }
+[data-skin='joshua'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(240px, 60%);
+  height: 18px;
+  margin-top: 6px;
+  background:
+    url('/themes/joshua/pick-sage.svg') right center / 16px 18px no-repeat,
+    linear-gradient(#8a6a4c, #8a6a4c) left center / calc(100% - 22px) 1.5px no-repeat;
+}
+[data-skin='joshua'] .eyebrow { color: #6e8b74; letter-spacing: 0.18em; }
+
+/* nav: frosted white */
+[data-skin='joshua'] .nav {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(30, 29, 27, 0.08);
+  box-shadow: 0 14px 34px -22px rgba(80, 60, 40, 0.45);
+}
+[data-skin='joshua'] .nav__logo::after {
+  content: '';
+  width: 24px;
+  height: 24px;
+  margin-left: 2px;
+  background: url('/themes/joshua/guitar.svg') center / contain no-repeat;
+}
+
+/* cards: white paper with a soft shadow */
+[data-skin='joshua'] .main .card,
+[data-skin='joshua'] .auth {
+  background: #ffffff;
+  border: 1px solid rgba(138, 106, 76, 0.14);
+  box-shadow: 0 18px 40px -28px rgba(80, 60, 40, 0.5);
+}
+[data-skin='joshua'] .main .btn,
+[data-skin='joshua'] .acct--signin {
+  color: #f6f3ee;
+  background: #1e1d1b;
+  box-shadow: 0 10px 22px -12px rgba(30, 29, 27, 0.6);
+}
+[data-skin='joshua'] .main .btn:hover { background: #33312e; }
+[data-skin='joshua'] .main .btn--ghost {
+  color: #1e1d1b;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 0 0 1.5px #6e8b74;
+}
+[data-skin='joshua'] .main .chip { border-color: rgba(110, 139, 116, 0.35); background: rgba(169, 191, 168, 0.18); }
+
+/* ---------- home: a slow slideshow of the photos ---------- */
+
+[data-skin='joshua'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #f6f3ee;
+  box-shadow: 0 30px 60px -34px rgba(80, 60, 40, 0.55);
+}
+[data-skin='joshua'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --shade: linear-gradient(180deg, rgba(246, 243, 238, 0) 22%, rgba(246, 243, 238, 0.9) 74%, #f6f3ee);
+  background: var(--shade), url('/themes/joshua/studio.jpg') center 22% / cover;
+  animation: joshua-roll 40s infinite;
+}
+@keyframes joshua-roll {
+  0%, 18%   { background-image: var(--shade), url('/themes/joshua/studio.jpg'); }
+  20%, 38%  { background-image: var(--shade), url('/themes/joshua/paris-cafe.jpg'); }
+  40%, 58%  { background-image: var(--shade), url('/themes/joshua/sofa-peace.jpg'); }
+  60%, 78%  { background-image: var(--shade), url('/themes/joshua/night-smile.jpg'); }
+  80%, 98%  { background-image: var(--shade), url('/themes/joshua/grocery.jpg'); }
+  100%      { background-image: var(--shade), url('/themes/joshua/studio.jpg'); }
+}
+/* a handwritten signature in the corner */
+[data-skin='joshua'] .hero::after {
+  content: 'Joshua · 지수 ♡';
+  position: absolute;
+  right: 28px;
+  top: 22px;
+  padding: 4px 14px;
+  font: 700 1.35rem/1.2 'Caveat', cursive;
+  color: #1e1d1b;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  transform: rotate(-3deg);
+  box-shadow: 0 8px 18px -10px rgba(80, 60, 40, 0.5);
+}
+[data-skin='joshua'] .hero > * { position: relative; z-index: 1; }
+[data-skin='joshua'] .hero__title { background: linear-gradient(120deg, #1e1d1b 20%, #6e8b74); -webkit-background-clip: text; background-clip: text; }
+[data-skin='joshua'] .hero__equation { color: #8a6a4c; -webkit-text-fill-color: #8a6a4c; background: none; }
+[data-skin='joshua'] .hero__lede { color: #3a3733; }
+@media (max-width: 720px) {
+  [data-skin='joshua'] .hero { padding: 120px 18px 40px; }
+  [data-skin='joshua'] .hero::after { right: 14px; top: 14px; font-size: 1.05rem; }
+}
+
+/* ---------- prints pinned with a pick beside page titles ---------- */
+
+[data-skin='joshua'] .page-head { position: relative; }
+[data-skin='joshua'] .page-head:has(~ .timeline) { --photo: url('/themes/joshua/paris-cafe.jpg'); }
+[data-skin='joshua'] .page-head:has(~ .game-list) { --photo: url('/themes/joshua/grocery.jpg'); }
+[data-skin='joshua'] .page-head:has(.music__ctas) { --photo: url('/themes/joshua/guitar.jpg'); }
+[data-skin='joshua'] .page-head:has(~ .unit),
+[data-skin='joshua'] .page-head:has(.tabs) { --photo: url('/themes/joshua/studio.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='joshua'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 270px;
+    padding-right: 250px;
+  }
+  [data-skin='joshua'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: -4px;
+    width: 190px;
+    height: 254px;
+    border: 8px solid #ffffff;
+    border-radius: 18px;
+    background: var(--photo) center 25% / cover;
+    transform: rotate(-2deg);
+    box-shadow: 0 22px 40px -22px rgba(80, 60, 40, 0.6);
+  }
+  /* the pick pinning it */
+  [data-skin='joshua'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 100px;
+    top: -18px;
+    width: 30px;
+    height: 34px;
+    background: url('/themes/joshua/pick-sage.svg') center / contain no-repeat;
+    transform: rotate(-14deg);
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.18));
+  }
+}
+
+/* ---------- tracklists become a handwritten setlist on the strings ---------- */
+
+[data-skin='joshua'] .main .tracks {
+  --ink: #1e1d1b;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 58px 18px 14px;
+  color: var(--ink);
+  background:
+    url('/themes/joshua/strings.svg') top 12px left 18px / calc(100% - 36px) 38px no-repeat,
+    #fbf8f3;
+  border: 1px solid rgba(138, 106, 76, 0.18);
+  border-radius: 14px;
+  box-shadow: 0 16px 30px -22px rgba(80, 60, 40, 0.5);
+}
+[data-skin='joshua'] .main .tracks::before {
+  content: 'setlist ♪';
+  position: absolute;
+  top: 6px;
+  right: 22px;
+  padding: 0 8px;
+  font: 700 1.4rem/1.2 'Caveat', cursive;
+  color: #6e8b74;
+  background: #fbf8f3;
+}
+[data-skin='joshua'] .main .tracks .tracks__row,
+[data-skin='joshua'] .main .tracks button { border-bottom-color: rgba(138, 106, 76, 0.12); }
+[data-skin='joshua'] .main .tracks button:hover { background: rgba(169, 191, 168, 0.18); }
+[data-skin='joshua'] .main .tracks .tracks__num { color: #8a6a4c; }
+[data-skin='joshua'] .main .tracks .tracks__title { color: var(--ink); }
+[data-skin='joshua'] .main .tracks .chip { color: #5e7a63; background: transparent; border: 1.5px solid rgba(110, 139, 116, 0.6); }
+[data-skin='joshua'] .main .tracks li.is-playing .tracks__title { color: #5e7a63; }
+[data-skin='joshua'] .main .tracks .like-btn.is-liked { color: #d16d6d; }
+
+/* ---------- sign in / register: the white studio ---------- */
+
+[data-skin='joshua'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(246, 243, 238, 0), rgba(217, 180, 143, 0.25)),
+    url('/themes/joshua/studio.jpg') center 20% / cover;
+}
+[data-skin='joshua'] .auth__glow { background: radial-gradient(circle, rgba(169, 191, 168, 0.45), transparent 65%); }
+[data-skin='joshua'] .auth__gem { content: url('/themes/joshua/pick-sage.svg'); width: 80px; height: 88px; }
+[data-skin='joshua'] .auth__switch a { color: #5e7a63; }
+
+/* ---------- Now Playing: the guitar on the rooftop ---------- */
+
+[data-skin='joshua'] .np {
+  --np-bg: #1e1d1b;
+  --np-ink: #f6f3ee;
+  --np-label: #d9b48f;
+  --np-label2: #a9bfa8;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(30, 29, 27, 0.72)),
+    url('/themes/joshua/guitar.jpg') center 40% / cover,
+    #1e1d1b;
+}
+[data-skin='joshua'] .np__deck { background: rgba(251, 248, 243, 0.92); color: #1e1d1b; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); }
+/* keeps the words readable over the photo */
+[data-skin='joshua'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(30, 29, 27, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='joshua'] .np__title { color: #f6f3ee; }
+[data-skin='joshua'] .np__album { font-family: 'Caveat', cursive; font-size: clamp(1.3rem, 2.4vw, 1.8rem); color: #d9b48f; }
+[data-skin='joshua'] .np__blurb { color: rgba(246, 243, 238, 0.85); }
+[data-skin='joshua'] .np__label { background: url('/themes/joshua/pick.svg') center / 52% no-repeat, #fbf8f3; }
+[data-skin='joshua'] .np-wave span { background: linear-gradient(#d9b48f, #a9bfa8); }
+[data-skin='joshua'] .np-ctrl .np-ctrl__main { background: #f6f3ee; color: #1e1d1b; }
+
+/* ---------- footer: the city from the lookout ---------- */
+
+[data-skin='joshua'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #f6f3ee;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(246, 243, 238, 0) 30%, rgba(30, 29, 27, 0) 56%, rgba(20, 19, 18, 0.9) 92%),
+    url('/themes/joshua/city-view.jpg') center 55% / cover;
+}
+[data-skin='joshua'] .footer a { color: #d9b48f; }
+
+/* ---------- the little cursor sparkles turn sage and latte ---------- */
+
+[data-skin='joshua'] .sparkle { color: #6e8b74; }
+[data-skin='joshua'] .sparkle:nth-child(odd) { color: #d9b48f; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='picks'] .bg-pattern::before,
+  [data-skin='joshua'] .hero::before { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--picks::before {
+  background-image: url('/themes/joshua/pick.svg'), url('/themes/joshua/pick-sage.svg'), url('/themes/joshua/strings.svg');
+  background-size: 18px, 14px, 180px 26px;
+  background-position: 90% 26%, 12% 74%, -20px 62%;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+}
+.tp--joshua::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50px;
+  width: 48px;
+  height: 48px;
+  background: url('/themes/joshua/guitar.svg') center / contain no-repeat;
+}
+.tp--joshua .tp__title { color: #1e1d1b; }

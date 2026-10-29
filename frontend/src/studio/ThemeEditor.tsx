@@ -15,7 +15,7 @@ const COLORS: { key: 'bg' | 'surface' | 'text' | 'accent' | 'accent2'; label: st
   { key: 'accent2', label: 'Second accent' },
 ]
 
-const PATTERNS: ThemeTokens['pattern'][] = ['sparkle', 'stars', 'petals', 'daisies', 'smileys', 'signs', 'flowers', 'orbits', 'suns', 'billiards', 'waves', 'grid', 'none']
+const PATTERNS: ThemeTokens['pattern'][] = ['sparkle', 'stars', 'petals', 'daisies', 'smileys', 'signs', 'flowers', 'orbits', 'suns', 'billiards', 'staves', 'hoops', 'film', 'butterflies', 'picks', 'umbrellas', 'roses', 'books', 'confetti', 'ink', 'footprints', 'tangerines', 'lemons', 'leaves', 'tiger', 'waves', 'grid', 'none']
 
 /** A little mock page drawn with the theme, so you see it before saving. */
 export function ThemePreview({ theme, title = 'SEVENTEEN', subtitle = 'for CARAT, since 2015' }: { theme: ThemeTokens; title?: string; subtitle?: string }) {
@@ -110,7 +110,7 @@ export function ThemeEditor({ value, onChange, presets = [] }: { value: ThemeTok
           options={PATTERNS.map((p) => ({ value: p, label: p }))}
         />
 
-        <Segmented<'none' | 'heaven' | 'darling' | 'leftright' | 'world' | 'attacca' | 'hot' | 'homerun'>
+        <Segmented<'none' | 'heaven' | 'darling' | 'leftright' | 'world' | 'attacca' | 'hot' | 'homerun' | 'maestro' | 'ajunice' | 'scoups' | 'jeonghan' | 'joshua' | 'jun' | 'dk' | 'wonwoo' | 'woozi' | 'the8' | 'dino' | 'seungkwan' | 'vernon' | 'mingyu' | 'hoshi'>
           label="Photo skin"
           value={value.skin ?? 'none'}
           onChange={(v) => set('skin', v)}
@@ -123,6 +123,21 @@ export function ThemeEditor({ value, onChange, presets = [] }: { value: ThemeTok
             { value: 'attacca', label: '✦ Rock with you' },
             { value: 'hot', label: '☀ Hot' },
             { value: 'homerun', label: '; Home;Run' },
+            { value: 'maestro', label: '♪ Maestro' },
+            { value: 'ajunice', label: '🏀 Aju Nice' },
+            { value: 'scoups', label: '📷 S.Coups aesthetics' },
+            { value: 'jeonghan', label: '🦋 Jeonghan Aesthetics' },
+            { value: 'joshua', label: '🎸 Joshua Aesthetics' },
+            { value: 'jun', label: '☂ Jun Aesthetics' },
+            { value: 'dk', label: '🌹 DK Aesthetics' },
+            { value: 'woozi', label: '🎙 Woozi Aesthetics' },
+            { value: 'wonwoo', label: '📚 Wonwoo Aesthetics' },
+            { value: 'the8', label: '✎ The8 Aesthetics' },
+            { value: 'dino', label: '🦖 Dino Aesthetics' },
+            { value: 'seungkwan', label: '🍊 Seungkwan Aesthetics' },
+            { value: 'vernon', label: '🍋 Vernon Aesthetics' },
+            { value: 'mingyu', label: '🌿 Mingyu Aesthetics' },
+            { value: 'hoshi', label: '🐯 Hoshi Aesthetics' },
           ]}
         />
 

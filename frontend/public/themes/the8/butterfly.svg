@@ -1,0 +1,5 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 90' stroke-linejoin='round'>
+  <path d='M48 46C40 24 22 8 8 12 0 16 6 36 16 44 6 50 4 66 14 74c12 8 28-6 34-22Z' fill='#BFD6EA' stroke='#5D8DB8' stroke-width='2.5'/>
+  <path d='M52 46C60 24 78 8 92 12c8 4 2 24-8 32 10 6 12 22 2 30-12 8-28-6-34-22Z' fill='#EFE6B8' stroke='#5D8DB8' stroke-width='2.5'/>
+  <path d='M50 48c-6 0-9-5-6-9 3-5 11-4 13 2 2 7-5 13-12 12-9-1-13-11-8-18 6-8 19-7 23 3' fill='none' stroke='#3C78B4' stroke-width='3' stroke-linecap='round'/>
+</svg>

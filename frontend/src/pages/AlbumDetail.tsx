@@ -5,7 +5,7 @@ import { useAlbum, useAlbums } from '../lib/api'
 import { formatDate } from '../lib/dates'
 import { albumAsSong } from '../lib/player'
 import { useOpenPlayer } from '../lib/useOpenPlayer'
-import { usePageTheme, useTheme } from '../lib/theme'
+import { useTheme } from '../lib/theme'
 import type { Album } from '../lib/types'
 
 /** A small cover card linking to another album. */
@@ -28,7 +28,6 @@ export function AlbumDetail() {
   const all = useAlbums()
   const { pinned, pin } = useTheme()
   const play = useOpenPlayer()
-  usePageTheme(a?.theme)
 
   if (loading) return <Loading />
   if (error || !a) return <ApiError message={error ?? 'Not found'} />
@@ -55,7 +54,7 @@ export function AlbumDetail() {
         <span aria-current="page">{a.title}</span>
       </nav>
 
-      <header className="album__hero">
+      <header className="album__hero" style={{ ['--a' as string]: a.theme.accent, ['--a2' as string]: a.theme.accent2 }}>
         <div className="album__art">
           {a.cover ? <img src={a.cover} alt={`${a.title} cover`} /> : <div className="album__orb" aria-hidden />}
         </div>

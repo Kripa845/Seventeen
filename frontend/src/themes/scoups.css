@@ -1,0 +1,301 @@
+/* ============================================================
+   "S.Coups aesthetics" skin: his camera roll. Warm film grain,
+   charcoal and cream, an amber date stamp like a point-and-shoot,
+   viewfinder corners, Milan at night, the Hasselblad mirror
+   selfies, snow, Shibuya in the sun (public/themes/scoups/).
+   Switched on by theme tokens with skin: 'scoups'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "film" background pattern (works with any theme) ---------- */
+
+[data-pattern='film'] .bg-pattern {
+  opacity: 0.5;
+  background-image:
+    url('/themes/scoups/grain.svg'),
+    url('/themes/scoups/filmstrip.svg'),
+    url('/themes/scoups/filmstrip.svg'),
+    radial-gradient(60% 40% at 0% 10%, rgba(255, 150, 60, 0.18), transparent 70%),
+    radial-gradient(50% 40% at 100% 90%, rgba(255, 90, 60, 0.12), transparent 70%);
+  background-size: 220px, 26px 35px, 26px 35px, 100% 100%, 100% 100%;
+  background-position: 0 0, 0 0, 100% 0;
+  background-repeat: repeat, repeat-y, repeat-y, no-repeat, no-repeat;
+}
+/* the viewfinder, framing the page */
+[data-pattern='film'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 90px 40px 40px;
+  background: url('/themes/scoups/viewfinder.svg') center / 100% 100% no-repeat;
+  opacity: 0.35;
+}
+[data-dark='false'][data-pattern='film'] .bg-pattern::before { filter: invert(0.8); }
+@media (max-width: 720px) {
+  [data-pattern='film'] .bg-pattern { background-size: 220px, 0 0, 0 0, 100% 100%, 100% 100%; }
+  [data-pattern='film'] .bg-pattern::before { inset: 80px 12px 20px; }
+}
+
+/* ---------- the skin ---------- */
+
+/* a streetlight glow on warm charcoal */
+[data-skin='scoups'] body {
+  background:
+    radial-gradient(800px 500px at 18% -10%, rgba(232, 160, 74, 0.2), transparent 70%),
+    radial-gradient(700px 500px at 100% 100%, rgba(143, 167, 184, 0.12), transparent 70%),
+    var(--bg);
+}
+
+/* headings: quiet serif with the camera's date stamp under them */
+[data-skin='scoups'] .main h1 { color: #f2e8d8; font-style: italic; letter-spacing: 0.01em; }
+[data-skin='scoups'] .main h1::after {
+  content: '● S.COUPS · 35MM';
+  display: block;
+  margin-top: 10px;
+  font: 700 0.78rem/1 'Space Mono', monospace;
+  font-style: normal;
+  letter-spacing: 0.18em;
+  color: #ff9a3c;
+  text-shadow: 0 0 6px rgba(255, 140, 50, 0.85), 0 0 14px rgba(255, 110, 40, 0.5);
+}
+[data-skin='scoups'] .eyebrow { color: #e8a04a; letter-spacing: 0.2em; }
+
+/* nav: smoked glass */
+[data-skin='scoups'] .nav {
+  background: rgba(20, 18, 16, 0.82);
+  border-color: rgba(242, 232, 216, 0.14);
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.9);
+}
+[data-skin='scoups'] .nav__logo::after {
+  content: '';
+  width: 26px;
+  height: 22px;
+  margin-left: 2px;
+  background: url('/themes/scoups/camera.svg') center / contain no-repeat;
+}
+
+/* cards: matte prints with a little grain */
+[data-skin='scoups'] .main .card,
+[data-skin='scoups'] .auth {
+  background:
+    url('/themes/scoups/grain.svg'),
+    linear-gradient(160deg, #221e1b, #191614);
+  background-size: 220px, auto;
+  border: 1px solid rgba(242, 232, 216, 0.1);
+  box-shadow: 0 20px 44px -26px rgba(0, 0, 0, 0.9);
+}
+[data-skin='scoups'] .main .btn,
+[data-skin='scoups'] .acct--signin {
+  color: #141210;
+  background: #f2e8d8;
+  box-shadow: 0 10px 24px -12px rgba(232, 160, 74, 0.7);
+}
+[data-skin='scoups'] .main .btn:hover { background: #fff6e8; }
+[data-skin='scoups'] .main .btn--ghost {
+  color: #f2e8d8;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px rgba(242, 232, 216, 0.55);
+}
+[data-skin='scoups'] .main .chip { border-color: rgba(242, 232, 216, 0.2); background: rgba(232, 160, 74, 0.1); }
+
+/* ---------- home: a photo dump, through the viewfinder ---------- */
+
+[data-skin='scoups'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 30px;
+  overflow: hidden;
+  background: #141210;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+[data-skin='scoups'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --shade: linear-gradient(180deg, rgba(20, 18, 16, 0.05) 18%, rgba(20, 18, 16, 0.86) 74%, #141210);
+  background: url('/themes/scoups/viewfinder.svg') center / calc(100% - 40px) calc(100% - 40px) no-repeat, var(--shade), url('/themes/scoups/milan-night.jpg') center 30% / cover;
+  animation: scoups-roll 42s infinite;
+}
+@keyframes scoups-roll {
+  0%, 13%   { background-image: url('/themes/scoups/viewfinder.svg'), var(--shade), url('/themes/scoups/milan-night.jpg'); }
+  14%, 27%  { background-image: url('/themes/scoups/viewfinder.svg'), var(--shade), url('/themes/scoups/shibuya.jpg'); }
+  28%, 41%  { background-image: url('/themes/scoups/viewfinder.svg'), var(--shade), url('/themes/scoups/snow-coat.jpg'); }
+  42%, 55%  { background-image: url('/themes/scoups/viewfinder.svg'), var(--shade), url('/themes/scoups/milan-tram.jpg'); }
+  56%, 69%  { background-image: url('/themes/scoups/viewfinder.svg'), var(--shade), url('/themes/scoups/hasselblad.jpg'); }
+  70%, 83%  { background-image: url('/themes/scoups/viewfinder.svg'), var(--shade), url('/themes/scoups/dinner.jpg'); }
+  84%, 99%  { background-image: url('/themes/scoups/viewfinder.svg'), var(--shade), url('/themes/scoups/market-cart.jpg'); }
+  100%      { background-image: url('/themes/scoups/viewfinder.svg'), var(--shade), url('/themes/scoups/milan-night.jpg'); }
+}
+/* the date stamp, burned into the corner */
+[data-skin='scoups'] .hero::after {
+  content: "’25  03  01";
+  position: absolute;
+  right: 40px;
+  bottom: 30px;
+  font: 700 1.05rem/1 'Space Mono', monospace;
+  letter-spacing: 0.14em;
+  color: #ff9a3c;
+  text-shadow: 0 0 6px rgba(255, 140, 50, 0.9), 0 0 16px rgba(255, 110, 40, 0.6);
+}
+[data-skin='scoups'] .hero > * { position: relative; z-index: 1; }
+[data-skin='scoups'] .hero__title { background: linear-gradient(180deg, #fff6e8 30%, #d9c6a8); -webkit-background-clip: text; background-clip: text; font-style: italic; }
+[data-skin='scoups'] .hero__equation { color: #e8a04a; -webkit-text-fill-color: #e8a04a; background: none; }
+[data-skin='scoups'] .hero__lede { color: #e9dfcf; }
+@media (max-width: 720px) {
+  [data-skin='scoups'] .hero { padding: 120px 18px 56px; }
+  [data-skin='scoups'] .hero::after { right: 24px; bottom: 18px; font-size: 0.85rem; }
+}
+
+/* ---------- instant prints beside page titles ---------- */
+
+[data-skin='scoups'] .page-head { position: relative; }
+[data-skin='scoups'] .page-head:has(~ .timeline) { --photo: url('/themes/scoups/shibuya.jpg'); --caption: 'shibuya ☼'; }
+[data-skin='scoups'] .page-head:has(~ .game-list) { --photo: url('/themes/scoups/market-cart.jpg'); --caption: 'snack run :)'; }
+[data-skin='scoups'] .page-head:has(.music__ctas) { --photo: url('/themes/scoups/hasselblad.jpg'); --caption: 'say cheese'; }
+[data-skin='scoups'] .page-head:has(~ .unit),
+[data-skin='scoups'] .page-head:has(.tabs) { --photo: url('/themes/scoups/snow-coat.jpg'); --caption: 'first snow'; }
+@media (min-width: 900px) {
+  [data-skin='scoups'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 270px;
+    padding-right: 260px;
+  }
+  [data-skin='scoups'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: -6px;
+    width: 196px;
+    height: 250px;
+    border: 10px solid #f4eee4;
+    border-bottom-width: 46px;
+    border-radius: 3px;
+    background: var(--photo) center 25% / cover;
+    transform: rotate(3deg);
+    box-shadow: 0 22px 40px -18px rgba(0, 0, 0, 0.85);
+  }
+  /* a pen caption on the print */
+  [data-skin='scoups'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: var(--caption);
+    position: absolute;
+    z-index: 1;
+    right: 30px;
+    top: 210px;
+    width: 176px;
+    text-align: center;
+    font: 700 1.3rem/1 'Caveat', cursive;
+    color: #3a3330;
+    transform: rotate(3deg);
+  }
+}
+
+/* ---------- tracklists become a strip of negatives ---------- */
+
+[data-skin='scoups'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 26px 16px;
+  background:
+    radial-gradient(circle at 50% 50%, #f2e8d8 0 3px, transparent 3.6px) top 9px left 0 / 22px 10px repeat-x,
+    radial-gradient(circle at 50% 50%, #f2e8d8 0 3px, transparent 3.6px) bottom 9px left 0 / 22px 10px repeat-x,
+    #1a1715;
+  border-radius: 6px;
+  box-shadow: 0 20px 40px -22px rgba(0, 0, 0, 0.9);
+}
+[data-skin='scoups'] .main .tracks .tracks__row,
+[data-skin='scoups'] .main .tracks button { border-bottom-color: rgba(242, 232, 216, 0.08); }
+[data-skin='scoups'] .main .tracks button:hover { background: rgba(232, 160, 74, 0.1); }
+[data-skin='scoups'] .main .tracks .tracks__num { color: #ff9a3c; text-shadow: 0 0 6px rgba(255, 140, 50, 0.6); }
+[data-skin='scoups'] .main .tracks .tracks__title { color: #f2e8d8; }
+[data-skin='scoups'] .main .tracks .tracks__native,
+[data-skin='scoups'] .main .tracks .tracks__note,
+[data-skin='scoups'] .main .tracks .tracks__nolink,
+[data-skin='scoups'] .main .tracks .tracks__disc,
+[data-skin='scoups'] .main .tracks .tracks__open { color: rgba(242, 232, 216, 0.55); }
+[data-skin='scoups'] .main .tracks .chip { color: #e8a04a; background: transparent; border: 1.5px solid rgba(232, 160, 74, 0.6); }
+[data-skin='scoups'] .main .tracks li.is-playing .tracks__title { color: #ff9a3c; }
+[data-skin='scoups'] .main .tracks .like-btn.is-liked { color: #ff6b5a; }
+
+/* ---------- sign in / register: the tapestry and the glasses ---------- */
+
+[data-skin='scoups'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(20, 18, 16, 0), rgba(20, 18, 16, 0.45)),
+    url('/themes/scoups/tapestry.jpg') center 30% / cover;
+}
+[data-skin='scoups'] .auth__glow { background: radial-gradient(circle, rgba(232, 160, 74, 0.38), transparent 65%); }
+[data-skin='scoups'] .auth__gem { content: url('/themes/scoups/camera.svg'); width: 96px; height: 78px; }
+[data-skin='scoups'] .auth__switch a { color: #f2e8d8; text-decoration-color: #e8a04a; }
+
+/* ---------- Now Playing: the yellow tram in Milan ---------- */
+
+[data-skin='scoups'] .np {
+  --np-bg: #141210;
+  --np-ink: #f2e8d8;
+  --np-label: #e8a04a;
+  --np-label2: #8fa7b8;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(20, 18, 16, 0.78)),
+    url('/themes/scoups/milan-tram.jpg') center / cover,
+    #141210;
+}
+[data-skin='scoups'] .np__deck { background: rgba(26, 23, 21, 0.9); color: #f2e8d8; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.9); }
+/* keeps the words readable over the photo */
+[data-skin='scoups'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(20, 18, 16, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='scoups'] .np__title { color: #f2e8d8; font-style: italic; }
+[data-skin='scoups'] .np__album { font-family: 'Space Mono', monospace; color: #ff9a3c; letter-spacing: 0.1em; text-shadow: 0 0 6px rgba(255, 140, 50, 0.7); }
+[data-skin='scoups'] .np__blurb { color: rgba(242, 232, 216, 0.82); }
+[data-skin='scoups'] .np__label { background: url('/themes/scoups/camera.svg') center / 62% no-repeat, #2a2622; }
+[data-skin='scoups'] .np-wave span { background: linear-gradient(#f2e8d8, #e8a04a); }
+[data-skin='scoups'] .np-ctrl .np-ctrl__main { background: #f2e8d8; color: #141210; }
+
+/* ---------- footer: smiling at the crosswalk ---------- */
+
+[data-skin='scoups'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #f2e8d8;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(20, 18, 16, 0) 28%, rgba(20, 18, 16, 0) 58%, rgba(12, 10, 9, 0.92) 92%),
+    url('/themes/scoups/milan-smile.jpg') center 40% / cover;
+}
+[data-skin='scoups'] .footer a { color: #f2e8d8; text-decoration-color: #e8a04a; }
+
+/* ---------- the little cursor sparkles turn to light leaks ---------- */
+
+[data-skin='scoups'] .sparkle { color: #ff9a3c; }
+[data-skin='scoups'] .sparkle:nth-child(odd) { color: #f2e8d8; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-skin='scoups'] .hero::before { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--film::before {
+  background-image: url('/themes/scoups/grain.svg'), url('/themes/scoups/filmstrip.svg');
+  background-size: 160px, 16px 21px;
+  background-position: 0 0, 100% 0;
+  background-repeat: repeat, repeat-y;
+  opacity: 0.6;
+}
+.tp--scoups::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 52px;
+  width: 52px;
+  height: 42px;
+  background: url('/themes/scoups/camera.svg') center / contain no-repeat;
+}
+.tp--scoups .tp__title { color: #f2e8d8; font-style: italic; }

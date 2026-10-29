@@ -1,0 +1,320 @@
+/* ============================================================
+   "The8 Aesthetics" skin: the painter's gallery. Gallery-white
+   walls, charcoal ink, olive and butterfly blue, quiet lowercase
+   type, ink-brush circles and strokes, round glasses and the
+   spiral butterfly from his T-shirt; framed photos with museum
+   labels (public/themes/the8/).
+   Switched on by theme tokens with skin: 'the8'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "ink" background pattern (works with any theme) ---------- */
+
+[data-pattern='ink'] .bg-pattern {
+  opacity: 0.4;
+  background-image:
+    url('/themes/the8/enso.svg'),
+    url('/themes/the8/glasses.svg'),
+    url('/themes/the8/enso.svg'),
+    url('/themes/the8/butterfly.svg'),
+    url('/themes/the8/brush.svg'),
+    url('/themes/the8/brush.svg');
+  background-size: 62px, 44px 22px, 34px, 30px, 380px 30px, 300px 24px;
+  background-position: 6% 16%, 90% 12%, 88% 82%, 10% 86%, -80px 40%, calc(100% + 90px) 64%;
+  background-repeat: no-repeat;
+}
+/* the butterfly off his T-shirt, drifting across the gallery */
+[data-pattern='ink'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 46px;
+  height: 42px;
+  right: 8%;
+  top: 30%;
+  background: url('/themes/the8/butterfly.svg') center / contain no-repeat;
+  filter: drop-shadow(0 8px 10px rgba(60, 120, 180, 0.25));
+  animation: the8-flutter 11s ease-in-out infinite;
+}
+@keyframes the8-flutter {
+  25% { transform: translate(-24px, -18px) rotate(-10deg) scaleX(0.85); }
+  50% { transform: translate(-40px, 10px) rotate(6deg); }
+  75% { transform: translate(-12px, 24px) rotate(-4deg) scaleX(0.9); }
+}
+[data-dark='true'][data-pattern='ink'] .bg-pattern { opacity: 0.25; filter: invert(1); }
+[data-dark='true'][data-pattern='ink'] .bg-pattern::before { filter: invert(1); }
+@media (max-width: 720px) {
+  [data-pattern='ink'] .bg-pattern::before { width: 32px; height: 30px; right: 4%; }
+}
+
+/* ---------- the skin ---------- */
+
+/* a white gallery with the afternoon sun on the wall */
+[data-skin='the8'] body {
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(255, 246, 220, 0.5) 34%, transparent 40%, transparent 52%, rgba(255, 246, 220, 0.4) 55%, transparent 60%),
+    radial-gradient(800px 520px at 100% 100%, rgba(127, 167, 201, 0.14), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+/* headings: lowercase, quiet, with an ink brush stroke underneath */
+[data-skin='the8'] .main h1 { color: #1a1a1a; text-transform: lowercase; letter-spacing: -0.02em; font-weight: 600; }
+[data-skin='the8'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(220px, 60%);
+  height: 14px;
+  margin-top: 8px;
+  background: url('/themes/the8/brush.svg') left center / 100% 100% no-repeat;
+}
+[data-skin='the8'] .eyebrow { color: #5f6340; letter-spacing: 0.24em; text-transform: lowercase; }
+
+/* nav: a plain white plinth */
+[data-skin='the8'] .nav {
+  background: rgba(255, 255, 255, 0.86);
+  border-color: rgba(26, 26, 26, 0.1);
+  box-shadow: 0 14px 30px -24px rgba(26, 26, 26, 0.5);
+}
+[data-skin='the8'] .nav__logo::after {
+  content: '';
+  width: 22px;
+  height: 22px;
+  margin-left: 2px;
+  background: url('/themes/the8/enso.svg') center / contain no-repeat;
+}
+
+/* cards: white with square corners and a hairline, like a mounted print */
+[data-skin='the8'] .main .card,
+[data-skin='the8'] .auth {
+  background: #ffffff;
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  border-radius: 4px;
+  box-shadow: 0 20px 40px -30px rgba(26, 26, 26, 0.45);
+}
+[data-skin='the8'] .main .btn,
+[data-skin='the8'] .acct--signin {
+  color: #f2f1ee;
+  background: #1a1a1a;
+  border-radius: 4px;
+  box-shadow: none;
+}
+[data-skin='the8'] .main .btn:hover { background: #5f6340; }
+[data-skin='the8'] .main .btn--ghost {
+  color: #1a1a1a;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px #1a1a1a;
+}
+[data-skin='the8'] .main .chip { border-radius: 4px; border-color: rgba(95, 99, 64, 0.35); background: rgba(95, 99, 64, 0.08); }
+
+/* ---------- home: one framed photo after another ---------- */
+
+[data-skin='the8'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f2f1ee;
+  outline: 1px solid rgba(26, 26, 26, 0.12);
+  outline-offset: 10px;
+  box-shadow: 0 30px 60px -38px rgba(26, 26, 26, 0.5);
+}
+[data-skin='the8'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --shade: linear-gradient(180deg, rgba(242, 241, 238, 0) 22%, rgba(242, 241, 238, 0.9) 74%, #f2f1ee);
+  background: var(--shade), url('/themes/the8/sea-boat.jpg') center 22% / cover;
+  animation: the8-gallery 40s infinite;
+}
+@keyframes the8-gallery {
+  0%, 18%   { background-image: var(--shade), url('/themes/the8/sea-boat.jpg'); }
+  20%, 38%  { background-image: var(--shade), url('/themes/the8/garden-butterfly.jpg'); }
+  40%, 58%  { background-image: var(--shade), url('/themes/the8/glasses-cardigan.jpg'); }
+  60%, 78%  { background-image: var(--shade), url('/themes/the8/window-coffee.jpg'); }
+  80%, 98%  { background-image: var(--shade), url('/themes/the8/sofa-coat.jpg'); }
+  100%      { background-image: var(--shade), url('/themes/the8/sea-boat.jpg'); }
+}
+/* a signature, as if on the canvas */
+[data-skin='the8'] .hero::after {
+  content: 'the8 · 明浩';
+  position: absolute;
+  right: 28px;
+  top: 22px;
+  padding: 4px 14px;
+  font: 700 1.4rem/1.2 'Caveat', cursive;
+  color: #1a1a1a;
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 4px;
+  box-shadow: 0 8px 18px -12px rgba(26, 26, 26, 0.5);
+}
+[data-skin='the8'] .hero > * { position: relative; z-index: 1; }
+[data-skin='the8'] .hero__title { text-transform: lowercase; background: linear-gradient(120deg, #1a1a1a 30%, #3c78b4); -webkit-background-clip: text; background-clip: text; }
+[data-skin='the8'] .hero__equation { color: #5f6340; -webkit-text-fill-color: #5f6340; background: none; }
+[data-skin='the8'] .hero__lede { color: #33332f; }
+@media (max-width: 720px) {
+  [data-skin='the8'] .hero { padding: 120px 18px 40px; outline-offset: 6px; }
+  [data-skin='the8'] .hero::after { right: 14px; top: 14px; font-size: 1.05rem; }
+}
+
+/* ---------- framed photos with a museum label beside page titles ---------- */
+
+[data-skin='the8'] .page-head { position: relative; }
+[data-skin='the8'] .page-head:has(~ .timeline) { --photo: url('/themes/the8/garden-butterfly.jpg'); --label: 'Garden, with butterfly'; }
+[data-skin='the8'] .page-head:has(~ .game-list) { --photo: url('/themes/the8/glasses-cardigan.jpg'); --label: 'Self-portrait in glasses'; }
+[data-skin='the8'] .page-head:has(.music__ctas) { --photo: url('/themes/the8/sofa-coat.jpg'); --label: 'Afternoon, black coat'; }
+[data-skin='the8'] .page-head:has(~ .unit),
+[data-skin='the8'] .page-head:has(.tabs) { --photo: url('/themes/the8/window-coffee.jpg'); --label: 'Coffee by the window'; }
+@media (min-width: 900px) {
+  [data-skin='the8'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 300px;
+    padding-right: 260px;
+  }
+  /* black frame, white mat */
+  [data-skin='the8'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: -4px;
+    width: 196px;
+    height: 250px;
+    border: 16px solid #ffffff;
+    outline: 5px solid #1a1a1a;
+    background: var(--photo) center 25% / cover;
+    box-shadow: 0 26px 40px -24px rgba(26, 26, 26, 0.6);
+  }
+  /* the little card on the wall beneath it */
+  [data-skin='the8'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: var(--label) '\A Xu Minghao · photograph';
+    white-space: pre;
+    position: absolute;
+    right: 20px;
+    top: 262px;
+    padding: 5px 9px;
+    font: 500 0.68rem/1.45 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: #33332f;
+    background: #ffffff;
+    border: 1px solid rgba(26, 26, 26, 0.12);
+  }
+}
+
+/* ---------- tracklists become the exhibition list ---------- */
+
+[data-skin='the8'] .main .tracks {
+  --ink: #1a1a1a;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 56px 18px 14px;
+  color: var(--ink);
+  background:
+    url('/themes/the8/brush.svg') top 16px left 18px / 150px 18px no-repeat,
+    #ffffff;
+  border: 1px solid rgba(26, 26, 26, 0.12);
+  border-radius: 4px;
+  box-shadow: 0 16px 30px -24px rgba(26, 26, 26, 0.5);
+}
+[data-skin='the8'] .main .tracks::before {
+  content: 'works on view';
+  position: absolute;
+  top: 12px;
+  right: 22px;
+  padding-right: 30px;
+  font: 600 0.75rem/24px 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: 0.22em;
+  color: #5f6340;
+  background: url('/themes/the8/enso.svg') right center / 22px no-repeat;
+}
+[data-skin='the8'] .main .tracks .tracks__row,
+[data-skin='the8'] .main .tracks button { border-bottom-color: rgba(26, 26, 26, 0.08); }
+[data-skin='the8'] .main .tracks button:hover { background: rgba(127, 167, 201, 0.12); }
+[data-skin='the8'] .main .tracks .tracks__num { color: #5f6340; font-variant-numeric: tabular-nums; }
+[data-skin='the8'] .main .tracks .tracks__title { color: var(--ink); }
+[data-skin='the8'] .main .tracks .chip { color: #3c78b4; background: transparent; border: 1px solid rgba(60, 120, 180, 0.5); }
+[data-skin='the8'] .main .tracks li.is-playing .tracks__title { color: #3c78b4; }
+[data-skin='the8'] .main .tracks .like-btn.is-liked { color: #d0697f; }
+
+/* ---------- sign in / register: sunlight on the wall, glasses on ---------- */
+
+[data-skin='the8'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(242, 241, 238, 0), rgba(242, 241, 238, 0.25)),
+    url('/themes/the8/glasses-cardigan.jpg') center 45% / cover;
+}
+[data-skin='the8'] .auth__glow { background: radial-gradient(circle, rgba(127, 167, 201, 0.4), transparent 65%); }
+[data-skin='the8'] .auth__gem { content: url('/themes/the8/butterfly.svg'); width: 90px; height: 82px; }
+[data-skin='the8'] .auth__switch a { color: #3c78b4; }
+
+/* ---------- Now Playing: leaning back on the grey sofa ---------- */
+
+[data-skin='the8'] .np {
+  --np-bg: #1a1a1a;
+  --np-ink: #f2f1ee;
+  --np-label: #efe6b8;
+  --np-label2: #bfd6ea;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(26, 26, 26, 0.72)),
+    url('/themes/the8/sofa-coat.jpg') center 30% / cover,
+    #1a1a1a;
+}
+[data-skin='the8'] .np__deck { background: rgba(255, 255, 255, 0.94); color: #1a1a1a; border-radius: 4px; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); }
+/* keeps the words readable over the photo */
+[data-skin='the8'] .np__text {
+  padding: 22px 26px;
+  border-radius: 4px;
+  background: rgba(26, 26, 26, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='the8'] .np__title { color: #f2f1ee; text-transform: lowercase; }
+[data-skin='the8'] .np__album { font-family: 'Caveat', cursive; font-size: clamp(1.3rem, 2.4vw, 1.8rem); color: #bfd6ea; }
+[data-skin='the8'] .np__blurb { color: rgba(242, 241, 238, 0.85); }
+[data-skin='the8'] .np__label { background: url('/themes/the8/enso.svg') center / 56% no-repeat, #ffffff; }
+[data-skin='the8'] .np-wave span { background: linear-gradient(#bfd6ea, #efe6b8); }
+[data-skin='the8'] .np-ctrl .np-ctrl__main { background: #f2f1ee; color: #1a1a1a; }
+
+/* ---------- footer: the sea from the boat ---------- */
+
+[data-skin='the8'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #f2f1ee;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(242, 241, 238, 0) 30%, rgba(20, 40, 60, 0) 56%, rgba(14, 26, 40, 0.88) 92%),
+    url('/themes/the8/sea-boat.jpg') center 46% / cover;
+}
+[data-skin='the8'] .footer a { color: #efe6b8; }
+
+/* ---------- the little cursor sparkles turn ink and blue ---------- */
+
+[data-skin='the8'] .sparkle { color: #1a1a1a; }
+[data-skin='the8'] .sparkle:nth-child(odd) { color: #3c78b4; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='ink'] .bg-pattern::before,
+  [data-skin='the8'] .hero::before { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--ink::before {
+  background-image: url('/themes/the8/enso.svg'), url('/themes/the8/butterfly.svg'), url('/themes/the8/brush.svg');
+  background-size: 26px, 16px, 160px 14px;
+  background-position: 90% 24%, 12% 76%, -20px 62%;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+}
+.tp--the8::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50px;
+  width: 48px;
+  height: 48px;
+  background: url('/themes/the8/enso.svg') center / contain no-repeat;
+}
+.tp--the8 .tp__title { color: #1a1a1a; text-transform: lowercase; }

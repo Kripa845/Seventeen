@@ -587,6 +587,14 @@
 .stk-tape--gold { background: linear-gradient(100deg, #e7c25a, #fff1b8 40%, #d9a400 70%, #f5d77a); }
 .stk-tape--check { background: repeating-conic-gradient(#ff8fb1 0 25%, #fff 0 50%) 0 0 / 10cqw 10cqw; }
 .stk-tape--stripe { background: repeating-linear-gradient(45deg, #7d93c9 0 4cqw, #fff 4cqw 8cqw); }
+.stk-tape--peach { background-color: #ffc9a8; }
+.stk-tape--sky { background-color: #bfe3ff; }
+.stk-tape--serenity { background: linear-gradient(90deg, #f7cac9, #92a8d1); }
+.stk-tape--grid { background: #fffdf6 linear-gradient(#9fb4e6 0.4cqw, transparent 0.4cqw) 0 0 / 5cqw 5cqw, linear-gradient(90deg, #9fb4e6 0.4cqw, transparent 0.4cqw) 0 0 / 5cqw 5cqw; }
+.stk-tape--hearts { background: #ffe1ea radial-gradient(circle at 35% 40%, #ff6f91 1.2cqw, transparent 1.4cqw) 0 0 / 7cqw 7cqw, radial-gradient(circle at 65% 40%, #ff6f91 1.2cqw, transparent 1.4cqw) 0 0 / 7cqw 7cqw; }
+.stk-tape--stars { background: #2b3a67 radial-gradient(circle, #ffe08a 0.9cqw, transparent 1.2cqw) 0 0 / 6cqw 6cqw, radial-gradient(circle, #fff 0.5cqw, transparent 0.8cqw) 3cqw 3cqw / 6cqw 6cqw; }
+.stk-tape--black { background: repeating-linear-gradient(90deg, #1d1d1f 0 6cqw, #2b2b2e 6cqw 12cqw); }
+.stk-tape--holo { background: linear-gradient(110deg, #ffd1f0, #c8f0ff 25%, #fff3b0 50%, #d6c4ff 75%, #ffd1f0); }
 .stk-tape--dots { background: #fff3c4 radial-gradient(circle, #e8476b 1.6cqw, transparent 1.9cqw) 0 0 / 8cqw 8cqw; }
 
 .stk-label {
@@ -670,6 +678,31 @@
   filter: drop-shadow(0.8cqw 0 0 #fff) drop-shadow(-0.8cqw 0 0 #fff) drop-shadow(0 0.8cqw 0 #fff) drop-shadow(0 -0.8cqw 0 #fff);
 }
 .stk-label--ransom { font-size: calc(130cqw / var(--len)); }
+/* a concert ticket stub, with notches */
+.stk-label--ticket {
+  padding: 0.35em 0.9em;
+  color: #fff;
+  background:
+    radial-gradient(circle at 0 50%, transparent 0.32em, #e8476b 0.34em) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 50%, transparent 0.32em, #e8476b 0.34em) right / 51% 100% no-repeat;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-size: calc(115cqw / var(--len));
+  outline: 0.6cqw dashed rgba(255, 255, 255, 0.7);
+  outline-offset: -1.6cqw;
+}
+/* glowing neon tubes */
+.stk-label--neon {
+  padding: 0.25em 0.5em;
+  color: #fff;
+  background: #1d1a2b;
+  border-radius: 0.4em;
+  font-family: 'Pacifico', cursive;
+  font-size: calc(140cqw / var(--len));
+  text-shadow: 0 0 0.12em #fff, 0 0 0.3em #ff6fb5, 0 0 0.6em #ff6fb5, 0 0 1em #b06fff;
+  box-shadow: 0 0 0 0.8cqw #ff6fb5, 0 0 3cqw #ff6fb5;
+}
 .ransom__ch {
   display: inline-block;
   padding: 0.04em 0.1em;
@@ -1351,3 +1384,6 @@
 .dvideo-box__frame iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 14px; background: #000; }
 .dvideo-box__frame video { width: 100%; max-height: 80vh; border-radius: 14px; background: #000; }
 .dvideo-box__caption { margin: 0; text-align: center; color: #f3f4fb; font-family: 'Caveat', cursive; font-size: 1.6rem; }
+
+/* who wrote the open page */
+.diary__by { font-weight: 500; opacity: 0.75; }

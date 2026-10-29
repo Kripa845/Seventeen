@@ -1,0 +1,318 @@
+/* ============================================================
+   "Vernon Aesthetics" skin: a summer afternoon. Pale sky and
+   white, sky-blue shirts, lemon yellow from the lemon in his hand
+   and the wall of yellow mums, the navy-and-orange stripes of his
+   knit tie, thin gold wire glasses, clouds over the hills and the
+   white fence (public/themes/vernon/).
+   Switched on by theme tokens with skin: 'vernon'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "lemons" background pattern (works with any theme) ---------- */
+
+[data-pattern='lemons'] .bg-pattern {
+  opacity: 0.45;
+  background-image:
+    url('/themes/vernon/lemon.svg'),
+    url('/themes/vernon/mum.svg'),
+    url('/themes/vernon/glasses.svg'),
+    url('/themes/vernon/lemon.svg'),
+    url('/themes/vernon/mum.svg'),
+    url('/themes/vernon/cloud.svg');
+  background-size: 40px 32px, 26px, 40px 17px, 28px 22px, 18px, 70px 35px;
+  background-position: 6% 18%, 92% 14%, 88% 80%, 11% 84%, 95% 50%, 3% 50%;
+  background-repeat: no-repeat;
+}
+/* one cloud drifting slowly across the top of the page */
+[data-pattern='lemons'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 96px;
+  height: 48px;
+  left: 100%;
+  top: 9%;
+  background: url('/themes/vernon/cloud.svg') center / contain no-repeat;
+  animation: vn-cloud 70s linear infinite;
+}
+@keyframes vn-cloud {
+  to { transform: translateX(calc(-100vw - 120px)); }
+}
+[data-dark='true'][data-pattern='lemons'] .bg-pattern { opacity: 0.28; }
+@media (max-width: 720px) {
+  [data-pattern='lemons'] .bg-pattern::before { width: 64px; height: 32px; }
+}
+
+/* ---------- the skin ---------- */
+
+/* sky overhead, a little sun in the corner */
+[data-skin='vernon'] body {
+  background:
+    radial-gradient(900px 520px at 90% -10%, rgba(244, 207, 69, 0.22), transparent 70%),
+    radial-gradient(1000px 600px at 10% -20%, rgba(169, 200, 232, 0.45), transparent 70%),
+    var(--bg);
+}
+
+/* headings: bold and relaxed, underlined with the knit-tie stripes */
+[data-skin='vernon'] .main h1 { color: #1a2433; font-weight: 800; letter-spacing: -0.02em; }
+[data-skin='vernon'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(200px, 50%);
+  height: 7px;
+  margin-top: 10px;
+  border-radius: 4px;
+  background: repeating-linear-gradient(90deg, #3b4f6e 0 16px, #d9733a 16px 22px, #b8452f 22px 25px, #d9733a 25px 31px);
+}
+[data-skin='vernon'] .eyebrow { color: #4a7fb8; letter-spacing: 0.2em; text-transform: uppercase; }
+
+/* nav: white and airy, his wire glasses on the logo */
+[data-skin='vernon'] .nav {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(74, 127, 184, 0.14);
+  box-shadow: 0 14px 34px -22px rgba(40, 70, 110, 0.45);
+}
+[data-skin='vernon'] .nav__logo::after {
+  content: '';
+  width: 32px;
+  height: 14px;
+  margin-left: 4px;
+  background: url('/themes/vernon/glasses.svg') center / contain no-repeat;
+}
+
+/* cards: white, with a soft sky-blue edge like his shirt */
+[data-skin='vernon'] .main .card,
+[data-skin='vernon'] .auth {
+  background: #ffffff;
+  border: 1px solid rgba(74, 127, 184, 0.16);
+  box-shadow: 0 18px 40px -28px rgba(40, 70, 110, 0.5);
+}
+[data-skin='vernon'] .main .btn,
+[data-skin='vernon'] .acct--signin {
+  color: #ffffff;
+  background: #3e6fa6;
+  box-shadow: 0 10px 22px -12px rgba(62, 111, 166, 0.7);
+}
+[data-skin='vernon'] .main .btn:hover { background: #335d8c; }
+[data-skin='vernon'] .main .btn--ghost {
+  color: #1a2433;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 0 0 1.5px #e8b92e;
+}
+[data-skin='vernon'] .main .chip { border-color: rgba(74, 127, 184, 0.3); background: rgba(169, 200, 232, 0.2); }
+
+/* ---------- home: a slow summer slideshow, each photo drifting a little closer ---------- */
+
+[data-skin='vernon'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #f4f7fa;
+  box-shadow: 0 30px 60px -34px rgba(40, 70, 110, 0.55);
+}
+[data-skin='vernon'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --shade: linear-gradient(180deg, rgba(244, 247, 250, 0) 22%, rgba(244, 247, 250, 0.9) 74%, #f4f7fa);
+  background: var(--shade), url('/themes/vernon/fence-sky.jpg') center 25% / cover;
+  /* six photos, 7s each; the zoom resets right as the next photo fades in */
+  animation: vn-show 42s infinite, vn-drift 7s -0.35s ease-out infinite;
+}
+@keyframes vn-show {
+  0%, 15%      { background-image: var(--shade), url('/themes/vernon/fence-sky.jpg'); }
+  16.7%, 31.7% { background-image: var(--shade), url('/themes/vernon/lemon-hoodie.jpg'); }
+  33.3%, 48.3% { background-image: var(--shade), url('/themes/vernon/stage-tie.jpg'); }
+  50%, 65%     { background-image: var(--shade), url('/themes/vernon/mums-blazer.jpg'); }
+  66.7%, 81.7% { background-image: var(--shade), url('/themes/vernon/denim-film.jpg'); }
+  83.3%, 98.3% { background-image: var(--shade), url('/themes/vernon/cap-practice.jpg'); }
+  100%         { background-image: var(--shade), url('/themes/vernon/fence-sky.jpg'); }
+}
+@keyframes vn-drift {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+/* a handwritten signature in the corner */
+[data-skin='vernon'] .hero::after {
+  content: 'Vernon · 한솔 🍋';
+  position: absolute;
+  right: 28px;
+  top: 22px;
+  padding: 4px 14px;
+  font: 700 1.35rem/1.2 'Caveat', cursive;
+  color: #1a2433;
+  background: rgba(255, 246, 201, 0.92);
+  border-radius: 999px;
+  transform: rotate(-3deg);
+  box-shadow: 0 8px 18px -10px rgba(40, 70, 110, 0.5);
+}
+[data-skin='vernon'] .hero > * { position: relative; z-index: 1; }
+[data-skin='vernon'] .hero__title { background: linear-gradient(120deg, #1a2433 30%, #4a7fb8); -webkit-background-clip: text; background-clip: text; }
+[data-skin='vernon'] .hero__equation { color: #c9971a; -webkit-text-fill-color: #c9971a; background: none; }
+[data-skin='vernon'] .hero__lede { color: #2e3a4c; }
+@media (max-width: 720px) {
+  [data-skin='vernon'] .hero { padding: 120px 18px 40px; }
+  [data-skin='vernon'] .hero::after { right: 14px; top: 14px; font-size: 1.05rem; }
+}
+
+/* ---------- white-bordered snapshots beside page titles, a lemon sticker on the corner ---------- */
+
+[data-skin='vernon'] .page-head { position: relative; }
+[data-skin='vernon'] .page-head:has(~ .timeline) { --photo: url('/themes/vernon/cap-practice.jpg'); }
+[data-skin='vernon'] .page-head:has(~ .game-list) { --photo: url('/themes/vernon/lemon-hoodie.jpg'); }
+[data-skin='vernon'] .page-head:has(.music__ctas) { --photo: url('/themes/vernon/stage-tie.jpg'); }
+[data-skin='vernon'] .page-head:has(~ .unit),
+[data-skin='vernon'] .page-head:has(.tabs) { --photo: url('/themes/vernon/mums-blazer.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='vernon'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 270px;
+    padding-right: 250px;
+  }
+  [data-skin='vernon'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: -4px;
+    width: 190px;
+    height: 254px;
+    border: 8px solid #ffffff;
+    border-bottom-width: 30px;
+    border-radius: 6px;
+    background: var(--photo) center 25% / cover;
+    transform: rotate(2.5deg);
+    box-shadow: 0 22px 40px -22px rgba(40, 70, 110, 0.6);
+  }
+  [data-skin='vernon'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    top: -14px;
+    width: 46px;
+    height: 37px;
+    background: url('/themes/vernon/lemon.svg') center / contain no-repeat;
+    transform: rotate(18deg);
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.18));
+  }
+}
+
+/* ---------- tracklists become a mixtape J-card, striped like the knit tie ---------- */
+
+[data-skin='vernon'] .main .tracks {
+  --ink: #1a2433;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 62px 18px 14px;
+  color: var(--ink);
+  background:
+    repeating-linear-gradient(90deg, #3b4f6e 0 22px, #d9733a 22px 30px, #b8452f 30px 34px, #d9733a 34px 42px) left top / 100% 10px no-repeat,
+    linear-gradient(180deg, #e3eef9, #ffffff 140px);
+  border: 1px solid rgba(74, 127, 184, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 16px 30px -22px rgba(40, 70, 110, 0.5);
+}
+[data-skin='vernon'] .main .tracks::before {
+  content: "side A · hansol's mix";
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  padding-left: 34px;
+  font: 700 1.45rem/1.2 'Caveat', cursive;
+  color: #3e6fa6;
+  background: url('/themes/vernon/lemon.svg') left center / 28px 22px no-repeat;
+}
+[data-skin='vernon'] .main .tracks .tracks__row,
+[data-skin='vernon'] .main .tracks button { border-bottom-color: rgba(74, 127, 184, 0.14); }
+[data-skin='vernon'] .main .tracks button:hover { background: rgba(244, 207, 69, 0.16); }
+[data-skin='vernon'] .main .tracks .tracks__num { color: #d9733a; font-variant-numeric: tabular-nums; }
+[data-skin='vernon'] .main .tracks .tracks__title { color: var(--ink); }
+[data-skin='vernon'] .main .tracks .chip { color: #3e6fa6; background: transparent; border: 1.5px solid rgba(62, 111, 166, 0.5); }
+[data-skin='vernon'] .main .tracks li.is-playing .tracks__title { color: #3e6fa6; }
+[data-skin='vernon'] .main .tracks .like-btn.is-liked { color: #d0566f; }
+
+/* ---------- sign in / register: the wall of yellow mums ---------- */
+
+[data-skin='vernon'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(244, 247, 250, 0), rgba(169, 200, 232, 0.3)),
+    url('/themes/vernon/mums-blazer.jpg') center 25% / cover;
+}
+[data-skin='vernon'] .auth__glow { background: radial-gradient(circle, rgba(244, 207, 69, 0.4), transparent 65%); }
+[data-skin='vernon'] .auth__gem { content: url('/themes/vernon/lemon.svg'); width: 92px; height: 74px; }
+[data-skin='vernon'] .auth__switch a { color: #3e6fa6; }
+
+/* ---------- Now Playing: the blue jacket against the steel wall, on film ---------- */
+
+[data-skin='vernon'] .np {
+  --np-bg: #121a26;
+  --np-ink: #ffffff;
+  --np-label: #f4cf45;
+  --np-label2: #a9c8e8;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(18, 26, 38, 0.75)),
+    url('/themes/vernon/denim-film.jpg') center 25% / cover,
+    #121a26;
+}
+[data-skin='vernon'] .np__deck { background: rgba(255, 255, 255, 0.94); color: #1a2433; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); }
+/* keeps the words readable over the photo */
+[data-skin='vernon'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(18, 26, 38, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='vernon'] .np__title { color: #ffffff; letter-spacing: -0.02em; }
+[data-skin='vernon'] .np__album { font-family: 'Caveat', cursive; font-size: clamp(1.3rem, 2.4vw, 1.8rem); color: #f4cf45; }
+[data-skin='vernon'] .np__blurb { color: rgba(255, 255, 255, 0.85); }
+[data-skin='vernon'] .np__label { background: url('/themes/vernon/lemon.svg') center / 60% no-repeat, #ffffff; }
+[data-skin='vernon'] .np-wave span { background: linear-gradient(#f4cf45, #a9c8e8); }
+[data-skin='vernon'] .np-ctrl .np-ctrl__main { background: #ffffff; color: #1a2433; }
+
+/* ---------- footer: the hills, the grass and the white fence ---------- */
+
+[data-skin='vernon'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #ffffff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.75);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(244, 247, 250, 0) 30%, rgba(20, 40, 20, 0) 56%, rgba(16, 30, 18, 0.8) 94%),
+    url('/themes/vernon/fence-sky.jpg') 30% 80% / cover;
+}
+[data-skin='vernon'] .footer a { color: #f4cf45; }
+
+/* ---------- the little cursor sparkles turn sky and lemon ---------- */
+
+[data-skin='vernon'] .sparkle { color: #4a7fb8; }
+[data-skin='vernon'] .sparkle:nth-child(odd) { color: #e8b92e; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='lemons'] .bg-pattern::before,
+  [data-skin='vernon'] .hero::before { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--lemons::before {
+  background-image: url('/themes/vernon/lemon.svg'), url('/themes/vernon/mum.svg'), url('/themes/vernon/cloud.svg');
+  background-size: 20px 16px, 14px, 30px 15px;
+  background-position: 90% 26%, 12% 74%, 70% 84%;
+  background-repeat: no-repeat;
+  opacity: 0.75;
+}
+.tp--vernon::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 56px;
+  width: 52px;
+  height: 22px;
+  background: url('/themes/vernon/glasses.svg') center / contain no-repeat;
+}
+.tp--vernon .tp__title { color: #1a2433; font-weight: 800; }

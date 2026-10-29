@@ -1,0 +1,317 @@
+/* ============================================================
+   "Aju Nice" skin (Very Nice, Love & Letter Repackage, 2016):
+   summer sky, the pastel school building with turquoise stripes,
+   the basketball hoop, yellow bleacher seats, blossom petals and
+   the peach sunset by the orange piano (public/themes/ajunice/).
+   Switched on by theme tokens with skin: 'ajunice'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "hoops" background pattern (works with any theme) ---------- */
+
+[data-pattern='hoops'] .bg-pattern {
+  opacity: 0.6;
+  background-image:
+    url('/themes/ajunice/basketball.svg'),
+    url('/themes/ajunice/petals.svg'),
+    url('/themes/ajunice/basketball.svg'),
+    url('/themes/ajunice/petals.svg'),
+    url('/themes/ajunice/petals.svg'),
+    radial-gradient(circle at 40% 40%, color-mix(in srgb, var(--accent) 35%, transparent) 0 1px, transparent 1.6px);
+  background-size: 40px, 60px 40px, 30px, 54px 36px, 48px 32px, 170px 170px;
+  background-position: 1% 26%, 97% 12%, 98.5% 72%, 2% 84%, 60% 97%, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+}
+/* a basketball bouncing on the right edge */
+[data-pattern='hoops'] .bg-pattern::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  bottom: 10%;
+  width: 38px;
+  height: 38px;
+  background: url('/themes/ajunice/basketball.svg') center / contain no-repeat;
+  filter: drop-shadow(0 8px 6px rgba(40, 80, 110, 0.25));
+  animation: an-bounce 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes an-bounce {
+  0%, 100% { transform: translateY(0) scale(1.08, 0.92); }
+  50% { transform: translateY(-120px) rotate(160deg); }
+}
+
+/* ---------- the skin ---------- */
+
+[data-skin='ajunice'] body {
+  background:
+    linear-gradient(180deg, #a9dcf2 0, #d4eefa 280px, var(--bg) 680px),
+    var(--bg);
+}
+
+/* headings: big, round and cheerful, with an orange drop shadow */
+[data-skin='ajunice'] .main h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  color: #1a9cb3;
+  letter-spacing: -0.01em;
+  text-shadow: 3px 3px 0 #ffb385;
+}
+/* a turquoise-and-cream stripe under it, like the school walls */
+[data-skin='ajunice'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(220px, 60%);
+  height: 10px;
+  margin-top: 10px;
+  border-radius: 99px;
+  background: repeating-linear-gradient(90deg, #29b6c9 0 22px, #fff6e6 22px 34px);
+  box-shadow: 0 0 0 2px #fff;
+}
+[data-skin='ajunice'] .main h2 { color: #1f3442; }
+[data-skin='ajunice'] .eyebrow { color: #ff7a3d; }
+
+/* nav: a white wall with turquoise stripes at the ends */
+[data-skin='ajunice'] .nav {
+  background:
+    linear-gradient(90deg, #29b6c9 0 10px, transparent 10px calc(100% - 10px), #29b6c9 calc(100% - 10px)),
+    rgba(255, 253, 247, 0.92);
+  border-color: rgba(41, 182, 201, 0.35);
+  box-shadow: 0 14px 30px -18px rgba(30, 120, 150, 0.5);
+}
+[data-skin='ajunice'] .nav__links a.active { background: #ff7a3d; color: #fff; }
+[data-skin='ajunice'] .nav__logo::after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  margin-left: 2px;
+  background: url('/themes/ajunice/basketball.svg') center / contain no-repeat;
+}
+
+/* cards: cream school walls with a turquoise stripe along the top */
+[data-skin='ajunice'] .main .card,
+[data-skin='ajunice'] .auth {
+  background:
+    linear-gradient(90deg, #29b6c9 0 18%, #fff6e6 18% 24%, #29b6c9 24% 30%, transparent 30%) top / 100% 6px no-repeat,
+    #fffdf7;
+  border: 1px solid rgba(41, 182, 201, 0.2);
+  box-shadow: 0 16px 32px -22px rgba(30, 110, 140, 0.45);
+}
+[data-skin='ajunice'] .main .btn,
+[data-skin='ajunice'] .acct--signin {
+  color: #fff;
+  background: #ff7a3d;
+  box-shadow: 0 10px 22px -10px rgba(255, 122, 61, 0.8);
+}
+[data-skin='ajunice'] .main .btn:hover { background: #f2652a; }
+[data-skin='ajunice'] .main .btn--ghost {
+  color: #1a7f91;
+  background: #fff;
+  box-shadow: inset 0 0 0 2px #29b6c9;
+}
+/* chips are the yellow bleacher seats */
+[data-skin='ajunice'] .main .chip { color: #4a3a00; background: #ffe45c; border: 1px solid #e8c400; }
+
+/* ---------- home: the school yard under a big summer sky ---------- */
+
+[data-skin='ajunice'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 60px 24px 280px;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 46% at 50% 44%, rgba(255, 253, 247, 0.78), rgba(255, 253, 247, 0) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 45%, rgba(255, 255, 255, 0) 70%),
+    url('/themes/ajunice/school-yard.jpg') center 30% / cover;
+  box-shadow: 0 30px 60px -34px rgba(30, 110, 140, 0.6);
+}
+/* the AJU NICE! badge, bobbing in the corner */
+[data-skin='ajunice'] .hero::after {
+  content: '';
+  position: absolute;
+  right: 22px;
+  top: 20px;
+  width: 190px;
+  height: 78px;
+  background: url('/themes/ajunice/very-nice.svg') center / contain no-repeat;
+  filter: drop-shadow(0 10px 14px rgba(30, 110, 140, 0.35));
+  animation: an-bob 3.2s ease-in-out infinite;
+}
+@keyframes an-bob {
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+[data-skin='ajunice'] .hero > * { position: relative; z-index: 1; }
+/* the chunky font is much wider than the default: keep the big title inside the banner */
+[data-skin='ajunice'] .hero h1 { font-size: clamp(2.4rem, 8.5vw, 6.2rem); text-shadow: 3px 3px 0 #ffb385, 0 0 30px rgba(255, 255, 255, 0.9); }
+[data-skin='ajunice'] .hero h1::after { margin-inline: auto; }
+[data-skin='ajunice'] .hero__equation { color: #ff7a3d; -webkit-text-fill-color: #ff7a3d; background: none; }
+[data-skin='ajunice'] .hero__lede { color: #1f3442; text-shadow: 0 0 12px rgba(255, 255, 255, 0.95); }
+@media (max-width: 720px) {
+  [data-skin='ajunice'] .hero { padding: 50px 18px 180px; }
+  [data-skin='ajunice'] .hero::after { width: 120px; height: 50px; right: 10px; top: 10px; }
+}
+
+/* ---------- a photo pinned beside page titles ---------- */
+
+[data-skin='ajunice'] .page-head { position: relative; }
+[data-skin='ajunice'] .page-head:has(~ .timeline) { --photo: url('/themes/ajunice/school-tilt.jpg'); --at: 30% center; }
+[data-skin='ajunice'] .page-head:has(~ .game-list) { --photo: url('/themes/ajunice/hoop.jpg'); --at: 40% 30%; }
+[data-skin='ajunice'] .page-head:has(.music__ctas) { --photo: url('/themes/ajunice/piano-sunset.jpg'); --at: 60% center; }
+[data-skin='ajunice'] .page-head:has(~ .unit),
+[data-skin='ajunice'] .page-head:has(.tabs) { --photo: url('/themes/ajunice/sky-jump.jpg'); --at: 55% 30%; }
+@media (min-width: 900px) {
+  [data-skin='ajunice'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 260px;
+    padding-right: 290px;
+  }
+  [data-skin='ajunice'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: 0;
+    width: 226px;
+    height: 230px;
+    border: 10px solid #fff;
+    border-bottom-width: 34px;
+    border-radius: 6px;
+    background: var(--photo) var(--at, center) / cover;
+    box-shadow: 0 20px 34px -18px rgba(30, 110, 140, 0.55);
+    transform: rotate(3deg);
+  }
+  /* a basketball resting on the corner */
+  [data-skin='ajunice'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 4px;
+    top: 214px;
+    width: 52px;
+    height: 52px;
+    background: url('/themes/ajunice/basketball.svg') center / contain no-repeat;
+    filter: drop-shadow(0 8px 8px rgba(30, 60, 80, 0.3));
+  }
+}
+
+/* ---------- tracklists become the class notice board ---------- */
+
+[data-skin='ajunice'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 18px 20px 16px 34px;
+  color: #1f3442;
+  background:
+    linear-gradient(90deg, #29b6c9 0 8px, #fff6e6 8px 12px, #29b6c9 12px 18px, transparent 18px),
+    repeating-linear-gradient(180deg, transparent 0 35px, rgba(41, 182, 201, 0.18) 35px 36px),
+    #fffdf7;
+  border-radius: 12px;
+  box-shadow: 0 18px 30px -20px rgba(30, 110, 140, 0.55);
+}
+[data-skin='ajunice'] .main .tracks::after {
+  content: 'Very Nice \2661  \C544\C8FC NICE!';
+  display: block;
+  margin-top: 12px;
+  text-align: right;
+  font-family: 'Gaegu', 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #ff7a3d;
+}
+[data-skin='ajunice'] .main .tracks .tracks__row,
+[data-skin='ajunice'] .main .tracks button { border-bottom-color: transparent; }
+[data-skin='ajunice'] .main .tracks button:hover { background: rgba(255, 228, 92, 0.35); }
+[data-skin='ajunice'] .main .tracks .tracks__num,
+[data-skin='ajunice'] .main .tracks .tracks__title,
+[data-skin='ajunice'] .main .tracks .tracks__native,
+[data-skin='ajunice'] .main .tracks .tracks__note,
+[data-skin='ajunice'] .main .tracks .tracks__nolink,
+[data-skin='ajunice'] .main .tracks .tracks__play,
+[data-skin='ajunice'] .main .tracks .tracks__disc,
+[data-skin='ajunice'] .main .tracks .tracks__open,
+[data-skin='ajunice'] .main .tracks .like-btn { color: #1f3442; }
+[data-skin='ajunice'] .main .tracks .tracks__native,
+[data-skin='ajunice'] .main .tracks .tracks__note,
+[data-skin='ajunice'] .main .tracks .tracks__nolink { opacity: 0.65; }
+[data-skin='ajunice'] .main .tracks .chip { color: #fff; background: #ff7a3d; border: 0; }
+[data-skin='ajunice'] .main .tracks li.is-playing .tracks__title { color: #1a9cb3; }
+[data-skin='ajunice'] .main .tracks .like-btn.is-liked { color: #ff5a7a; }
+
+/* ---------- sign in / register: the jump into the blue sky ---------- */
+
+[data-skin='ajunice'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(169, 220, 242, 0), rgba(169, 220, 242, 0.35)),
+    url('/themes/ajunice/sky-jump.jpg') 55% center / cover;
+}
+[data-skin='ajunice'] .auth__glow { background: radial-gradient(circle, rgba(255, 255, 255, 0.6), transparent 65%); }
+[data-skin='ajunice'] .auth__gem { content: url('/themes/ajunice/basketball.svg'); width: 80px; height: 80px; }
+[data-skin='ajunice'] .auth__switch a { color: #ff7a3d; }
+
+/* ---------- Now Playing: the peach sunset by the orange piano ---------- */
+
+[data-skin='ajunice'] .np {
+  --np-bg: #3b2316;
+  --np-ink: #fff8ef;
+  --np-label: #ff7a3d;
+  --np-label2: #29b6c9;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 40%, rgba(80, 40, 20, 0.55)),
+    url('/themes/ajunice/piano-sunset.jpg') center / cover,
+    #3b2316;
+}
+[data-skin='ajunice'] .np__deck { background: rgba(255, 253, 247, 0.92); color: #1f3442; box-shadow: 0 30px 60px -28px rgba(80, 40, 20, 0.6); }
+/* keeps the words readable over the photo */
+[data-skin='ajunice'] .np__text {
+  padding: 22px 26px;
+  border-radius: 22px;
+  background: rgba(60, 34, 20, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='ajunice'] .np__title { color: #fff; font-family: 'Unbounded', sans-serif; font-weight: 800; text-shadow: 3px 3px 0 #ff7a3d; }
+[data-skin='ajunice'] .np h1::after { display: none; }
+[data-skin='ajunice'] .np__album { color: #ffe45c; }
+[data-skin='ajunice'] .np__blurb { color: rgba(255, 248, 239, 0.9); }
+[data-skin='ajunice'] .np__label { background: url('/themes/ajunice/basketball.svg') center / 100% no-repeat, #ff7a3d; }
+[data-skin='ajunice'] .np-wave span { background: linear-gradient(#ff7a3d, #ffe45c); }
+[data-skin='ajunice'] .np-ctrl .np-ctrl__main { background: #ff7a3d; color: #fff; }
+
+/* ---------- footer: the school building under the clouds ---------- */
+
+[data-skin='ajunice'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 420px;
+  margin-top: 60px;
+  padding: 0 16px 100px;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(20, 60, 80, 0.85);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(234, 246, 251, 0) 30%, rgba(234, 246, 251, 0) 60%, rgba(20, 60, 80, 0.75) 95%),
+    url('/themes/ajunice/school-tilt.jpg') center 40% / cover;
+}
+[data-skin='ajunice'] .footer a { color: #ffe45c; }
+
+/* ---------- the little cursor sparkles turn hoop orange and stripe turquoise ---------- */
+
+[data-skin='ajunice'] .sparkle { color: #ff7a3d; }
+[data-skin='ajunice'] .sparkle:nth-child(odd) { color: #29b6c9; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--hoops::before {
+  background-image: url('/themes/ajunice/basketball.svg'), url('/themes/ajunice/petals.svg');
+  background-size: 22px, 34px 22px;
+  background-position: 88% 28%, 10% 74%;
+  background-repeat: no-repeat;
+  opacity: 0.9;
+}
+.tp--ajunice::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 44px;
+  width: 64px;
+  height: 26px;
+  background: url('/themes/ajunice/very-nice.svg') center / contain no-repeat;
+}
+.tp--ajunice .tp__title { font-family: 'Unbounded', sans-serif; color: #1a9cb3; text-shadow: 2px 2px 0 #ffb385; }

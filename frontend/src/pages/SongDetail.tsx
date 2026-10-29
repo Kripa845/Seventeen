@@ -7,7 +7,6 @@ import { useApi, useMembers, useSong } from '../lib/api'
 import { creditFor } from '../lib/credits'
 import { formatDate } from '../lib/dates'
 import { usePlayer } from '../lib/player'
-import { usePageTheme } from '../lib/theme'
 import type { Album } from '../lib/types'
 import { useOpenPlayer } from '../lib/useOpenPlayer'
 
@@ -20,7 +19,6 @@ export function SongDetail() {
   const { current, playing } = usePlayer()
   const play = useOpenPlayer()
   const a = s && album.data?.slug === s.album_slug ? album.data : null
-  usePageTheme(a?.theme)
 
   if (loading) return <Loading />
   if (error || !s) return <ApiError message={error ?? 'Not found'} />
@@ -44,7 +42,7 @@ export function SongDetail() {
         <span aria-current="page">{s.title}</span>
       </nav>
 
-      <header className="song__hero card">
+      <header className="song__hero card" style={a ? { ['--a' as string]: a.theme.accent, ['--a2' as string]: a.theme.accent2 } : undefined}>
         <Link to={`/discography/${s.album_slug}`} className="song__art" aria-label={`${s.album_title} album page`}>
           {cover ? <img src={cover} alt="" /> : <span className="song__orb" aria-hidden />}
           {isCurrent && playing && <span className="song__eq" aria-label="Playing now"><i /><i /><i /></span>}

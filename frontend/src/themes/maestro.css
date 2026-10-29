@@ -1,0 +1,329 @@
+/* ============================================================
+   "Maestro" skin (17 Is Right Here, 2024): the black concert
+   stage under one white spotlight, the orchestra in a circle,
+   the wall of instruments, laser-red strings, a conductor's
+   baton and tracklists as a page of the score
+   (public/themes/maestro/).
+   Switched on by theme tokens with skin: 'maestro'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "staves" background pattern (works with any theme) ---------- */
+
+[data-pattern='staves'] .bg-pattern {
+  opacity: 0.32;
+  background-image:
+    url('/themes/maestro/staff.svg'),
+    url('/themes/maestro/note.svg'),
+    url('/themes/maestro/staff.svg'),
+    url('/themes/maestro/notes.svg'),
+    url('/themes/maestro/note.svg');
+  background-size: 300px, 26px, 240px, 46px, 18px;
+  background-position: -40px 18%, 93% 12%, calc(100% + 60px) 74%, 8% 84%, 88% 92%;
+  background-repeat: no-repeat;
+}
+/* the conductor's baton, keeping time at the edge of the page */
+[data-pattern='staves'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -20px;
+  top: 34%;
+  background: url('/themes/maestro/baton.svg') center / contain no-repeat;
+  transform-origin: 12% 88%;
+  animation: maestro-beat 2.4s ease-in-out infinite;
+}
+/* down, in, out, up: a 4/4 pattern */
+@keyframes maestro-beat {
+  0%, 100% { rotate: -6deg; }
+  25% { rotate: 14deg; }
+  50% { rotate: -14deg; }
+  75% { rotate: 6deg; }
+}
+[data-dark='false'][data-pattern='staves'] .bg-pattern { filter: invert(0.85); }
+@media (max-width: 720px) {
+  [data-pattern='staves'] .bg-pattern::before { width: 96px; height: 96px; right: -24px; }
+}
+
+/* ---------- the skin ---------- */
+
+/* one white spotlight on a black stage */
+[data-skin='maestro'] body {
+  background:
+    radial-gradient(900px 520px at 50% -12%, rgba(205, 222, 240, 0.2), transparent 70%),
+    radial-gradient(700px 420px at 100% 100%, rgba(227, 38, 58, 0.1), transparent 70%),
+    var(--bg);
+}
+
+/* headings: concert-hall serif, with the baton underneath */
+[data-skin='maestro'] .main h1 {
+  color: #f4f6fa;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 30px rgba(205, 222, 240, 0.25);
+}
+[data-skin='maestro'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(240px, 60%);
+  height: 4px;
+  margin-top: 10px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #3a404c 0 14%, #f4f6fa 14% 96%, #e3263a 96%);
+}
+[data-skin='maestro'] .eyebrow { color: #e3263a; letter-spacing: 0.22em; }
+
+/* nav: black glass under the rig */
+[data-skin='maestro'] .nav {
+  background: rgba(11, 13, 18, 0.84);
+  border-color: rgba(232, 238, 245, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 14px 34px -20px rgba(0, 0, 0, 0.9);
+}
+[data-skin='maestro'] .nav__logo::after {
+  content: '';
+  width: 24px;
+  height: 24px;
+  margin-left: 2px;
+  background: url('/themes/maestro/baton.svg') center / contain no-repeat;
+  transform-origin: 12% 88%;
+  animation: maestro-beat 2.4s ease-in-out infinite;
+}
+
+/* cards: matte black, lit from above */
+[data-skin='maestro'] .main .card,
+[data-skin='maestro'] .auth {
+  background:
+    radial-gradient(120% 80% at 50% -20%, rgba(205, 222, 240, 0.08), transparent 60%),
+    #13161d;
+  border: 1px solid rgba(232, 238, 245, 0.12);
+  box-shadow: 0 20px 44px -26px rgba(0, 0, 0, 0.9);
+}
+[data-skin='maestro'] .main .btn,
+[data-skin='maestro'] .acct--signin {
+  color: #0b0d12;
+  background: #f4f6fa;
+  box-shadow: 0 10px 26px -12px rgba(205, 222, 240, 0.7);
+}
+[data-skin='maestro'] .main .btn:hover { background: #ffffff; }
+[data-skin='maestro'] .main .btn--ghost {
+  color: #f4f6fa;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px #e3263a;
+}
+[data-skin='maestro'] .main .chip { border-color: rgba(232, 238, 245, 0.22); background: rgba(232, 238, 245, 0.06); }
+
+/* ---------- home: the wall of instruments ---------- */
+
+[data-skin='maestro'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 160px 24px 56px;
+  border-radius: 34px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(11, 13, 18, 0.1) 18%, rgba(11, 13, 18, 0.9) 74%, #0b0d12),
+    url('/themes/maestro/instrument-wall.jpg') center 30% / cover;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9);
+}
+/* the spotlight breathing */
+[data-skin='maestro'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(40% 55% at 50% 38%, rgba(220, 232, 245, 0.18), transparent 70%);
+  animation: maestro-light 7s ease-in-out infinite;
+}
+@keyframes maestro-light { 50% { opacity: 0.35; } }
+/* the baton, conducting the page */
+[data-skin='maestro'] .hero::after {
+  content: '';
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  right: 26px;
+  top: 22px;
+  background: url('/themes/maestro/baton.svg') center / contain no-repeat;
+  transform-origin: 12% 88%;
+  filter: drop-shadow(0 0 10px rgba(227, 38, 58, 0.5));
+  animation: maestro-beat 2.4s ease-in-out infinite;
+}
+[data-skin='maestro'] .hero > * { position: relative; z-index: 1; }
+[data-skin='maestro'] .hero__title { background: linear-gradient(180deg, #ffffff 30%, #9fb3c8); -webkit-background-clip: text; background-clip: text; }
+[data-skin='maestro'] .hero__equation { color: #e3263a; -webkit-text-fill-color: #e3263a; background: none; }
+[data-skin='maestro'] .hero__lede { color: #dfe6ee; }
+@media (max-width: 720px) {
+  [data-skin='maestro'] .hero { padding: 110px 18px 40px; }
+  [data-skin='maestro'] .hero::after { width: 72px; height: 72px; right: 10px; top: 10px; }
+}
+
+/* ---------- concert stills beside page titles, in a spotlight frame ---------- */
+
+[data-skin='maestro'] .page-head { position: relative; }
+[data-skin='maestro'] .page-head:has(~ .timeline) { --photo: url('/themes/maestro/red-circle.jpg'); }
+[data-skin='maestro'] .page-head:has(~ .game-list) { --photo: url('/themes/maestro/creation.jpg'); }
+[data-skin='maestro'] .page-head:has(.music__ctas) { --photo: url('/themes/maestro/cello.jpg'); }
+[data-skin='maestro'] .page-head:has(~ .unit),
+[data-skin='maestro'] .page-head:has(.tabs) { --photo: url('/themes/maestro/orchestra.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='maestro'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 220px;
+    padding-right: 330px;
+  }
+  [data-skin='maestro'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 0;
+    width: 300px;
+    height: 190px;
+    border-radius: 16px;
+    background:
+      radial-gradient(70% 80% at 50% 40%, transparent 55%, rgba(11, 13, 18, 0.7)),
+      var(--photo) center / cover;
+    box-shadow: 0 0 0 1px rgba(232, 238, 245, 0.18), 0 26px 50px -24px rgba(0, 0, 0, 0.95);
+  }
+  /* a red programme tab */
+  [data-skin='maestro'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: 'MAESTRO';
+    position: absolute;
+    z-index: 1;
+    right: 30px;
+    top: 168px;
+    padding: 3px 10px;
+    font: 600 0.68rem/1.5 'Cormorant Garamond', Georgia, serif;
+    letter-spacing: 0.3em;
+    color: #f4f6fa;
+    background: #e3263a;
+    border-radius: 3px;
+  }
+}
+
+/* ---------- tracklists become a page of the score ---------- */
+
+[data-skin='maestro'] .main .tracks {
+  --ink: #15171c;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 40px 18px 14px;
+  color: var(--ink);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 9px, rgba(21, 23, 28, 0.12) 9px 10px) top 14px left 18px / calc(100% - 36px) 50px no-repeat,
+    #f3f1ec;
+  border-radius: 6px;
+  box-shadow: 0 22px 40px -22px rgba(0, 0, 0, 0.9);
+}
+[data-skin='maestro'] .main .tracks::before {
+  content: '♩ = 120   ·   Maestro';
+  position: absolute;
+  top: 10px;
+  right: 22px;
+  font: italic 600 0.85rem/1 'Cormorant Garamond', Georgia, serif;
+  color: #e3263a;
+}
+[data-skin='maestro'] .main .tracks .tracks__row,
+[data-skin='maestro'] .main .tracks button { border-bottom-color: rgba(21, 23, 28, 0.12); }
+[data-skin='maestro'] .main .tracks button:hover { background: rgba(227, 38, 58, 0.08); }
+[data-skin='maestro'] .main .tracks .tracks__num,
+[data-skin='maestro'] .main .tracks .tracks__title,
+[data-skin='maestro'] .main .tracks .tracks__native,
+[data-skin='maestro'] .main .tracks .tracks__note,
+[data-skin='maestro'] .main .tracks .tracks__nolink,
+[data-skin='maestro'] .main .tracks .tracks__play,
+[data-skin='maestro'] .main .tracks .tracks__disc,
+[data-skin='maestro'] .main .tracks .tracks__open,
+[data-skin='maestro'] .main .tracks .like-btn { color: var(--ink); }
+[data-skin='maestro'] .main .tracks .tracks__title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; font-weight: 700; }
+[data-skin='maestro'] .main .tracks .tracks__native,
+[data-skin='maestro'] .main .tracks .tracks__note,
+[data-skin='maestro'] .main .tracks .tracks__nolink { opacity: 0.65; }
+[data-skin='maestro'] .main .tracks .chip { color: #e3263a; background: transparent; border: 1.5px solid #e3263a; }
+[data-skin='maestro'] .main .tracks li.is-playing .tracks__title { color: #e3263a; }
+[data-skin='maestro'] .main .tracks .like-btn.is-liked { color: #e3263a; }
+
+/* ---------- sign in / register: the laser violin ---------- */
+
+[data-skin='maestro'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(11, 13, 18, 0), rgba(11, 13, 18, 0.5)),
+    url('/themes/maestro/laser-violin.jpg') 30% center / cover;
+}
+[data-skin='maestro'] .auth__glow { background: radial-gradient(circle, rgba(227, 38, 58, 0.4), transparent 65%); }
+[data-skin='maestro'] .auth__gem { content: url('/themes/maestro/notes.svg'); width: 92px; height: 92px; }
+[data-skin='maestro'] .auth__switch a { color: #f4f6fa; text-decoration-color: #e3263a; }
+
+/* ---------- Now Playing: the piano on the rooftop ---------- */
+
+[data-skin='maestro'] .np {
+  --np-bg: #0b0d12;
+  --np-ink: #f4f6fa;
+  --np-label: #e3263a;
+  --np-label2: #8fb8d8;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(11, 13, 18, 0.75)),
+    url('/themes/maestro/rooftop-piano.jpg') center / cover,
+    #0b0d12;
+}
+[data-skin='maestro'] .np__deck { background: rgba(19, 22, 29, 0.9); color: #f4f6fa; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.9); }
+/* keeps the words readable over the photo */
+[data-skin='maestro'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(11, 13, 18, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='maestro'] .np__title { color: #f4f6fa; }
+[data-skin='maestro'] .np__album { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; color: #e3263a; letter-spacing: 0.04em; }
+[data-skin='maestro'] .np__blurb { color: rgba(244, 246, 250, 0.82); }
+[data-skin='maestro'] .np__label { background: url('/themes/maestro/notes.svg') center / 62% no-repeat, #f3f1ec; }
+[data-skin='maestro'] .np-wave span { background: linear-gradient(#f4f6fa, #e3263a); }
+[data-skin='maestro'] .np-ctrl .np-ctrl__main { background: #f4f6fa; color: #0b0d12; }
+
+/* ---------- footer: the orchestra from above ---------- */
+
+[data-skin='maestro'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #f4f6fa;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(11, 13, 18, 0) 28%, rgba(11, 13, 18, 0) 60%, rgba(6, 7, 10, 0.92) 92%),
+    url('/themes/maestro/orchestra.jpg') center 45% / cover;
+}
+[data-skin='maestro'] .footer a { color: #f4f6fa; text-decoration-color: #e3263a; }
+
+/* ---------- the little cursor sparkles turn spotlight white and laser red ---------- */
+
+[data-skin='maestro'] .sparkle { color: #f4f6fa; }
+[data-skin='maestro'] .sparkle:nth-child(odd) { color: #e3263a; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='staves'] .bg-pattern::before,
+  [data-skin='maestro'] .nav__logo::after,
+  [data-skin='maestro'] .hero::before,
+  [data-skin='maestro'] .hero::after { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--staves::before {
+  background-image: url('/themes/maestro/staff.svg'), url('/themes/maestro/note.svg');
+  background-size: 160px, 16px;
+  background-position: -20px 30%, 88% 72%;
+  background-repeat: no-repeat;
+  opacity: 0.55;
+}
+.tp--maestro::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 50px;
+  width: 52px;
+  height: 52px;
+  background: url('/themes/maestro/baton.svg') center / contain no-repeat;
+}
+.tp--maestro .tp__title { color: #f4f6fa; }

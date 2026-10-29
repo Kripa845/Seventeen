@@ -1,6 +1,6 @@
 import { Loading } from '../components/Status'
 import { useAlbums } from '../lib/api'
-import { ATTACCA_THEME, CARAT_THEME, DARLING_THEME, HEAVEN_THEME, HOMERUN_THEME, HOT_THEME, LEFTRIGHT_THEME, WORLD_THEME } from '../lib/color'
+import { AJUNICE_THEME, ATTACCA_THEME, CARAT_THEME, DARLING_THEME, HEAVEN_THEME, HOMERUN_THEME, HOT_THEME, JEONGHAN_THEME, JOSHUA_THEME, JUN_THEME, DK_THEME, WONWOO_THEME, WOOZI_THEME, LEFTRIGHT_THEME, MAESTRO_THEME, SCOUPS_THEME, WORLD_THEME, THE8_THEME, DINO_THEME, SEUNGKWAN_THEME, VERNON_THEME, MINGYU_THEME, HOSHI_THEME } from '../lib/color'
 import { useTheme } from '../lib/theme'
 import type { ThemeTokens } from '../lib/types'
 import { ThemePreview } from '../studio/ThemeEditor'
@@ -14,6 +14,21 @@ const PHOTO_THEMES: { label: string; theme: ThemeTokens; era: string }[] = [
   { label: '✦ Rock with you', theme: ATTACCA_THEME, era: 'Attacca · 2021' },
   { label: '☀ Hot', theme: HOT_THEME, era: 'Face the Sun · 2022' },
   { label: '; Home;Run', theme: HOMERUN_THEME, era: '; [Semicolon] · 2020' },
+  { label: '♪ Maestro', theme: MAESTRO_THEME, era: '17 Is Right Here · 2024' },
+  { label: '🏀 Aju Nice', theme: AJUNICE_THEME, era: 'Love & Letter Repackage · 2016' },
+  { label: '📷 S.Coups aesthetics', theme: SCOUPS_THEME, era: 'his camera roll' },
+  { label: '🦋 Jeonghan Aesthetics', theme: JEONGHAN_THEME, era: 'quiet film photos' },
+  { label: '🎸 Joshua Aesthetics', theme: JOSHUA_THEME, era: 'soft days & guitar' },
+  { label: '☂ Jun Aesthetics', theme: JUN_THEME, era: 'four seasons on a walk' },
+  { label: '🌹 DK Aesthetics', theme: DK_THEME, era: 'black & white, a white rose' },
+  { label: '🎙 Woozi Aesthetics', theme: WOOZI_THEME, era: 'confetti pink, the red mic, prod. by Woozi' },
+  { label: '📚 Wonwoo Aesthetics', theme: WONWOO_THEME, era: 'a quiet reading room' },
+  { label: '✎ The8 Aesthetics', theme: THE8_THEME, era: 'the painter’s gallery' },
+  { label: '🦖 Dino Aesthetics', theme: DINO_THEME, era: 'black, white & café light' },
+  { label: '🍊 Seungkwan Aesthetics', theme: SEUNGKWAN_THEME, era: 'a night walk over the bridges' },
+  { label: '🍋 Vernon Aesthetics', theme: VERNON_THEME, era: 'a summer afternoon, a lemon' },
+  { label: '🌿 Mingyu Aesthetics', theme: MINGYU_THEME, era: 'summer, a little out of focus' },
+  { label: '🐯 Hoshi Aesthetics', theme: HOSHI_THEME, era: 'the tiger in the pines' },
 ]
 
 /** /themes : wear any theme across the whole site (saved in this browser only). */

@@ -31,10 +31,10 @@ export interface ThemeTokens {
   accent: string
   accent2: string
   font: 'serif' | 'sans' | 'display' | 'mono' | 'marker'
-  pattern: 'sparkle' | 'grid' | 'waves' | 'stars' | 'petals' | 'daisies' | 'smileys' | 'signs' | 'flowers' | 'orbits' | 'suns' | 'billiards' | 'none'
+  pattern: 'sparkle' | 'grid' | 'waves' | 'stars' | 'petals' | 'daisies' | 'smileys' | 'signs' | 'flowers' | 'orbits' | 'suns' | 'billiards' | 'staves' | 'hoops' | 'film' | 'butterflies' | 'picks' | 'umbrellas' | 'roses' | 'books' | 'confetti' | 'ink' | 'footprints' | 'tangerines' | 'lemons' | 'leaves' | 'tiger' | 'none'
   dark: boolean
   /** Photos and decorations on top of the colours (see src/themes/). */
-  skin?: 'none' | 'heaven' | 'darling' | 'leftright' | 'world' | 'attacca' | 'hot' | 'homerun'
+  skin?: 'none' | 'heaven' | 'darling' | 'leftright' | 'world' | 'attacca' | 'hot' | 'homerun' | 'maestro' | 'ajunice' | 'scoups' | 'jeonghan' | 'joshua' | 'jun' | 'dk' | 'wonwoo' | 'woozi' | 'the8' | 'dino' | 'seungkwan' | 'vernon' | 'mingyu' | 'hoshi'
 }
 
 export interface Song {
@@ -120,7 +120,7 @@ export interface Score {
 export type DiaryBook = 'diary' | 'album'
 export type DiaryPaper = 'plain' | 'lined' | 'grid' | 'dots' | 'kraft' | 'blush' | 'night' | 'album' | 'linen'
 export type DiaryFrame = 'none' | 'cutout' | 'polaroid' | 'tape' | 'round' | 'heart' | 'arch' | 'stamp' | 'film' | 'gold' | 'torn'
-export type DiaryFont = 'hand' | 'cute' | 'marker' | 'type' | 'script' | 'serif' | 'bold'
+export type DiaryFont = 'hand' | 'cute' | 'marker' | 'type' | 'script' | 'serif' | 'bold' | 'pen' | 'round' | 'poster' | 'retro' | 'bubbly' | 'magazine' | 'pixel'
 export type DiaryTextStyle = 'plain' | 'note' | 'label' | 'tape'
 export type DiarySongStyle = 'card' | 'vinyl' | 'cassette'
 
@@ -155,6 +155,8 @@ export interface DiaryPage {
   items: DiaryItem[]
   is_private: boolean
   position: number // photo album order (Studio, Album management)
+  author_name: string // who wrote it ('' for older pages)
+  can_edit: boolean // you wrote it, or you're an admin
   photos: Record<string, string> // photo id -> url
   videos: Record<string, string> // video id -> url
   created_at: string

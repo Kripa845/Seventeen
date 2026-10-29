@@ -1,0 +1,316 @@
+/* ============================================================
+   "Jun Aesthetics" skin: a walk through the seasons. Stone grey
+   and cream, sea-mist blue and ginkgo gold, italic serif type,
+   cherry blossoms in spring, the sea in summer, ginkgo at night
+   in autumn and a clear umbrella in the rain
+   (public/themes/jun/).
+   Switched on by theme tokens with skin: 'jun'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "umbrellas" background pattern (works with any theme) ---------- */
+
+[data-pattern='umbrellas'] .bg-pattern {
+  opacity: 0.5;
+  background-image:
+    url('/themes/jun/umbrella.svg'),
+    url('/themes/jun/ginkgo.svg'),
+    url('/themes/jun/petal.svg'),
+    url('/themes/jun/ginkgo.svg'),
+    url('/themes/jun/umbrella.svg'),
+    url('/themes/jun/rain.svg');
+  background-size: 46px, 26px, 20px, 32px, 30px, 200px;
+  background-position: 7% 18%, 91% 12%, 86% 78%, 12% 84%, 94% 48%, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+}
+/* one ginkgo leaf falling, turning as it goes */
+[data-pattern='umbrellas'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: 7%;
+  top: 26%;
+  background: url('/themes/jun/ginkgo.svg') center / contain no-repeat;
+  filter: drop-shadow(0 8px 10px rgba(60, 50, 20, 0.22));
+  animation: jun-fall 14s ease-in-out infinite;
+}
+@keyframes jun-fall {
+  25% { transform: translate(-22px, 30px) rotate(-24deg); }
+  50% { transform: translate(6px, 64px) rotate(18deg); }
+  75% { transform: translate(-16px, 92px) rotate(-12deg); }
+}
+[data-dark='true'][data-pattern='umbrellas'] .bg-pattern { opacity: 0.3; }
+@media (max-width: 720px) {
+  [data-pattern='umbrellas'] .bg-pattern::before { width: 28px; height: 28px; right: 4%; }
+}
+
+/* ---------- the skin ---------- */
+
+/* overcast light with a little sun on the stone */
+[data-skin='jun'] body {
+  background:
+    radial-gradient(900px 520px at 88% -10%, rgba(201, 164, 63, 0.18), transparent 70%),
+    radial-gradient(820px 540px at 0% 100%, rgba(94, 122, 140, 0.18), transparent 70%),
+    var(--bg);
+}
+
+/* headings: italic serif with a ginkgo leaf at the end of a fine line */
+[data-skin='jun'] .main h1 { color: #1b1c1f; font-style: italic; letter-spacing: -0.005em; }
+[data-skin='jun'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(240px, 60%);
+  height: 18px;
+  margin-top: 6px;
+  background:
+    url('/themes/jun/ginkgo.svg') right center / 18px 18px no-repeat,
+    linear-gradient(#4f6b7d, #4f6b7d) left center / calc(100% - 24px) 1px no-repeat;
+}
+[data-skin='jun'] .eyebrow { color: #4f6b7d; letter-spacing: 0.2em; }
+
+/* nav: frosted like a clear umbrella */
+[data-skin='jun'] .nav {
+  background: rgba(251, 250, 247, 0.72);
+  border-color: rgba(79, 107, 125, 0.14);
+  box-shadow: 0 14px 34px -22px rgba(40, 55, 65, 0.45);
+}
+[data-skin='jun'] .nav__logo::after {
+  content: '';
+  width: 22px;
+  height: 24px;
+  margin-left: 2px;
+  background: url('/themes/jun/umbrella.svg') center / contain no-repeat;
+}
+
+/* cards: cream paper, like the wall behind the white shirt */
+[data-skin='jun'] .main .card,
+[data-skin='jun'] .auth {
+  background: #fbfaf7;
+  border: 1px solid rgba(79, 107, 125, 0.14);
+  box-shadow: 0 18px 40px -28px rgba(40, 55, 65, 0.5);
+}
+[data-skin='jun'] .main .btn,
+[data-skin='jun'] .acct--signin {
+  color: #fbfaf7;
+  background: #2b3a44;
+  box-shadow: 0 10px 22px -12px rgba(43, 58, 68, 0.6);
+}
+[data-skin='jun'] .main .btn:hover { background: #3b4d59; }
+[data-skin='jun'] .main .btn--ghost {
+  color: #1b1c1f;
+  background: rgba(251, 250, 247, 0.6);
+  box-shadow: inset 0 0 0 1.5px #c9a43f;
+}
+[data-skin='jun'] .main .chip { border-color: rgba(79, 107, 125, 0.3); background: rgba(220, 230, 236, 0.5); }
+
+/* ---------- home: the four seasons, one after another ---------- */
+
+[data-skin='jun'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #eeede9;
+  box-shadow: 0 30px 60px -34px rgba(40, 55, 65, 0.55);
+}
+[data-skin='jun'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --shade: linear-gradient(180deg, rgba(238, 237, 233, 0) 22%, rgba(238, 237, 233, 0.9) 74%, #eeede9);
+  background: var(--shade), url('/themes/jun/seaside.jpg') center 22% / cover;
+  animation: jun-seasons 40s infinite;
+}
+@keyframes jun-seasons {
+  0%, 18%   { background-image: var(--shade), url('/themes/jun/seaside.jpg'); }
+  20%, 38%  { background-image: var(--shade), url('/themes/jun/blossoms.jpg'); }
+  40%, 58%  { background-image: var(--shade), url('/themes/jun/stone-wall.jpg'); }
+  60%, 78%  { background-image: var(--shade), url('/themes/jun/rain-umbrella.jpg'); }
+  80%, 98%  { background-image: var(--shade), url('/themes/jun/white-shirt.jpg'); }
+  100%      { background-image: var(--shade), url('/themes/jun/seaside.jpg'); }
+}
+/* a handwritten signature in the corner */
+[data-skin='jun'] .hero::after {
+  content: 'Jun · 준휘 ☂';
+  position: absolute;
+  right: 28px;
+  top: 22px;
+  padding: 4px 14px;
+  font: 700 1.35rem/1.2 'Caveat', cursive;
+  color: #2b3a44;
+  background: rgba(251, 250, 247, 0.8);
+  border-radius: 999px;
+  transform: rotate(-3deg);
+  box-shadow: 0 8px 18px -10px rgba(40, 55, 65, 0.5);
+}
+[data-skin='jun'] .hero > * { position: relative; z-index: 1; }
+[data-skin='jun'] .hero__title { font-style: italic; background: linear-gradient(120deg, #1b1c1f 25%, #4f6b7d); -webkit-background-clip: text; background-clip: text; }
+[data-skin='jun'] .hero__equation { color: #a8862c; -webkit-text-fill-color: #a8862c; background: none; }
+[data-skin='jun'] .hero__lede { color: #33373b; }
+@media (max-width: 720px) {
+  [data-skin='jun'] .hero { padding: 120px 18px 40px; }
+  [data-skin='jun'] .hero::after { right: 14px; top: 14px; font-size: 1.05rem; }
+}
+
+/* ---------- prints beside page titles, a ginkgo leaf caught on the corner ---------- */
+
+[data-skin='jun'] .page-head { position: relative; }
+[data-skin='jun'] .page-head:has(~ .timeline) { --photo: url('/themes/jun/blossoms.jpg'); }
+[data-skin='jun'] .page-head:has(~ .game-list) { --photo: url('/themes/jun/rain-umbrella.jpg'); }
+[data-skin='jun'] .page-head:has(.music__ctas) { --photo: url('/themes/jun/stone-wall.jpg'); }
+[data-skin='jun'] .page-head:has(~ .unit),
+[data-skin='jun'] .page-head:has(.tabs) { --photo: url('/themes/jun/white-shirt.jpg'); }
+@media (min-width: 900px) {
+  [data-skin='jun'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 270px;
+    padding-right: 250px;
+  }
+  [data-skin='jun'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: -4px;
+    width: 190px;
+    height: 254px;
+    border: 8px solid #fbfaf7;
+    border-bottom-width: 30px;
+    border-radius: 6px;
+    background: var(--photo) center 25% / cover;
+    transform: rotate(2deg);
+    box-shadow: 0 22px 40px -22px rgba(40, 55, 65, 0.6);
+  }
+  [data-skin='jun'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 4px;
+    top: -16px;
+    width: 34px;
+    height: 34px;
+    background: url('/themes/jun/ginkgo.svg') center / contain no-repeat;
+    transform: rotate(32deg);
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.18));
+  }
+}
+
+/* ---------- tracklists become a rainy-walk playlist under a clear umbrella ---------- */
+
+[data-skin='jun'] .main .tracks {
+  --ink: #1b1c1f;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 54px 18px 14px;
+  color: var(--ink);
+  background:
+    url('/themes/jun/rain.svg') 0 0 / 160px repeat,
+    linear-gradient(180deg, #e8eef1, #fbfaf7 120px);
+  border: 1px solid rgba(79, 107, 125, 0.18);
+  border-radius: 14px;
+  box-shadow: 0 16px 30px -22px rgba(40, 55, 65, 0.5);
+}
+[data-skin='jun'] .main .tracks::before {
+  content: 'for a rainy walk';
+  position: absolute;
+  top: 10px;
+  right: 22px;
+  padding: 0 8px 0 34px;
+  font: 700 1.4rem/1.2 'Caveat', cursive;
+  color: #4f6b7d;
+  background: url('/themes/jun/umbrella.svg') left center / 26px 28px no-repeat;
+}
+[data-skin='jun'] .main .tracks .tracks__row,
+[data-skin='jun'] .main .tracks button { border-bottom-color: rgba(79, 107, 125, 0.12); }
+[data-skin='jun'] .main .tracks button:hover { background: rgba(220, 230, 236, 0.6); }
+[data-skin='jun'] .main .tracks .tracks__num { color: #a8862c; }
+[data-skin='jun'] .main .tracks .tracks__title { color: var(--ink); }
+[data-skin='jun'] .main .tracks .chip { color: #4f6b7d; background: transparent; border: 1.5px solid rgba(79, 107, 125, 0.55); }
+[data-skin='jun'] .main .tracks li.is-playing .tracks__title { color: #4f6b7d; }
+[data-skin='jun'] .main .tracks .like-btn.is-liked { color: #d0697f; }
+
+/* ---------- sign in / register: the sea ---------- */
+
+[data-skin='jun'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(238, 237, 233, 0), rgba(94, 122, 140, 0.22)),
+    url('/themes/jun/seaside.jpg') center 30% / cover;
+}
+[data-skin='jun'] .auth__glow { background: radial-gradient(circle, rgba(201, 164, 63, 0.35), transparent 65%); }
+[data-skin='jun'] .auth__gem { content: url('/themes/jun/umbrella.svg'); width: 80px; height: 88px; }
+[data-skin='jun'] .auth__switch a { color: #4f6b7d; }
+
+/* ---------- Now Playing: hood up on the sofa, phone in hand ---------- */
+
+[data-skin='jun'] .np {
+  --np-bg: #1b1c1f;
+  --np-ink: #fbfaf7;
+  --np-label: #d9b43f;
+  --np-label2: #a9bccb;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(27, 28, 31, 0.75)),
+    url('/themes/jun/sofa-hood.jpg') center 25% / cover,
+    #1b1c1f;
+}
+[data-skin='jun'] .np__deck { background: rgba(251, 250, 247, 0.92); color: #1b1c1f; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); }
+/* keeps the words readable over the photo */
+[data-skin='jun'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(27, 28, 31, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='jun'] .np__title { color: #fbfaf7; font-style: italic; }
+[data-skin='jun'] .np__album { font-family: 'Caveat', cursive; font-size: clamp(1.3rem, 2.4vw, 1.8rem); color: #d9b43f; }
+[data-skin='jun'] .np__blurb { color: rgba(251, 250, 247, 0.85); }
+[data-skin='jun'] .np__label { background: url('/themes/jun/ginkgo.svg') center / 50% no-repeat, #fbfaf7; }
+[data-skin='jun'] .np-wave span { background: linear-gradient(#d9b43f, #a9bccb); }
+[data-skin='jun'] .np-ctrl .np-ctrl__main { background: #fbfaf7; color: #1b1c1f; }
+
+/* ---------- footer: ginkgo leaves under the streetlight ---------- */
+
+[data-skin='jun'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #fbfaf7;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(238, 237, 233, 0) 30%, rgba(14, 18, 28, 0) 56%, rgba(10, 12, 20, 0.9) 92%),
+    url('/themes/jun/ginkgo-night.jpg') center 22% / cover;
+}
+[data-skin='jun'] .footer a { color: #d9b43f; }
+
+/* ---------- the little cursor sparkles turn sea and gold ---------- */
+
+[data-skin='jun'] .sparkle { color: #4f6b7d; }
+[data-skin='jun'] .sparkle:nth-child(odd) { color: #c9a43f; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='umbrellas'] .bg-pattern::before,
+  [data-skin='jun'] .hero::before { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--umbrellas::before {
+  background-image: url('/themes/jun/umbrella.svg'), url('/themes/jun/ginkgo.svg'), url('/themes/jun/petal.svg'), url('/themes/jun/rain.svg');
+  background-size: 22px, 14px, 12px, 90px;
+  background-position: 90% 26%, 12% 74%, 70% 84%, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+  opacity: 0.7;
+}
+.tp--jun::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50px;
+  width: 44px;
+  height: 48px;
+  background: url('/themes/jun/umbrella.svg') center / contain no-repeat;
+}
+.tp--jun .tp__title { color: #1b1c1f; font-style: italic; }

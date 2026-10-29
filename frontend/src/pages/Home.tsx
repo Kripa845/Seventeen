@@ -1,11 +1,13 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { MemberAvatar } from '../components/MemberAvatar'
+import { MemberDialog } from '../components/MemberDialog'
 import { ApiError, Loading } from '../components/Status'
 import { useAlbums, useMembers, useSongs } from '../lib/api'
 import { dailyIndex, DEBUT, daysSince, formatDayMonth, nextAnniversary } from '../lib/dates'
 import { useTheme } from '../lib/theme'
-import type { Unit } from '../lib/types'
+import type { Member, Unit } from '../lib/types'
 
 const UNITS: { unit: Unit; name: string; text: string }[] = [
   { unit: 'hiphop', name: 'Hip-hop Unit', text: 'The rappers: sharp verses, bold stage presence and a lot of the group’s swagger.' },
@@ -20,7 +22,7 @@ const LOCKED = [
   { icon: '▣', title: 'Memories', text: 'Photo albums of photos, member pictures, songs and videos.' },
   { icon: '♫', title: 'Music & playlist', text: 'Every song with its MV, and a playlist of the ones you heart.' },
   { icon: '✦', title: 'Themes', text: 'Wear any era’s look across the whole site.' },
-  { icon: '☺', title: 'Your bias', text: 'Pick a member and your dashboard takes on their colour.' },
+  { icon: '☺', title: 'Your bias', text: 'Pick a member and your dashboard shows their colour.' },
 ]
 
 /** The landing page: open to everyone. The rest of the site is behind a free account. */
@@ -30,6 +32,7 @@ export function Home() {
   const songs = useSongs()
   const { site } = useTheme()
   const { account } = useAuth()
+  const [shown, setShown] = useState<Member | null>(null) // the member whose details are open
 
   const anniversary = nextAnniversary('2015-05-26')
   const nextBirthday = members.data
@@ -131,6 +134,7 @@ export function Home() {
       <section id="members">
         <div className="section-head">
           <h2>The members</h2>
+          <span className="muted small landing-hint">Tap a member for their details</span>
           <Link className="link-arrow" to="/members">{account ? 'Full profiles →' : 'Sign in for full profiles →'}</Link>
         </div>
         {members.loading && <Loading />}
@@ -144,14 +148,17 @@ export function Home() {
                 <ul>
                   {list.map((m) => (
                     <li key={m.slug} style={{ ['--m' as string]: m.color }}>
-                      <MemberAvatar member={m} size="sm" />
-                      <span>
-                        <b>
-                          {m.stage_name}
-                          {m.is_unit_leader && <span className="landing-unit__leader"> · leader</span>}
-                        </b>
-                        <small>{m.position}</small>
-                      </span>
+                      <button className="landing-unit__member" onClick={() => setShown(m)} aria-haspopup="dialog">
+                        <MemberAvatar member={m} size="sm" />
+                        <span>
+                          <b>
+                            {m.stage_name}
+                            {m.is_unit_leader && <span className="landing-unit__leader"> · leader</span>}
+                          </b>
+                          <small>{m.position}</small>
+                        </span>
+                        <span className="landing-unit__more" aria-hidden>›</span>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -168,8 +175,12 @@ export function Home() {
               <h2>{todays.stage_name}</h2>
               <p className="today__tagline">{todays.tagline}</p>
               <p className="muted small">{todays.unit_label} · {todays.position} · birthday {formatDayMonth(nextAnniversary(todays.birthday).date)}</p>
+              <button className="link-arrow landing-today__more" onClick={() => setShown(todays)} aria-haspopup="dialog">More about {todays.stage_name} →</button>
             </div>
           </div>
+        )}
+        {shown && members.data && (
+          <MemberDialog member={shown} members={members.data} onPick={setShown} onClose={() => setShown(null)} />
         )}
       </section>
 

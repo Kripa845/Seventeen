@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { CSSProperties, FormEvent, ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useAuth } from '../auth/AuthProvider'
 import { useAlbums, useMembers, useSongs } from '../lib/api'
 import { usePlayer } from '../lib/player'
-import { useStudioUser } from '../lib/studio'
 import type { DiaryPage } from '../lib/types'
 import { Book } from './Book'
 import { ALBUM_BOOK, DIARY_BOOK, diaryApi, longDate, monthLabel, pageName, pageText, todayIso, uid } from './kit'
@@ -17,7 +17,7 @@ import { VideoProvider } from './Video'
 import type { MemberMap } from './Sheet'
 import './diary.css'
 
-type Popup = 'more' | 'menu' | 'new' | 'signin' | 'delete' | null
+type Popup = 'more' | 'menu' | 'new' | 'delete' | null
 
 function Pop({ children, onClose, className = '' }: { children: ReactNode; onClose: () => void; className?: string }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -39,35 +39,6 @@ function Pop({ children, onClose, className = '' }: { children: ReactNode; onClo
   )
 }
 
-function SignIn({ onSignIn, onClose }: { onSignIn: (u: string, p: string) => Promise<void>; onClose: () => void }) {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
-  const submit = async (e: FormEvent) => {
-    e.preventDefault()
-    setBusy(true)
-    setError(null)
-    try {
-      await onSignIn(username.trim(), password)
-      onClose()
-    } catch (err) {
-      setError((err as Error).message)
-      setBusy(false)
-    }
-  }
-  return (
-    <form className="dform" onSubmit={submit}>
-      <b>Sign in to write</b>
-      <span className="dhint">Use a Studio (staff) account.</span>
-      <input className="dinput" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" autoFocus required />
-      <input className="dinput" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
-      {error && <span className="dform__error">{error}</span>}
-      <button className="dbtn dbtn--primary" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
-    </form>
-  )
-}
-
 export function Diary() {
   return <Journal book={DIARY_BOOK} />
 }
@@ -82,8 +53,9 @@ function Journal({ book }: { book: BookConfig }) {
   const songsApi = useSongs()
   const albumsApi = useAlbums()
   const player = usePlayer()
-  const { user, signIn, signOut } = useStudioUser()
-  const canEdit = !!user?.is_staff
+  const { account } = useAuth()
+  // Signed-in viewers add diary pages and change their own; photo albums are added by admins.
+  const canAdd = book.kind === 'diary' ? !!account : !!account?.is_staff
   const [params, setParams] = useSearchParams()
 
   const [pages, setPages] = useState<DiaryPage[] | null>(null)
@@ -111,9 +83,10 @@ function Journal({ book }: { book: BookConfig }) {
     [songsApi.data, albumsApi.data],
   )
 
-  // Reload when someone signs in or out: staff also see private pages.
+  // Reload when the account changes: what you can see and change depends on it.
+  const who = account === undefined ? undefined : (account?.username ?? '')
   useEffect(() => {
-    if (user === undefined) return
+    if (who === undefined) return
     let alive = true
     diaryApi
       .list(book.kind)
@@ -122,7 +95,7 @@ function Journal({ book }: { book: BookConfig }) {
     return () => {
       alive = false
     }
-  }, [user, book.kind])
+  }, [who, book.kind])
 
   const shown = useMemo(() => {
     if (!pages) return []
@@ -210,7 +183,7 @@ function Journal({ book }: { book: BookConfig }) {
   const togglePrivate = async (page: DiaryPage) => {
     try {
       replace(await diaryApi.save(page.id, { is_private: !page.is_private }))
-      flash(page.is_private ? 'Everyone can see this page now' : 'Only you can see this page now')
+      flash(page.is_private ? 'Everyone can see this page now' : 'Only you (and admins) can see this page now')
     } catch (e) {
       flash((e as Error).message)
     }
@@ -251,10 +224,10 @@ function Journal({ book }: { book: BookConfig }) {
     setPopup(null)
   }
 
-  const openPage = (page: DiaryPage) => (canEdit ? setEditing({ page, isNew: false }) : setReading(page))
+  const openPage = (page: DiaryPage) => (page.can_edit ? setEditing({ page, isNew: false }) : setReading(page))
 
   const addClick = () => {
-    if (!canEdit) return setPopup('signin')
+    if (!canAdd) return
     setNewDate(todayIso())
     setNewTitle('')
     setPopup('new')
@@ -357,7 +330,7 @@ function Journal({ book }: { book: BookConfig }) {
                     )}
                     <button onClick={() => (go(0), setPopup(null))} disabled={!shown.length}>⇤ First page</button>
                     <button onClick={() => (go(shown.length - 1), setPopup(null))} disabled={!shown.length}>Latest page ⇥</button>
-                    {canEdit && dated && (
+                    {canAdd && dated && (
                       <button
                         onClick={() => {
                           const today = shown.find((p) => p.date === todayIso())
@@ -368,12 +341,6 @@ function Journal({ book }: { book: BookConfig }) {
                       >
                         ✎ Today’s page
                       </button>
-                    )}
-                    <hr />
-                    {user ? (
-                      <button onClick={() => (signOut(), setPopup(null))}>Sign out ({user.username})</button>
-                    ) : (
-                      <button onClick={() => setPopup('signin')}>{dated ? 'Sign in to write' : 'Admin sign in'}</button>
                     )}
                   </Pop>
                 )}
@@ -397,7 +364,7 @@ function Journal({ book }: { book: BookConfig }) {
                 <div className="diary__cover">
                   <span className="diary__cover-gem" aria-hidden>◆</span>
                   <b>{book.cover}</b>
-                  <span>{canEdit ? (book.kind === 'album' ? 'Tap + to start your first page of memories.' : 'Tap + to write your first page.') : 'Nothing here yet.'}</span>
+                  <span>{canAdd ? (book.kind === 'album' ? 'Tap + to start your first page of memories.' : 'Tap + to write your first page.') : 'Nothing here yet.'}</span>
                 </div>
               )}
             </div>
@@ -409,8 +376,9 @@ function Journal({ book }: { book: BookConfig }) {
               <p className="diary__when">
                 {current.date ? longDate(current.date) : <b>{current.title || 'Untitled page'}</b>}
                 {current.date && current.title && <b> · {current.title}</b>}
+                {current.author_name && <span className="diary__by"> · by {current.author_name}</span>}
                 <button className="diary__open" onClick={() => openPage(current)}>
-                  {canEdit ? '✎ Edit page' : '⤢ View page'}
+                  {current.can_edit ? '✎ Edit page' : '⤢ View page'}
                 </button>
                 {currentSongs.length > 0 && (
                   <button
@@ -474,12 +442,11 @@ function Journal({ book }: { book: BookConfig }) {
               </button>
               {popup === 'more' && current && (
                 <Pop onClose={() => setPopup(null)} className="dpop--up">
-                  <button onClick={() => (openPage(current), setPopup(null))}>{canEdit ? '✎ Edit page' : '⤢ Open page'}</button>
-                  {canEdit && (
-                    <>
-                      <button onClick={() => duplicate(current)}>⧉ Duplicate</button>
-                      <button onClick={() => togglePrivate(current)}>{current.is_private ? '◉ Make public' : '◌ Make private'}</button>
-                    </>
+                  <button onClick={() => (openPage(current), setPopup(null))}>{current.can_edit ? '✎ Edit page' : '⤢ Open page'}</button>
+                  {/* a copy is yours, so anyone who can add pages can copy one */}
+                  {canAdd && <button onClick={() => duplicate(current)}>⧉ Duplicate</button>}
+                  {current.can_edit && (
+                    <button onClick={() => togglePrivate(current)}>{current.is_private ? '◉ Make public' : '◌ Make private'}</button>
                   )}
                   <button onClick={() => (setView(view === 'book' ? 'grid' : 'book'), setPopup(null))}>{view === 'book' ? '▦ All pages' : '📖 Book view'}</button>
                 </Pop>
@@ -488,7 +455,7 @@ function Journal({ book }: { book: BookConfig }) {
             <button className="dcircle" aria-label="Share" disabled={!current} onClick={() => current && share(current)}>
               <IconShare />
             </button>
-            {canEdit && (
+            {current?.can_edit && (
               <div className="dpop-anchor">
                 <button className="dcircle" aria-label="Delete page" disabled={!current} onClick={() => setPopup('delete')}>
                   <IconTrash />
@@ -507,8 +474,8 @@ function Journal({ book }: { book: BookConfig }) {
               </div>
             )}
             <div className="dpop-anchor">
-              {/* Photo albums are made by admins only: viewers don't get an add button at all. */}
-              {(canEdit || dated) && (
+              {/* Photo albums are made by admins only: viewers don't get an add button there. */}
+              {canAdd && (
                 <button className="dcircle" aria-label="New page" onClick={addClick}>
                   <IconPlus />
                 </button>
@@ -532,15 +499,9 @@ function Journal({ book }: { book: BookConfig }) {
                   </form>
                 </Pop>
               )}
-              {popup === 'signin' && (
-                <Pop onClose={() => setPopup(null)} className="dpop--up">
-                  <SignIn onSignIn={signIn} onClose={() => setPopup(null)} />
-                </Pop>
-              )}
             </div>
           </footer>
 
-          {user && !canEdit && dated && <p className="diary__note">Signed in as {user.username}. Only staff accounts can add pages here.</p>}
           {toast && <div className="dtoast" role="status">{toast}</div>}
 
           {editing && (

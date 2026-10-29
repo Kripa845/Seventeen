@@ -11,9 +11,9 @@ from .models import Album, DiaryPage, DiaryPhoto, DiaryVideo, GameScore, Member,
 
 HEX = re.compile(r"^#[0-9A-Fa-f]{6}$")
 FONTS = {"serif", "sans", "display", "mono", "marker"}
-PATTERNS = {"sparkle", "grid", "waves", "stars", "petals", "daisies", "smileys", "signs", "flowers", "orbits", "suns", "billiards", "none"}
+PATTERNS = {"sparkle", "grid", "waves", "stars", "petals", "daisies", "smileys", "signs", "flowers", "orbits", "suns", "billiards", "staves", "hoops", "film", "butterflies", "picks", "umbrellas", "roses", "books", "confetti", "ink", "footprints", "tangerines", "lemons", "leaves", "tiger", "none"}
 # A skin adds photos and decorations on top of the colours (frontend/src/themes/<skin>.css).
-SKINS = {"none", "heaven", "darling", "leftright", "world", "attacca", "hot", "homerun"}
+SKINS = {"none", "heaven", "darling", "leftright", "world", "attacca", "hot", "homerun", "maestro", "ajunice", "scoups", "jeonghan", "joshua", "jun", "dk", "wonwoo", "woozi", "the8", "dino", "seungkwan", "vernon", "mingyu", "hoshi"}
 
 
 def validate_theme(value):
@@ -210,7 +210,7 @@ YOUTUBE_URL = re.compile(r"^https://(www\.|m\.)?(youtube\.com|youtu\.be)/\S+$")
 SONG_STYLES = {"card", "vinyl", "cassette"}
 MUSIC_URL = re.compile(r"^https://(www\.|m\.|music\.)?(youtube\.com|youtu\.be|open\.spotify\.com)/\S+$")
 FRAMES = {"none", "cutout", "polaroid", "tape", "round", "heart", "arch", "stamp", "film", "gold", "torn"}
-TEXT_FONTS = {"hand", "cute", "marker", "type", "script", "serif", "bold"}
+TEXT_FONTS = {"hand", "cute", "marker", "type", "script", "serif", "bold", "pen", "round", "poster", "retro", "bubbly", "magazine", "pixel"}
 TEXT_STYLES = {"plain", "note", "label", "tape"}
 MAX_ITEMS = 150
 MAX_PHOTO_MB = 10
@@ -344,22 +344,41 @@ class DiaryVideoSerializer(serializers.ModelSerializer):
         return value
 
 
+def can_edit_page(user, page):
+    """Admins change any page; a viewer changes the diary pages they wrote."""
+    if not (user and user.is_authenticated):
+        return False
+    return user.is_staff or (page.book == DiaryPage.Book.DIARY and page.author_id == user.id)
+
+
 class DiaryPageSerializer(serializers.ModelSerializer):
     # {photo id: url} and {video id: url} for the uploaded things on this page.
     photos = serializers.SerializerMethodField()
     videos = serializers.SerializerMethodField()
+    author_name = serializers.SerializerMethodField()
+    can_edit = serializers.SerializerMethodField()
 
     class Meta:
         model = DiaryPage
         fields = [
             "id", "book", "date", "title", "paper", "items", "is_private", "position", "photos", "videos",
-            "created_at", "updated_at",
+            "author_name", "can_edit", "created_at", "updated_at",
         ]
         # position changes only through POST /api/diary/reorder/
         read_only_fields = ["position", "created_at", "updated_at"]
 
     def get_photos(self, page):
         return {str(p.id): p.image.url for p in page.photos.all()}
+
+    def get_author_name(self, page):
+        if not page.author:
+            return ""
+        profile = getattr(page.author, "profile", None)  # read only: never creates one
+        return profile.name if profile else page.author.get_username()
+
+    def get_can_edit(self, page):
+        request = self.context.get("request")
+        return bool(request) and can_edit_page(request.user, page)
 
     def get_videos(self, page):
         return {str(v.id): v.file.url for v in page.videos.all()}

@@ -1,0 +1,331 @@
+/* ============================================================
+   "Jeonghan Aesthetics" skin: quiet film photos. Soft grain,
+   charcoal blue, the dusty sky and beige plaid, the river in the
+   sun, Budapest at night, torn tape and a white butterfly, and
+   "yoon" in a small lowercase serif (public/themes/jeonghan/).
+   Switched on by theme tokens with skin: 'jeonghan'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "butterflies" background pattern (works with any theme) ---------- */
+
+[data-pattern='butterflies'] .bg-pattern {
+  opacity: 0.45;
+  background-image:
+    url('/themes/jeonghan/grain.svg'),
+    url('/themes/jeonghan/butterfly.svg'),
+    url('/themes/jeonghan/butterfly.svg'),
+    url('/themes/jeonghan/tape.svg'),
+    url('/themes/jeonghan/tape.svg');
+  background-size: 200px, 30px 24px, 20px 16px, 90px 30px, 70px 24px;
+  background-position: 0 0, 97% 18%, 2% 70%, 1% 12%, 98% 88%;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+}
+[data-dark='false'][data-pattern='butterflies'] .bg-pattern { filter: invert(0.8); }
+/* one butterfly drifting up the right side */
+[data-pattern='butterflies'] .bg-pattern::after {
+  content: '';
+  position: absolute;
+  right: 4%;
+  bottom: -40px;
+  width: 34px;
+  height: 27px;
+  background: url('/themes/jeonghan/butterfly.svg') center / contain no-repeat;
+  animation: jh-drift 22s ease-in-out infinite;
+}
+@keyframes jh-drift {
+  0% { transform: translate(0, 0) scaleX(1); }
+  25% { transform: translate(-60px, -30vh) scaleX(0.6); }
+  50% { transform: translate(10px, -60vh) scaleX(1); }
+  75% { transform: translate(-40px, -85vh) scaleX(0.6); }
+  100% { transform: translate(0, -115vh) scaleX(1); }
+}
+
+/* ---------- the skin ---------- */
+
+[data-skin='jeonghan'] body {
+  background:
+    url('/themes/jeonghan/grain.svg') 0 0 / 200px repeat,
+    radial-gradient(900px 500px at 20% -10%, rgba(143, 160, 180, 0.22), transparent 70%),
+    radial-gradient(800px 500px at 100% 100%, rgba(201, 183, 154, 0.12), transparent 70%),
+    var(--bg);
+  background-attachment: fixed, scroll, scroll, scroll;
+}
+
+/* headings: a soft lowercase serif, like the "yoon" caption */
+[data-skin='jeonghan'] .main h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-style: italic;
+  text-transform: lowercase;
+  letter-spacing: 0.01em;
+  color: #ece8e0;
+}
+/* a scrap of torn tape under the title */
+[data-skin='jeonghan'] .main h1::after {
+  content: '';
+  display: block;
+  width: 110px;
+  height: 22px;
+  margin-top: 6px;
+  background: url('/themes/jeonghan/tape.svg') left center / contain no-repeat;
+  transform: rotate(-3deg);
+}
+[data-skin='jeonghan'] .main h2 { font-family: 'Cormorant Garamond', serif; font-weight: 500; color: #ece8e0; }
+[data-skin='jeonghan'] .eyebrow { color: #c9b79a; letter-spacing: 0.24em; text-transform: lowercase; }
+
+/* nav: smoked glass */
+[data-skin='jeonghan'] .nav {
+  background: rgba(24, 26, 31, 0.82);
+  border-color: rgba(236, 232, 224, 0.1);
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.8);
+}
+[data-skin='jeonghan'] .nav__links a { color: rgba(236, 232, 224, 0.65); }
+[data-skin='jeonghan'] .nav__links a:hover { color: #fff; }
+[data-skin='jeonghan'] .nav__links a.active { background: #ece8e0; color: #15171b; }
+[data-skin='jeonghan'] .nav__logo::after {
+  content: '';
+  width: 18px;
+  height: 14px;
+  margin-left: 2px;
+  background: url('/themes/jeonghan/butterfly.svg') center / contain no-repeat;
+}
+
+/* cards: matte prints with rounded corners, like the collage frames */
+[data-skin='jeonghan'] .main .card,
+[data-skin='jeonghan'] .auth {
+  background: rgba(31, 35, 42, 0.86);
+  border: 1px solid rgba(236, 232, 224, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 20px 40px -26px rgba(0, 0, 0, 0.85);
+}
+[data-skin='jeonghan'] .main .btn,
+[data-skin='jeonghan'] .acct--signin {
+  color: #15171b;
+  background: #c9b79a;
+  box-shadow: 0 10px 22px -12px rgba(201, 183, 154, 0.7);
+}
+[data-skin='jeonghan'] .main .btn:hover { background: #d8c8ad; }
+[data-skin='jeonghan'] .main .btn--ghost {
+  color: #ece8e0;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px rgba(143, 160, 180, 0.8);
+}
+[data-skin='jeonghan'] .main .chip { color: #ece8e0; background: rgba(143, 160, 180, 0.14); border: 1px solid rgba(143, 160, 180, 0.4); }
+
+/* ---------- home: two taped prints either side of the title ---------- */
+
+[data-skin='jeonghan'] .hero {
+  position: relative;
+  margin-top: 18px;
+  border-radius: 24px;
+  overflow: hidden;
+  background:
+    url('/themes/jeonghan/grain.svg') 0 0 / 200px repeat,
+    radial-gradient(70% 90% at 50% 40%, rgba(143, 160, 180, 0.16), transparent 70%),
+    #121418;
+  box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.85);
+}
+[data-skin='jeonghan'] .hero > * { position: relative; z-index: 1; }
+[data-skin='jeonghan'] .hero h1 { text-transform: none; }
+[data-skin='jeonghan'] .hero h1::after { margin-inline: auto; }
+[data-skin='jeonghan'] .hero__equation { color: #c9b79a; -webkit-text-fill-color: #c9b79a; background: none; }
+[data-skin='jeonghan'] .hero__lede { color: rgba(236, 232, 224, 0.82); }
+@media (min-width: 1000px) {
+  [data-skin='jeonghan'] .hero { padding-inline: 230px; }
+  [data-skin='jeonghan'] .hero::before,
+  [data-skin='jeonghan'] .hero::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 190px;
+    height: 320px;
+    border-radius: 14px;
+    box-shadow: 0 24px 40px -18px rgba(0, 0, 0, 0.9);
+  }
+  /* the river in the sun, smiling */
+  [data-skin='jeonghan'] .hero::before {
+    left: 30px;
+    translate: 0 -50%;
+    rotate: -4deg;
+    background:
+      url('/themes/jeonghan/tape.svg') center 0 / 96px 30px no-repeat,
+      url('/themes/jeonghan/river-smile.jpg') 30% 40% / cover;
+  }
+  /* Budapest at night, with a butterfly resting on the corner */
+  [data-skin='jeonghan'] .hero::after {
+    right: 30px;
+    translate: 0 -50%;
+    rotate: 3deg;
+    background:
+      url('/themes/jeonghan/butterfly.svg') 92% 94% / 34px 27px no-repeat,
+      url('/themes/jeonghan/danube-night.jpg') 45% 68% / cover;
+  }
+}
+
+/* ---------- a tall print beside page titles ---------- */
+
+[data-skin='jeonghan'] .page-head { position: relative; }
+[data-skin='jeonghan'] .page-head:has(~ .timeline) { --photo: url('/themes/jeonghan/sky-strip.jpg'); --at: center 8%; }
+[data-skin='jeonghan'] .page-head:has(~ .game-list) { --photo: url('/themes/jeonghan/court-night.jpg'); --at: center 75%; }
+[data-skin='jeonghan'] .page-head:has(.music__ctas) { --photo: url('/themes/jeonghan/cap.jpg'); --at: center 40%; }
+[data-skin='jeonghan'] .page-head:has(~ .unit),
+[data-skin='jeonghan'] .page-head:has(.tabs) { --photo: url('/themes/jeonghan/river-glasses.jpg'); --at: 70% 50%; }
+@media (min-width: 900px) {
+  [data-skin='jeonghan'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 300px;
+    padding-right: 260px;
+  }
+  [data-skin='jeonghan'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 24px;
+    top: -6px;
+    width: 190px;
+    height: 290px;
+    border-radius: 14px;
+    background:
+      url('/themes/jeonghan/tape.svg') center 0 / 90px 28px no-repeat,
+      var(--photo) var(--at, center) / cover;
+    filter: saturate(0.85) contrast(1.02);
+    box-shadow: 0 24px 40px -18px rgba(0, 0, 0, 0.85);
+    transform: rotate(2.5deg);
+  }
+  [data-skin='jeonghan'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: 'yoon';
+    position: absolute;
+    z-index: 1;
+    right: 168px;
+    top: 292px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: #ece8e0;
+  }
+}
+
+/* ---------- tracklists become the black collage ---------- */
+
+[data-skin='jeonghan'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 16px 16px 14px;
+  background: #0c0d0f;
+  border-radius: 18px;
+  box-shadow: 0 22px 40px -24px rgba(0, 0, 0, 0.9);
+}
+[data-skin='jeonghan'] .main .tracks .tracks__row {
+  margin: 6px 0;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(236, 232, 224, 0.05);
+}
+[data-skin='jeonghan'] .main .tracks button:hover { background: rgba(236, 232, 224, 0.08); }
+[data-skin='jeonghan'] .main .tracks::before {
+  content: '';
+  position: absolute;
+  right: 40px;
+  top: -12px;
+  width: 92px;
+  height: 30px;
+  background: url('/themes/jeonghan/tape.svg') center / contain no-repeat;
+  transform: rotate(6deg);
+}
+[data-skin='jeonghan'] .main .tracks::after {
+  content: 'yoon';
+  display: block;
+  margin: 10px 4px 0;
+  padding-right: 46px;
+  text-align: right;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  color: #ece8e0;
+  background: url('/themes/jeonghan/butterfly.svg') right center / 30px 24px no-repeat;
+}
+[data-skin='jeonghan'] .main .tracks .tracks__title { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.1rem; }
+[data-skin='jeonghan'] .main .tracks .chip { color: #15171b; background: #c9b79a; border: 0; }
+[data-skin='jeonghan'] .main .tracks li.is-playing .tracks__title { color: #c9b79a; }
+[data-skin='jeonghan'] .main .tracks .like-btn.is-liked { color: #e8a0a8; }
+
+/* ---------- sign in / register: the collage ---------- */
+
+[data-skin='jeonghan'] .auth__art {
+  background: url('/themes/jeonghan/collage.jpg') center 40% / cover, #000;
+}
+[data-skin='jeonghan'] .auth__glow { background: radial-gradient(circle, rgba(236, 232, 224, 0.18), transparent 65%); }
+[data-skin='jeonghan'] .auth__gem { content: url('/themes/jeonghan/butterfly.svg'); width: 72px; height: 58px; }
+[data-skin='jeonghan'] .auth__switch a { color: #c9b79a; }
+/* the collage is the picture here: the member circle steps back until you reach for it */
+[data-skin='jeonghan'] .auth__ring { opacity: 0.35; transition: opacity 0.3s; }
+[data-skin='jeonghan'] .auth__art:hover .auth__ring { opacity: 1; }
+
+/* ---------- Now Playing: Budapest at night ---------- */
+
+[data-skin='jeonghan'] .np {
+  --np-bg: #0e1116;
+  --np-ink: #ece8e0;
+  --np-label: #c9b79a;
+  --np-label2: #8fa0b4;
+  background:
+    url('/themes/jeonghan/grain.svg') 0 0 / 200px repeat,
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(8, 10, 14, 0.8)),
+    url('/themes/jeonghan/danube-night.jpg') center 66% / cover,
+    #0e1116;
+}
+[data-skin='jeonghan'] .np__deck { background: #ece8e0; color: #15171b; box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.85); }
+/* keeps the words readable over the photo */
+[data-skin='jeonghan'] .np__text {
+  padding: 22px 26px;
+  border-radius: 22px;
+  background: rgba(10, 12, 16, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='jeonghan'] .np__title { color: #ece8e0; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-style: italic; }
+[data-skin='jeonghan'] .np h1::after { display: none; }
+[data-skin='jeonghan'] .np__album { color: #c9b79a; font-family: 'Cormorant Garamond', serif; text-transform: lowercase; }
+[data-skin='jeonghan'] .np__blurb { color: rgba(236, 232, 224, 0.82); }
+[data-skin='jeonghan'] .np__label { background: url('/themes/jeonghan/butterfly.svg') center / 52% no-repeat, #8fa0b4; }
+[data-skin='jeonghan'] .np-wave span { background: linear-gradient(#ece8e0, #8fa0b4); }
+[data-skin='jeonghan'] .np-ctrl .np-ctrl__main { background: #15171b; color: #ece8e0; }
+
+/* ---------- footer: the dusty sky ---------- */
+
+[data-skin='jeonghan'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 420px;
+  margin-top: 60px;
+  padding: 0 16px 100px;
+  color: #ece8e0;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(21, 23, 27, 0.1) 30%, rgba(21, 23, 27, 0.1) 55%, rgba(10, 12, 16, 0.9) 92%),
+    url('/themes/jeonghan/sky-strip.jpg') center 9% / cover;
+}
+[data-skin='jeonghan'] .footer a { color: #c9b79a; }
+
+/* ---------- the little cursor sparkles turn white and dusty blue ---------- */
+
+[data-skin='jeonghan'] .sparkle { color: #ece8e0; }
+[data-skin='jeonghan'] .sparkle:nth-child(odd) { color: #8fa0b4; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--butterflies::before {
+  background-image: url('/themes/jeonghan/butterfly.svg'), url('/themes/jeonghan/tape.svg');
+  background-size: 22px 18px, 44px 15px;
+  background-position: 88% 28%, 10% 74%;
+  background-repeat: no-repeat;
+  opacity: 0.85;
+}
+.tp--jeonghan::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 46px;
+  width: 26px;
+  height: 21px;
+  background: url('/themes/jeonghan/butterfly.svg') center / contain no-repeat;
+}
+.tp--jeonghan .tp__title { font-family: 'Cormorant Garamond', serif; font-style: italic; text-transform: lowercase; }

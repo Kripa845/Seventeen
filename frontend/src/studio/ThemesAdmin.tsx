@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { MemberAvatar } from '../components/MemberAvatar'
 import { Loading } from '../components/Status'
-import { CARAT_THEME, DARLING_THEME, HEAVEN_THEME, LEFTRIGHT_THEME, WORLD_THEME, ATTACCA_THEME, HOT_THEME, HOMERUN_THEME, mix } from '../lib/color'
+import { CARAT_THEME, DARLING_THEME, HEAVEN_THEME, LEFTRIGHT_THEME, WORLD_THEME, ATTACCA_THEME, HOT_THEME, HOMERUN_THEME, MAESTRO_THEME, AJUNICE_THEME, SCOUPS_THEME, JEONGHAN_THEME, JOSHUA_THEME, JUN_THEME, DK_THEME, WONWOO_THEME, WOOZI_THEME, THE8_THEME, DINO_THEME, SEUNGKWAN_THEME, VERNON_THEME, MINGYU_THEME, HOSHI_THEME, mix } from '../lib/color'
 import { send, useStudioData } from '../lib/studio'
 import type { Album, Member, ThemeTokens } from '../lib/types'
 import { LookAndFeel } from './LookAndFeel'
@@ -29,7 +29,7 @@ function EraThemes() {
   if (!albums) return <Loading />
   const list = [...albums].reverse()
   const editing = list.find((a) => a.slug === open)
-  const presets: Preset[] = [{ label: 'Rose Quartz & Serenity', theme: CARAT_THEME }, { label: '✿ Seventeenth Heaven', theme: HEAVEN_THEME }, { label: '☺ Darl+ing', theme: DARLING_THEME }, { label: '⇄ Left & Right', theme: LEFTRIGHT_THEME }, { label: '❀ World', theme: WORLD_THEME }, { label: '✦ Rock with you', theme: ATTACCA_THEME }, { label: '☀ Hot', theme: HOT_THEME }, { label: '; Home;Run', theme: HOMERUN_THEME }, ...list.map((a) => ({ label: a.title, theme: a.theme }))]
+  const presets: Preset[] = [{ label: 'Rose Quartz & Serenity', theme: CARAT_THEME }, { label: '✿ Seventeenth Heaven', theme: HEAVEN_THEME }, { label: '☺ Darl+ing', theme: DARLING_THEME }, { label: '⇄ Left & Right', theme: LEFTRIGHT_THEME }, { label: '❀ World', theme: WORLD_THEME }, { label: '✦ Rock with you', theme: ATTACCA_THEME }, { label: '☀ Hot', theme: HOT_THEME }, { label: '; Home;Run', theme: HOMERUN_THEME }, { label: '♪ Maestro', theme: MAESTRO_THEME }, { label: '🏀 Aju Nice', theme: AJUNICE_THEME }, { label: '📷 S.Coups aesthetics', theme: SCOUPS_THEME }, { label: '🦋 Jeonghan Aesthetics', theme: JEONGHAN_THEME }, { label: '🎸 Joshua Aesthetics', theme: JOSHUA_THEME }, { label: '☂ Jun Aesthetics', theme: JUN_THEME }, { label: '🌹 DK Aesthetics', theme: DK_THEME }, { label: '📚 Wonwoo Aesthetics', theme: WONWOO_THEME }, { label: '🎙 Woozi Aesthetics', theme: WOOZI_THEME }, { label: '✎ The8 Aesthetics', theme: THE8_THEME }, { label: '🦖 Dino Aesthetics', theme: DINO_THEME }, { label: '🍊 Seungkwan Aesthetics', theme: SEUNGKWAN_THEME }, { label: '🍋 Vernon Aesthetics', theme: VERNON_THEME }, { label: '🌿 Mingyu Aesthetics', theme: MINGYU_THEME }, { label: '🐯 Hoshi Aesthetics', theme: HOSHI_THEME }, ...list.map((a) => ({ label: a.title, theme: a.theme }))]
 
   const save = async () => {
     if (!editing || !draft) return

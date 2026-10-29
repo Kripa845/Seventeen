@@ -1,0 +1,307 @@
+/* ============================================================
+   "Dino Aesthetics" skin: black-and-white portraits that warm
+   into colour, amber café lights, the forest-green hoodie, the
+   red-orange sleeve, snow under streetlights, and a little dino
+   leaving footprints (public/themes/dino/).
+   Switched on by theme tokens with skin: 'dino'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "footprints" background pattern (works with any theme) ---------- */
+
+[data-pattern='footprints'] .bg-pattern {
+  opacity: 0.22;
+  background-image:
+    url('/themes/dino/footprint.svg'),
+    url('/themes/dino/footprint.svg'),
+    url('/themes/dino/footprint.svg'),
+    url('/themes/dino/footprint.svg'),
+    url('/themes/dino/footprint.svg'),
+    url('/themes/dino/footprint.svg');
+  background-size: 18px 21px;
+  /* a little trail walking up the left edge, and another down the right */
+  background-position: 2% 92%, 3.6% 82%, 1.8% 72%, 97% 18%, 98.4% 28%, 96.8% 38%;
+  background-repeat: no-repeat;
+}
+[data-dark='false'][data-pattern='footprints'] .bg-pattern { filter: invert(0.85); opacity: 0.3; }
+/* the dino itself, peeking up from the bottom corner now and then */
+[data-pattern='footprints'] .bg-pattern::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  bottom: -64px;
+  width: 80px;
+  height: 60px;
+  background: url('/themes/dino/dino.svg') center / contain no-repeat;
+  animation: dn-peek 14s ease-in-out infinite;
+}
+@keyframes dn-peek {
+  0%, 70%, 100% { transform: translateY(0); }
+  78%, 92% { transform: translateY(-56px) rotate(-4deg); }
+}
+
+/* ---------- the skin ---------- */
+
+[data-skin='dino'] body {
+  background:
+    url('/themes/dino/grain.svg') 0 0 / 200px repeat,
+    radial-gradient(900px 480px at 85% -10%, rgba(255, 186, 92, 0.16), transparent 70%),
+    radial-gradient(700px 500px at 0% 100%, rgba(47, 90, 63, 0.22), transparent 70%),
+    var(--bg);
+  background-attachment: fixed, scroll, scroll, scroll;
+}
+
+/* headings: bold, tight, monochrome, with the red-orange sleeve stripe */
+[data-skin='dino'] .main h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  color: #f2ede4;
+}
+[data-skin='dino'] .main h1::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 8px;
+  margin-top: 12px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #e8642c 0 70%, #2f5a3f 70%);
+}
+[data-skin='dino'] .main h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #f2ede4; letter-spacing: -0.02em; }
+[data-skin='dino'] .eyebrow { color: #ffba5c; letter-spacing: 0.22em; }
+
+/* nav: matte black with the dino beside the logo */
+[data-skin='dino'] .nav {
+  background: rgba(20, 20, 19, 0.88);
+  border-color: rgba(242, 237, 228, 0.08);
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.85);
+}
+[data-skin='dino'] .nav__links a { color: rgba(242, 237, 228, 0.62); }
+[data-skin='dino'] .nav__links a:hover { color: #fff; }
+[data-skin='dino'] .nav__links a.active { background: #e8642c; color: #fff; }
+[data-skin='dino'] .nav__logo::after {
+  content: '';
+  width: 26px;
+  height: 20px;
+  margin-left: 2px;
+  background: url('/themes/dino/dino.svg') center / contain no-repeat;
+}
+
+[data-skin='dino'] .main .card,
+[data-skin='dino'] .auth {
+  background: rgba(27, 27, 26, 0.9);
+  border: 1px solid rgba(242, 237, 228, 0.07);
+  box-shadow: 0 20px 40px -26px rgba(0, 0, 0, 0.9);
+}
+[data-skin='dino'] .main .btn,
+[data-skin='dino'] .acct--signin {
+  color: #fff;
+  background: #e8642c;
+  box-shadow: 0 10px 22px -10px rgba(232, 100, 44, 0.8);
+}
+[data-skin='dino'] .main .btn:hover { background: #f27a46; }
+[data-skin='dino'] .main .btn--ghost {
+  color: #f2ede4;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px rgba(242, 237, 228, 0.55);
+}
+[data-skin='dino'] .main .chip { color: #f2ede4; background: rgba(47, 90, 63, 0.4); border: 1px solid rgba(110, 160, 125, 0.45); }
+
+/* ---------- home: the black-and-white window seat ---------- */
+
+[data-skin='dino'] .hero {
+  position: relative;
+  margin-top: 18px;
+  border-radius: 24px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(17, 17, 17, 0.95) 0%, rgba(17, 17, 17, 0.75) 45%, rgba(17, 17, 17, 0.2) 100%),
+    url('/themes/dino/bw-window.jpg') 85% 30% / cover,
+    #111;
+  box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.9);
+}
+[data-skin='dino'] .hero > * { position: relative; z-index: 1; }
+[data-skin='dino'] .hero h1::after { margin-inline: auto; }
+[data-skin='dino'] .hero__equation { color: #ffba5c; -webkit-text-fill-color: #ffba5c; background: none; }
+[data-skin='dino'] .hero__lede { color: rgba(242, 237, 228, 0.85); }
+
+/* ---------- black-and-white prints beside page titles that warm up on hover ---------- */
+
+[data-skin='dino'] .page-head { position: relative; }
+[data-skin='dino'] .page-head:has(~ .timeline) { --photo: url('/themes/dino/bw-low-angle.jpg'); --at: center 25%; }
+[data-skin='dino'] .page-head:has(~ .game-list) { --photo: url('/themes/dino/hands-face.jpg'); --at: center 40%; }
+[data-skin='dino'] .page-head:has(.music__ctas) { --photo: url('/themes/dino/theatre-seats.jpg'); --at: center 12%; }
+[data-skin='dino'] .page-head:has(~ .unit),
+[data-skin='dino'] .page-head:has(.tabs) { --photo: url('/themes/dino/bw-glass.jpg'); --at: 20% 40%; }
+@media (min-width: 900px) {
+  [data-skin='dino'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 300px;
+    padding-right: 260px;
+  }
+  [data-skin='dino'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 24px;
+    top: -6px;
+    width: 196px;
+    height: 296px;
+    border-radius: 6px;
+    background: var(--photo) var(--at, center) / cover;
+    filter: grayscale(1) contrast(1.08);
+    box-shadow: 0 0 0 1px rgba(242, 237, 228, 0.1), 0 24px 40px -18px rgba(0, 0, 0, 0.9);
+    transition: filter 0.6s var(--ease);
+  }
+  [data-skin='dino'] .page-head:hover::after { filter: grayscale(0) contrast(1); }
+  /* the sleeve stripe pinned to the print's corner */
+  [data-skin='dino'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 14px;
+    top: 268px;
+    width: 72px;
+    height: 10px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #e8642c 0 70%, #2f5a3f 70%);
+  }
+}
+
+/* ---------- tracklists become the café menu board ---------- */
+
+[data-skin='dino'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 54px 22px 18px;
+  color: #f2ede4;
+  background:
+    radial-gradient(70% 30% at 50% 0%, rgba(255, 186, 92, 0.16), transparent 80%),
+    url('/themes/dino/grain.svg') 0 0 / 200px repeat,
+    #161615;
+  border: 1px solid rgba(242, 237, 228, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 22px 40px -24px rgba(0, 0, 0, 0.9);
+}
+[data-skin='dino'] .main .tracks::before {
+  content: 'MENU';
+  position: absolute;
+  left: 22px;
+  top: 16px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.4em;
+  font-size: 0.85rem;
+  color: #ffba5c;
+}
+[data-skin='dino'] .main .tracks::after {
+  content: "Chan\2019s pick \2661";
+  display: block;
+  margin-top: 12px;
+  padding-right: 38px;
+  text-align: right;
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #e8642c;
+  background: url('/themes/dino/dino.svg') right center / 32px 24px no-repeat;
+}
+[data-skin='dino'] .main .tracks .tracks__row,
+[data-skin='dino'] .main .tracks button { border-bottom-color: rgba(242, 237, 228, 0.08); }
+[data-skin='dino'] .main .tracks button:hover { background: rgba(255, 186, 92, 0.08); }
+[data-skin='dino'] .main .tracks .tracks__num,
+[data-skin='dino'] .main .tracks .tracks__title,
+[data-skin='dino'] .main .tracks .tracks__native,
+[data-skin='dino'] .main .tracks .tracks__note,
+[data-skin='dino'] .main .tracks .tracks__nolink,
+[data-skin='dino'] .main .tracks .tracks__play,
+[data-skin='dino'] .main .tracks .tracks__disc,
+[data-skin='dino'] .main .tracks .tracks__open,
+[data-skin='dino'] .main .tracks .like-btn { color: #f2ede4; }
+[data-skin='dino'] .main .tracks .tracks__native,
+[data-skin='dino'] .main .tracks .tracks__note,
+[data-skin='dino'] .main .tracks .tracks__nolink { opacity: 0.6; }
+[data-skin='dino'] .main .tracks .chip { color: #161615; background: #ffba5c; border: 0; }
+[data-skin='dino'] .main .tracks li.is-playing .tracks__title { color: #ffba5c; }
+[data-skin='dino'] .main .tracks .like-btn.is-liked { color: #e8642c; }
+
+/* ---------- sign in / register: snow under the streetlights ---------- */
+
+[data-skin='dino'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(17, 17, 17, 0), rgba(17, 17, 17, 0.35)),
+    url('/themes/dino/snow-night.jpg') center 55% / cover;
+}
+[data-skin='dino'] .auth__glow { background: radial-gradient(circle, rgba(255, 186, 92, 0.3), transparent 65%); }
+[data-skin='dino'] .auth__gem { content: url('/themes/dino/dino.svg'); width: 96px; height: 72px; }
+[data-skin='dino'] .auth__switch a { color: #e8642c; }
+
+/* ---------- Now Playing: the warm café, hood up ---------- */
+
+[data-skin='dino'] .np {
+  --np-bg: #14110d;
+  --np-ink: #f2ede4;
+  --np-label: #e8642c;
+  --np-label2: #2f5a3f;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(10, 9, 7, 0.8)),
+    url('/themes/dino/hoodie-cafe.jpg') center 45% / cover,
+    #14110d;
+}
+[data-skin='dino'] .np__deck { background: #f2ede4; color: #161615; box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.85); }
+/* keeps the words readable over the photo */
+[data-skin='dino'] .np__text {
+  padding: 22px 26px;
+  border-radius: 22px;
+  background: rgba(14, 12, 9, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='dino'] .np__title { color: #f2ede4; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.03em; }
+[data-skin='dino'] .np h1::after { display: none; }
+[data-skin='dino'] .np__album { color: #ffba5c; }
+[data-skin='dino'] .np__blurb { color: rgba(242, 237, 228, 0.82); }
+[data-skin='dino'] .np__label { background: url('/themes/dino/dino.svg') center / 64% no-repeat, #e8642c; }
+[data-skin='dino'] .np-wave span { background: linear-gradient(#e8642c, #ffba5c); }
+[data-skin='dino'] .np-ctrl .np-ctrl__main { background: #e8642c; color: #fff; }
+
+/* ---------- footer: the diner under the hanging bulbs ---------- */
+
+[data-skin='dino'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 420px;
+  margin-top: 60px;
+  padding: 0 16px 100px;
+  color: #f2ede4;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(17, 17, 17, 0.15) 30%, rgba(17, 17, 17, 0.15) 55%, rgba(10, 9, 7, 0.9) 92%),
+    url('/themes/dino/cap-diner.jpg') center 30% / cover;
+}
+[data-skin='dino'] .footer a { color: #ffba5c; }
+
+/* ---------- the little cursor sparkles turn sleeve orange and hoodie green ---------- */
+
+[data-skin='dino'] .sparkle { color: #e8642c; }
+[data-skin='dino'] .sparkle:nth-child(odd) { color: #6fa07d; }
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--footprints::before {
+  background-image: url('/themes/dino/footprint.svg'), url('/themes/dino/footprint.svg'), url('/themes/dino/footprint.svg');
+  background-size: 12px 14px;
+  background-position: 10% 80%, 16% 64%, 11% 48%;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+}
+.tp--dino::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 44px;
+  width: 38px;
+  height: 28px;
+  background: url('/themes/dino/dino.svg') center / contain no-repeat;
+}
+.tp--dino .tp__title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; text-transform: uppercase; }

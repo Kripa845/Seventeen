@@ -2,15 +2,13 @@ import { Link, useParams } from 'react-router-dom'
 import { MemberAvatar } from '../components/MemberAvatar'
 import { ApiError, Loading } from '../components/Status'
 import { useMember, useMembers, useSongs } from '../lib/api'
-import { memberTheme } from '../lib/color'
 import { creditFor, songsFor } from '../lib/credits'
 import { ageOn, DEBUT, daysSince, daysUntil, formatDate, formatDayMonth, nextAnniversary } from '../lib/dates'
-import { usePageTheme } from '../lib/theme'
 import { useOpenPlayer } from '../lib/useOpenPlayer'
 import type { Member } from '../lib/types'
 
 /** Enlistment and the countdown to discharge; nothing at all while it's not announced. */
-function MilitaryService({ m }: { m: Member }) {
+export function MilitaryService({ m }: { m: Member }) {
   const kind = [m.service_label, m.service_note].filter(Boolean).join(' · ')
 
   if (!m.enlistment_date) {
@@ -85,7 +83,6 @@ export function MemberDetail() {
   const all = useMembers()
   const songs = useSongs()
   const play = useOpenPlayer()
-  usePageTheme(m ? memberTheme(m.color) : null)
 
   if (loading) return <Loading />
   if (error || !m) return <ApiError message={error ?? 'Not found'} />

@@ -4,12 +4,19 @@ import type { DiaryBook, DiaryFont, DiaryFrame, DiaryItem, DiaryPage, DiaryPaper
 
 // ---------- What can go on a page ----------
 
-export const EMOJI = [
-  '💎', '💖', '💗', '🌸', '✨', '⭐', '🌟', '🎀', '🎂', '🎉', '🎤', '🎧', '🎶', '📸', '💌', '🌈',
-  '☁️', '🌙', '🍓', '🍑', '🍊', '🧸', '🦋', '🐯', '🐱', '🐶', '🍀', '🔥', '🫶', '🥹', '😭', '💐',
+/** Emoji stickers, in the groups the sticker panel shows. Stored on the page as the emoji itself. */
+export const EMOJI_GROUPS: { label: string; emoji: string[] }[] = [
+  { label: 'Love', emoji: ['💎', '💖', '💗', '💕', '💞', '💓', '💘', '💝', '💌', '🩷', '💜', '💙', '🤍', '🫶', '🥰', '😍'] },
+  { label: 'Stage & music', emoji: ['🎤', '🎧', '🎶', '🎵', '🎹', '🎸', '🥁', '🎻', '🎺', '🎫', '🎟️', '📸', '🎬', '💿', '🪩', '📻'] },
+  { label: 'Party', emoji: ['🎂', '🎉', '🎊', '🎀', '🎁', '🎈', '🥳', '🍰', '🧁', '🥂', '🕯️', '🪅'] },
+  { label: 'Feelings', emoji: ['🥹', '😭', '😆', '😎', '🤭', '😳', '🤩', '😴', '🥺', '😤', '🤯', '🙈', '😇', '🫠', '😵‍💫', '🤗'] },
+  { label: 'Nature', emoji: ['🌸', '🌷', '🌻', '🌹', '💐', '🍀', '🌈', '☁️', '🌙', '⭐', '🌟', '✨', '🔥', '❄️', '🌊', '☀️'] },
+  { label: 'Animals', emoji: ['🐯', '🐱', '🐶', '🐹', '🐰', '🦊', '🐻', '🐼', '🐸', '🐧', '🦁', '🦋', '🐳', '🦖', '🐢', '🐥'] },
+  { label: 'Food', emoji: ['🍓', '🍑', '🍊', '🍒', '🍉', '🍦', '🍩', '🍫', '🍜', '🍙', '🧋', '☕'] },
+  { label: 'Things', emoji: ['🧸', '✈️', '🗓️', '📍', '🎮', '📚', '🔮', '🧿', '🪄', '👑', '💍', '🏆'] },
 ]
 
-export type LabelStyle = 'ransom' | 'pill' | 'bubble' | 'stamp' | 'tag' | 'badge' | 'script'
+export type LabelStyle = 'ransom' | 'pill' | 'bubble' | 'stamp' | 'tag' | 'badge' | 'script' | 'ticket' | 'neon'
 
 /** Word stickers. Stored on the page by key, e.g. "label:carat". */
 export const LABELS: Record<string, { text: string; style: LabelStyle }> = {
@@ -25,10 +32,34 @@ export const LABELS: Record<string, { text: string; style: LabelStyle }> = {
   'label:bestday': { text: 'best day ever', style: 'tag' },
   'label:onrepeat': { text: 'on repeat ♫', style: 'bubble' },
   'label:bias': { text: 'my bias ♡', style: 'stamp' },
+  'label:1331': { text: '13 + 3 + 1', style: 'tag' },
+  'label:13': { text: '13', style: 'badge' },
+  'label:hbd': { text: 'Happy birthday ♡', style: 'bubble' },
+  'label:dday': { text: 'D-DAY', style: 'ticket' },
+  'label:admit': { text: 'ADMIT ONE', style: 'ticket' },
+  'label:fanmeeting': { text: 'FAN MEETING', style: 'ticket' },
+  'label:comeback': { text: 'COMEBACK!', style: 'ransom' },
+  'label:encore': { text: 'ENCORE', style: 'neon' },
+  'label:forever17': { text: 'forever 17', style: 'neon' },
+  'label:nowplaying': { text: '▶ now playing', style: 'neon' },
+  'label:lightstick': { text: 'carat bong on ✦', style: 'pill' },
+  'label:soldout': { text: 'SOLD OUT', style: 'stamp' },
+  'label:thankyou': { text: 'thank you ♡', style: 'script' },
+  'label:mood': { text: 'today’s mood', style: 'tag' },
+  'label:saranghae': { text: '사랑해 ♡', style: 'bubble' },
+  'label:svt-kr': { text: '세븐틴', style: 'stamp' },
+  'label:carat-kr': { text: '캐럿 ♡', style: 'pill' },
 }
 
-export const TAPES = ['tape:pink', 'tape:blue', 'tape:mint', 'tape:lilac', 'tape:check', 'tape:stripe', 'tape:dots', 'tape:gold']
-export const SHAPES = ['shape:heart', 'shape:star', 'shape:sparkle', 'shape:diamond', 'shape:flower', 'shape:cloud']
+export const TAPES = [
+  'tape:pink', 'tape:blue', 'tape:mint', 'tape:lilac', 'tape:check', 'tape:stripe', 'tape:dots', 'tape:gold',
+  'tape:peach', 'tape:sky', 'tape:serenity', 'tape:grid', 'tape:hearts', 'tape:stars', 'tape:black', 'tape:holo',
+]
+export const SHAPES = [
+  'shape:heart', 'shape:star', 'shape:sparkle', 'shape:diamond', 'shape:flower', 'shape:cloud',
+  'shape:lightstick', 'shape:crown', 'shape:note', 'shape:moon', 'shape:bow', 'shape:butterfly',
+  'shape:smile', 'shape:rainbow', 'shape:camera', 'shape:cherry',
+]
 
 /** How wide a new sticker starts, in % of the spread. */
 export function stickerWidth(key: string) {
@@ -48,6 +79,13 @@ export const FONTS: Record<DiaryFont, { label: string; family: string }> = {
   script: { label: 'Script', family: "'Pinyon Script', cursive" },
   serif: { label: 'Serif', family: "'Cormorant Garamond', serif" },
   bold: { label: 'Bold', family: "'Unbounded', sans-serif" },
+  pen: { label: 'Pen 손글씨', family: "'Nanum Pen Script', cursive" },
+  round: { label: 'Round 주아', family: "'Jua', sans-serif" },
+  poster: { label: 'Poster 블랙', family: "'Black Han Sans', sans-serif" },
+  retro: { label: 'Retro', family: "'Pacifico', cursive" },
+  bubbly: { label: 'Bubbly', family: "'Chewy', cursive" },
+  magazine: { label: 'Magazine', family: "'Playfair Display', serif" },
+  pixel: { label: 'Pixel', family: "'Silkscreen', monospace" },
 }
 
 export const TEXT_STYLES: Record<DiaryTextStyle, string> = {
@@ -93,6 +131,11 @@ export const TEXT_PRESETS: { label: string; text: string; font: DiaryFont; style
   { label: 'Cute 귀여운', text: '오늘도 고마워 ♡', font: 'cute', style: 'plain', size: 3.4, color: '#C25E73', w: 30 },
   { label: 'Label', text: 'SET LIST', font: 'type', style: 'label', size: 2.4, color: '#2B2B2B', w: 18 },
   { label: 'Script', text: 'forever & always', font: 'script', style: 'plain', size: 4.5, color: '#2F5DA8', w: 34 },
+  { label: '손글씨 메모', text: '오늘 진짜 행복했다 ♡', font: 'pen', style: 'note', size: 4, color: '#2B2B2B', w: 26 },
+  { label: 'Poster', text: '세븐틴 컴백', font: 'poster', style: 'plain', size: 6, color: '#2F5DA8', w: 40 },
+  { label: 'Retro', text: 'Very Nice', font: 'retro', style: 'plain', size: 5, color: '#E8476B', w: 34 },
+  { label: 'Magazine', text: 'The Maestro', font: 'magazine', style: 'plain', size: 5, color: '#2B2B2B', w: 36 },
+  { label: 'Pixel', text: 'LEVEL 17 ✦', font: 'pixel', style: 'label', size: 2.6, color: '#2B2B2B', w: 24 },
 ]
 
 // ---------- Helpers ----------

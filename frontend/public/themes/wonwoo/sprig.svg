@@ -1,0 +1,9 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 120' fill='none' stroke-linecap='round'>
+  <path d='M40 118C40 80 36 50 24 20M38 74c8-14 18-26 30-34M37 52C30 42 20 36 8 34' stroke='#9DB09A' stroke-width='2.6'/>
+  <path d='M40 96c-8-4-14-12-14-20 8 2 14 10 14 20ZM40 88c8-4 14-12 14-20-8 2-14 10-14 20Z' fill='#9DB09A' fill-opacity='0.75'/>
+  <g fill='#B99AA6'>
+    <circle cx='24' cy='18' r='4'/><circle cx='18' cy='12' r='3'/><circle cx='29' cy='10' r='3'/><circle cx='22' cy='5' r='2.5'/>
+    <circle cx='68' cy='40' r='4'/><circle cx='72' cy='32' r='3'/><circle cx='62' cy='34' r='2.6'/>
+    <circle cx='8' cy='34' r='3.6'/><circle cx='4' cy='27' r='2.6'/><circle cx='13' cy='28' r='2.4'/>
+  </g>
+</svg>

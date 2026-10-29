@@ -1,0 +1,340 @@
+/* ============================================================
+   "Seungkwan Aesthetics" skin: a night walk over the bridges.
+   Midnight navy, the mint of the green bridge at night and
+   Jeju-tangerine orange, city lights out of focus, a suspension
+   bridge under every title, earbuds in, postcards from the walk
+   with a tangerine stamp (public/themes/seungkwan/).
+   Switched on by theme tokens with skin: 'seungkwan'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "tangerines" background pattern (works with any theme) ---------- */
+
+[data-pattern='tangerines'] .bg-pattern {
+  opacity: 0.5;
+  background-image:
+    url('/themes/seungkwan/tangerine.svg'),
+    url('/themes/seungkwan/earbud.svg'),
+    url('/themes/seungkwan/tangerine.svg'),
+    url('/themes/seungkwan/tangerine.svg'),
+    radial-gradient(circle, rgba(127, 211, 190, 0.55) 0 40%, transparent 70%),
+    radial-gradient(circle, rgba(255, 155, 61, 0.5) 0 40%, transparent 70%),
+    radial-gradient(circle, rgba(140, 170, 255, 0.45) 0 40%, transparent 70%);
+  background-size: 34px, 18px 30px, 24px, 20px, 46px 46px, 30px 30px, 38px 38px;
+  background-position: 7% 18%, 92% 13%, 87% 80%, 12% 86%, 94% 46%, 4% 54%, 70% 92%;
+  background-repeat: no-repeat;
+}
+/* one tangerine bobbing like a lantern on the water */
+[data-pattern='tangerines'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  right: 7%;
+  top: 28%;
+  background: url('/themes/seungkwan/tangerine.svg') center / contain no-repeat;
+  filter: drop-shadow(0 8px 12px rgba(255, 155, 61, 0.35));
+  animation: seungkwan-bob 6s ease-in-out infinite;
+}
+@keyframes seungkwan-bob {
+  50% { transform: translateY(14px) rotate(10deg); }
+}
+[data-dark='false'][data-pattern='tangerines'] .bg-pattern { opacity: 0.4; }
+@media (max-width: 720px) {
+  [data-pattern='tangerines'] .bg-pattern::before { width: 30px; height: 30px; right: 4%; }
+}
+
+/* ---------- the skin ---------- */
+
+/* night sky over the river, city lights blurred at the edges */
+[data-skin='seungkwan'] body {
+  background:
+    radial-gradient(260px 260px at 12% 22%, rgba(127, 211, 190, 0.1), transparent 70%),
+    radial-gradient(220px 220px at 88% 30%, rgba(255, 155, 61, 0.1), transparent 70%),
+    radial-gradient(300px 300px at 70% 85%, rgba(140, 170, 255, 0.08), transparent 70%),
+    radial-gradient(1000px 600px at 50% 110%, rgba(30, 60, 90, 0.5), transparent 70%),
+    var(--bg);
+}
+
+/* headings: a suspension bridge drawn underneath */
+[data-skin='seungkwan'] .main h1 { color: #f4efe6; letter-spacing: -0.015em; }
+[data-skin='seungkwan'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(240px, 60%);
+  height: 30px;
+  margin-top: 4px;
+  background: url('/themes/seungkwan/bridge.svg') left center / contain no-repeat;
+}
+[data-skin='seungkwan'] .eyebrow { color: #7fd3be; letter-spacing: 0.2em; }
+
+/* nav: night glass with a tangerine on the logo */
+[data-skin='seungkwan'] .nav {
+  background: rgba(15, 22, 38, 0.78);
+  border-color: rgba(127, 211, 190, 0.18);
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.7);
+}
+[data-skin='seungkwan'] .nav__logo::after {
+  content: '';
+  width: 22px;
+  height: 22px;
+  margin-left: 4px;
+  background: url('/themes/seungkwan/tangerine.svg') center / contain no-repeat;
+}
+
+/* cards: navy glass with a faint mint edge */
+[data-skin='seungkwan'] .main .card,
+[data-skin='seungkwan'] .auth {
+  background: rgba(23, 32, 54, 0.92);
+  border: 1px solid rgba(127, 211, 190, 0.16);
+  box-shadow: 0 20px 44px -28px rgba(0, 0, 0, 0.8);
+}
+[data-skin='seungkwan'] .main .btn,
+[data-skin='seungkwan'] .acct--signin {
+  color: #2a1606;
+  background: #ff9b3d;
+  box-shadow: 0 10px 24px -10px rgba(255, 155, 61, 0.6);
+}
+[data-skin='seungkwan'] .main .btn:hover { background: #ffad5c; }
+[data-skin='seungkwan'] .main .btn--ghost {
+  color: #f4efe6;
+  background: rgba(15, 22, 38, 0.5);
+  box-shadow: inset 0 0 0 1.5px #7fd3be;
+}
+[data-skin='seungkwan'] .main .chip { border-color: rgba(127, 211, 190, 0.3); background: rgba(127, 211, 190, 0.08); }
+
+/* ---------- home: the walk, bridge to bridge ---------- */
+
+[data-skin='seungkwan'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #0f1626;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+}
+[data-skin='seungkwan'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --shade: linear-gradient(180deg, rgba(15, 22, 38, 0) 22%, rgba(15, 22, 38, 0.88) 72%, #0f1626);
+  background: var(--shade), url('/themes/seungkwan/green-bridge.jpg') center 30% / cover;
+  animation: seungkwan-walk 40s infinite;
+}
+@keyframes seungkwan-walk {
+  0%, 18%   { background-image: var(--shade), url('/themes/seungkwan/green-bridge.jpg'); }
+  20%, 38%  { background-image: var(--shade), url('/themes/seungkwan/bridge-day.jpg'); }
+  40%, 58%  { background-image: var(--shade), url('/themes/seungkwan/willow.jpg'); }
+  60%, 78%  { background-image: var(--shade), url('/themes/seungkwan/winter-lights.jpg'); }
+  80%, 98%  { background-image: var(--shade), url('/themes/seungkwan/cap-earbuds.jpg'); }
+  100%      { background-image: var(--shade), url('/themes/seungkwan/green-bridge.jpg'); }
+}
+/* a handwritten signature in the corner */
+[data-skin='seungkwan'] .hero::after {
+  content: 'Seungkwan · 승관 ♪';
+  position: absolute;
+  right: 28px;
+  top: 22px;
+  padding: 4px 14px 4px 38px;
+  font: 700 1.35rem/1.2 'Caveat', cursive;
+  color: #2a1606;
+  background: url('/themes/seungkwan/tangerine.svg') 10px center / 22px no-repeat, #ffe7cc;
+  border-radius: 999px;
+  transform: rotate(-3deg);
+  box-shadow: 0 8px 18px -8px rgba(255, 155, 61, 0.55);
+}
+[data-skin='seungkwan'] .hero > * { position: relative; z-index: 1; }
+[data-skin='seungkwan'] .hero__title { background: linear-gradient(120deg, #f4efe6 25%, #7fd3be); -webkit-background-clip: text; background-clip: text; }
+[data-skin='seungkwan'] .hero__equation { color: #ff9b3d; -webkit-text-fill-color: #ff9b3d; background: none; }
+[data-skin='seungkwan'] .hero__lede { color: rgba(244, 239, 230, 0.86); }
+@media (max-width: 720px) {
+  [data-skin='seungkwan'] .hero { padding: 120px 18px 40px; }
+  [data-skin='seungkwan'] .hero::after { right: 14px; top: 14px; font-size: 1.05rem; }
+}
+
+/* ---------- postcards from the walk beside page titles, with a tangerine stamp ---------- */
+
+[data-skin='seungkwan'] .page-head { position: relative; }
+[data-skin='seungkwan'] .page-head:has(~ .timeline) {
+  --photo: url('/themes/seungkwan/green-bridge.jpg');
+  --caption: 'the green bridge';
+}
+[data-skin='seungkwan'] .page-head:has(~ .game-list) {
+  --photo: url('/themes/seungkwan/winter-lights.jpg');
+  --caption: 'winter lights';
+}
+[data-skin='seungkwan'] .page-head:has(.music__ctas) {
+  --photo: url('/themes/seungkwan/cap-earbuds.jpg');
+  --caption: 'on repeat ♪';
+}
+[data-skin='seungkwan'] .page-head:has(~ .unit),
+[data-skin='seungkwan'] .page-head:has(.tabs) {
+  --photo: url('/themes/seungkwan/bridge-day.jpg');
+  --caption: 'the river by day';
+}
+@media (min-width: 900px) {
+  [data-skin='seungkwan'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 280px;
+    padding-right: 250px;
+  }
+  /* the postcard: photo on top, a handwritten line on the cream strip below */
+  [data-skin='seungkwan'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: var(--caption);
+    position: absolute;
+    right: 22px;
+    top: -4px;
+    width: 190px;
+    height: 264px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 4px;
+    font: 700 1.25rem/1.2 'Caveat', cursive;
+    color: #1e2b47;
+    border: 8px solid #fbf6ec;
+    border-bottom-width: 0;
+    border-radius: 6px;
+    background:
+      linear-gradient(#fbf6ec, #fbf6ec) bottom / 100% 38px no-repeat,
+      var(--photo) center 25% / cover;
+    transform: rotate(-2.5deg);
+    box-shadow: 0 24px 40px -20px rgba(0, 0, 0, 0.75);
+  }
+  /* the stamp in the corner */
+  [data-skin='seungkwan'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 6px;
+    top: -18px;
+    width: 46px;
+    height: 55px;
+    background: url('/themes/seungkwan/stamp.svg') center / contain no-repeat;
+    transform: rotate(8deg);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+  }
+}
+
+/* ---------- tracklists become what's playing in his earbuds ---------- */
+
+[data-skin='seungkwan'] .main .tracks {
+  --ink: #f4efe6;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 52px 18px 14px;
+  color: var(--ink);
+  background:
+    radial-gradient(160px 90px at 92% 0%, rgba(255, 155, 61, 0.14), transparent 70%),
+    #172036;
+  border: 1px solid rgba(127, 211, 190, 0.18);
+  border-radius: 18px;
+  box-shadow: 0 18px 34px -22px rgba(0, 0, 0, 0.8);
+}
+[data-skin='seungkwan'] .main .tracks::before {
+  content: 'on repeat tonight';
+  position: absolute;
+  top: 10px;
+  left: 18px;
+  padding-left: 22px;
+  font: 700 1.4rem/1.2 'Caveat', cursive;
+  color: #7fd3be;
+  background: url('/themes/seungkwan/earbud.svg') left center / 13px 22px no-repeat;
+}
+[data-skin='seungkwan'] .main .tracks .tracks__row,
+[data-skin='seungkwan'] .main .tracks button { border-bottom-color: rgba(127, 211, 190, 0.1); }
+[data-skin='seungkwan'] .main .tracks button:hover { background: rgba(127, 211, 190, 0.08); }
+[data-skin='seungkwan'] .main .tracks .tracks__num { color: #ff9b3d; font-variant-numeric: tabular-nums; }
+[data-skin='seungkwan'] .main .tracks .tracks__title { color: var(--ink); }
+[data-skin='seungkwan'] .main .tracks .chip { color: #7fd3be; background: transparent; border: 1.5px solid rgba(127, 211, 190, 0.5); }
+[data-skin='seungkwan'] .main .tracks li.is-playing .tracks__title { color: #ffb066; }
+[data-skin='seungkwan'] .main .tracks .like-btn.is-liked { color: #ff7a8a; }
+
+/* ---------- sign in / register: under the willow ---------- */
+
+[data-skin='seungkwan'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(15, 22, 38, 0), rgba(15, 22, 38, 0.55)),
+    url('/themes/seungkwan/willow.jpg') center 30% / cover;
+}
+[data-skin='seungkwan'] .auth__glow { background: radial-gradient(circle, rgba(255, 155, 61, 0.35), transparent 65%); }
+[data-skin='seungkwan'] .auth__gem { content: url('/themes/seungkwan/tangerine.svg'); width: 84px; height: 84px; }
+[data-skin='seungkwan'] .auth__switch a { color: #7fd3be; }
+
+/* ---------- Now Playing: late at the café, phone in hand ---------- */
+
+[data-skin='seungkwan'] .np {
+  --np-bg: #0f1626;
+  --np-ink: #f4efe6;
+  --np-label: #ff9b3d;
+  --np-label2: #7fd3be;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(15, 22, 38, 0.78)),
+    url('/themes/seungkwan/cafe-night.jpg') center 35% / cover,
+    #0f1626;
+}
+[data-skin='seungkwan'] .np__deck { background: rgba(23, 32, 54, 0.92); color: #f4efe6; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.7); }
+/* keeps the words readable over the photo */
+[data-skin='seungkwan'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(15, 22, 38, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='seungkwan'] .np__title { color: #f4efe6; }
+[data-skin='seungkwan'] .np__album { font-family: 'Caveat', cursive; font-size: clamp(1.3rem, 2.4vw, 1.8rem); color: #ff9b3d; }
+[data-skin='seungkwan'] .np__blurb { color: rgba(244, 239, 230, 0.85); }
+[data-skin='seungkwan'] .np__label { background: url('/themes/seungkwan/tangerine.svg') center / 56% no-repeat, #fbf6ec; }
+[data-skin='seungkwan'] .np-wave span { background: linear-gradient(#ff9b3d, #7fd3be); }
+[data-skin='seungkwan'] .np-ctrl .np-ctrl__main { background: #ff9b3d; color: #2a1606; }
+
+/* ---------- footer: the river at night, city lights across the water ---------- */
+
+[data-skin='seungkwan'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #f4efe6;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(15, 22, 38, 0) 28%, rgba(10, 14, 24, 0) 56%, rgba(8, 10, 18, 0.9) 92%),
+    url('/themes/seungkwan/river-night.jpg') center 38% / cover;
+}
+[data-skin='seungkwan'] .footer a { color: #ff9b3d; }
+
+/* ---------- the little cursor sparkles turn mint and tangerine ---------- */
+
+[data-skin='seungkwan'] .sparkle { color: #7fd3be; }
+[data-skin='seungkwan'] .sparkle:nth-child(odd) { color: #ff9b3d; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='tangerines'] .bg-pattern::before,
+  [data-skin='seungkwan'] .hero::before { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--tangerines::before {
+  background-image:
+    url('/themes/seungkwan/tangerine.svg'),
+    url('/themes/seungkwan/earbud.svg'),
+    radial-gradient(circle, rgba(127, 211, 190, 0.6) 0 40%, transparent 70%);
+  background-size: 18px, 10px 17px, 22px 22px;
+  background-position: 90% 26%, 12% 74%, 70% 84%;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+}
+.tp--seungkwan::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 52px;
+  width: 40px;
+  height: 40px;
+  background: url('/themes/seungkwan/tangerine.svg') center / contain no-repeat;
+}
+.tp--seungkwan .tp__title { color: #f4efe6; }

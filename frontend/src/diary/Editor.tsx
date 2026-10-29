@@ -6,7 +6,7 @@ import { usePlayer } from '../lib/player'
 import type { DiaryFrame, DiaryItem, DiaryPage, DiaryPaper, DiarySongStyle, Member, Song } from '../lib/types'
 import {
   diaryApi,
-  EMOJI,
+  EMOJI_GROUPS,
   itemStyle,
   MAX_VIDEO_MB,
   FONTS,
@@ -656,14 +656,18 @@ export function Editor({
             </button>
           ))}
         </div>
-        <p className="dpanel__h">Emoji</p>
-        <div className="dstickers">
-          {EMOJI.map((k) => (
-            <button key={k} className="dsticker dsticker--emoji" onClick={() => addSticker(k)}>
-              {k}
-            </button>
-          ))}
-        </div>
+        {EMOJI_GROUPS.map((g) => (
+          <div key={g.label}>
+            <p className="dpanel__h">Emoji · {g.label}</p>
+            <div className="dstickers">
+              {g.emoji.map((k) => (
+                <button key={k} className="dsticker dsticker--emoji" onClick={() => addSticker(k)} aria-label={k}>
+                  {k}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
         <p className="dpanel__h">Doodles &amp; tape</p>
         <div className="dstickers">
           {[...SHAPES, ...TAPES].map((k) => (
@@ -765,7 +769,7 @@ export function Editor({
           <input type="checkbox" checked={draft.is_private} onChange={(e) => setDraft((d) => ({ ...d, is_private: e.target.checked }))} />
           <span className="dswitch__track" aria-hidden />
           <span>
-            <IconEyeOff /> Private page <small>Only signed-in staff can see it</small>
+            <IconEyeOff /> Private page <small>Only you and admins can see it</small>
           </span>
         </label>
       </div>

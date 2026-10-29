@@ -4,11 +4,9 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { MemberAvatar } from '../components/MemberAvatar'
 import { Loading } from '../components/Status'
 import { useMembers } from '../lib/api'
-import { memberTheme } from '../lib/color'
 import { formatDayMonth, nextAnniversary } from '../lib/dates'
 import { usePlayer } from '../lib/player'
 import { send, useStudioData } from '../lib/studio'
-import { usePageTheme } from '../lib/theme'
 import type { Account, GameKey, Score, Song } from '../lib/types'
 import { useOpenPlayer } from '../lib/useOpenPlayer'
 import { useAuth } from './AuthProvider'
@@ -167,7 +165,7 @@ function BiasPicker({ account }: { account: Account }) {
       <div className="dash-card__head">
         <div>
           <h2>My bias</h2>
-          <p className="muted small">Your dashboard wears their colour.</p>
+          <p className="muted small">Your dashboard shows their colour.</p>
         </div>
         {account.bias && <button className="link-btn" onClick={() => pick(null)}>Clear</button>}
       </div>
@@ -271,7 +269,6 @@ export function Dashboard() {
   const { account, likes } = useAuth()
   const members = useMembers().data
   const bias = members?.find((m) => m.slug === account?.bias)
-  usePageTheme(bias ? memberTheme(bias.color) : null)
 
   if (account === undefined) return <Loading />
   if (!account) return <Navigate to="/login?next=/me" replace />
@@ -283,7 +280,7 @@ export function Dashboard() {
 
   return (
     <div className="dash">
-      <header className="dash-hero card">
+      <header className="dash-hero card" style={bias ? { ['--m' as string]: bias.color } : undefined}>
         <div className="dash-hero__avatar">
           {bias ? <MemberAvatar member={bias} size="lg" /> : <span className="dash-hero__initial">{account.display_name[0]?.toUpperCase()}</span>}
         </div>
@@ -295,7 +292,7 @@ export function Dashboard() {
             {hello}, {account.display_name} ✦
           </h1>
           <p className="muted">
-            {bias ? `${bias.stage_name} stan · ${bias.tagline}` : 'Pick your bias below and this page takes on their colour.'}
+            {bias ? `${bias.stage_name} stan · ${bias.tagline}` : 'Pick your bias below and your dashboard shows their colour.'}
           </p>
         </div>
         {account.role === 'admin' && (

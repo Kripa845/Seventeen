@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Loading } from '../components/Status'
-import { CARAT_THEME, DARLING_THEME, HEAVEN_THEME, LEFTRIGHT_THEME, WORLD_THEME, ATTACCA_THEME, HOT_THEME, HOMERUN_THEME } from '../lib/color'
+import { CARAT_THEME, DARLING_THEME, HEAVEN_THEME, LEFTRIGHT_THEME, WORLD_THEME, ATTACCA_THEME, HOT_THEME, HOMERUN_THEME, MAESTRO_THEME, AJUNICE_THEME, SCOUPS_THEME, JEONGHAN_THEME, JOSHUA_THEME, JUN_THEME, DK_THEME, WONWOO_THEME, WOOZI_THEME, THE8_THEME, DINO_THEME, SEUNGKWAN_THEME, VERNON_THEME, MINGYU_THEME, HOSHI_THEME } from '../lib/color'
 import { send, useStudioData } from '../lib/studio'
 import { usePageTheme, useTheme } from '../lib/theme'
 import type { Album, SiteSettings } from '../lib/types'
@@ -30,6 +30,21 @@ function Editor({ site }: { site: SiteSettings }) {
     { label: '✦ Rock with you', theme: ATTACCA_THEME },
     { label: '☀ Hot', theme: HOT_THEME },
     { label: '; Home;Run', theme: HOMERUN_THEME },
+    { label: '♪ Maestro', theme: MAESTRO_THEME },
+    { label: '🏀 Aju Nice', theme: AJUNICE_THEME },
+    { label: '📷 S.Coups aesthetics', theme: SCOUPS_THEME },
+    { label: '🦋 Jeonghan Aesthetics', theme: JEONGHAN_THEME },
+    { label: '🎸 Joshua Aesthetics', theme: JOSHUA_THEME },
+    { label: '☂ Jun Aesthetics', theme: JUN_THEME },
+    { label: '🌹 DK Aesthetics', theme: DK_THEME },
+    { label: '🎙 Woozi Aesthetics', theme: WOOZI_THEME },
+    { label: '📚 Wonwoo Aesthetics', theme: WONWOO_THEME },
+    { label: '✎ The8 Aesthetics', theme: THE8_THEME },
+    { label: '🦖 Dino Aesthetics', theme: DINO_THEME },
+    { label: '🍊 Seungkwan Aesthetics', theme: SEUNGKWAN_THEME },
+    { label: '🍋 Vernon Aesthetics', theme: VERNON_THEME },
+    { label: '🌿 Mingyu Aesthetics', theme: MINGYU_THEME },
+    { label: '🐯 Hoshi Aesthetics', theme: HOSHI_THEME },
     ...(albums ?? []).map((a) => ({ label: a.title, theme: a.theme })).reverse(),
   ]
 

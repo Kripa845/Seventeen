@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model, login, logout, update_session_auth_hash
-from django.db.models import Count, Max
+from django.db.models import Count, Max, Q
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from rest_framework import mixins, permissions, status, viewsets
@@ -17,6 +17,7 @@ from .serializers import (
     AlbumDetailSerializer,
     AlbumListSerializer,
     DiaryPageSerializer,
+    can_edit_page,
     DiaryPhotoSerializer,
     DiaryVideoSerializer,
     GameScoreSerializer,
@@ -36,15 +37,22 @@ class IsStaffOrReadOnly(permissions.BasePermission):
         return request.method in permissions.SAFE_METHODS or bool(request.user and request.user.is_staff)
 
 
-class SignedInReadsStaffWrites(permissions.BasePermission):
-    """Signed-in accounts (viewers and admins) can read; only staff can change things.
-    The diary, the photo albums and the games are for signed-in CARATs, not the landing page."""
+class DiaryAccess(permissions.BasePermission):
+    """The diary and the photo albums, for signed-in accounts. Everyone reads the public pages;
+    viewers add diary pages and change their own; admins change anything and keep the photo albums."""
 
     def has_permission(self, request, view):
         user = request.user
         if not (user and user.is_authenticated):
             return False
-        return request.method in permissions.SAFE_METHODS or user.is_staff
+        if request.method in permissions.SAFE_METHODS or user.is_staff:
+            return True
+        if view.action == "create":
+            return request.data.get("book", DiaryPage.Book.DIARY) == DiaryPage.Book.DIARY
+        return view.action != "reorder"  # the rest is checked per page
+
+    def has_object_permission(self, request, view, page):
+        return request.method in permissions.SAFE_METHODS or can_edit_page(request.user, page)
 
 
 class MemberViewSet(
@@ -113,7 +121,9 @@ class SiteSettingsView(APIView):
 
 class DiaryPageViewSet(viewsets.ModelViewSet):
     """GET /api/diary/ : every diary page, oldest first (private pages only for staff);
-    ?book=album lists the photo albums instead. Signed-in accounts read; staff write.
+    ?book=album lists the photo albums instead. Signed-in accounts read and add diary pages,
+    and change the ones they wrote; admins change any page and keep the photo albums.
+    Private pages are seen only by their writer and admins.
 
     POST /api/diary/<id>/photos/ {image} and /api/diary/<id>/videos/ {file} upload a photo
     or a video to place on that page.
@@ -122,15 +132,19 @@ class DiaryPageViewSet(viewsets.ModelViewSet):
     """
 
     serializer_class = DiaryPageSerializer
-    permission_classes = [SignedInReadsStaffWrites]
+    permission_classes = [DiaryAccess]
 
     def get_queryset(self):
-        qs = DiaryPage.objects.prefetch_related("photos", "videos")
+        qs = DiaryPage.objects.select_related("author__profile").prefetch_related("photos", "videos")
         if self.action == "list":
             qs = qs.filter(book=self.request.query_params.get("book", DiaryPage.Book.DIARY))
-        if not (self.request.user and self.request.user.is_staff):
-            qs = qs.filter(is_private=False)
+        user = self.request.user
+        if not user.is_staff:
+            qs = qs.filter(Q(is_private=False) | Q(author=user))
         return qs
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
     def perform_destroy(self, instance):
         instance.delete_photos()

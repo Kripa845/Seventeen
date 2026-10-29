@@ -1,0 +1,344 @@
+/* ============================================================
+   "Woozi Aesthetics" skin: the producer's booth and the encore.
+   Stage black, confetti pink and stage-light blue, a sparkly red
+   mic, thick black frames, a waveform under every title, the
+   black-and-white spotlight and the white studio
+   (public/themes/woozi/).
+   Switched on by theme tokens with skin: 'woozi'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "confetti" background pattern (works with any theme) ---------- */
+
+[data-pattern='confetti'] .bg-pattern {
+  opacity: 0.5;
+  background-image:
+    url('/themes/woozi/confetti.svg'),
+    url('/themes/woozi/confetti.svg'),
+    url('/themes/woozi/petal.svg'),
+    url('/themes/woozi/petal.svg'),
+    url('/themes/woozi/mic.svg');
+  background-size: 120px, 90px, 18px, 14px, 14px 28px;
+  background-position: 3% 14%, 96% 70%, 92% 16%, 6% 82%, 97% 40%;
+  background-repeat: no-repeat;
+}
+/* petals drifting down the left and right edges */
+[data-pattern='confetti'] .bg-pattern::before,
+[data-pattern='confetti'] .bg-pattern::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  width: 20px;
+  height: 20px;
+  background: url('/themes/woozi/petal.svg') center / contain no-repeat;
+  animation: wz-fall 18s linear infinite;
+}
+[data-pattern='confetti'] .bg-pattern::before { left: 7%; }
+[data-pattern='confetti'] .bg-pattern::after { right: 9%; width: 14px; height: 14px; animation-duration: 24s; animation-delay: -9s; }
+@keyframes wz-fall {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(24px, 28vh) rotate(120deg); }
+  50% { transform: translate(-12px, 56vh) rotate(220deg); }
+  75% { transform: translate(18px, 84vh) rotate(320deg); }
+  100% { transform: translate(0, 112vh) rotate(420deg); }
+}
+[data-dark='false'][data-pattern='confetti'] .bg-pattern { opacity: 0.35; }
+
+/* ---------- the skin ---------- */
+
+/* a dark arena, pink light from above, blue from the crowd */
+[data-skin='woozi'] body {
+  background:
+    url('/themes/woozi/grain.svg') 0 0 / 200px repeat,
+    radial-gradient(900px 520px at 25% -12%, rgba(242, 155, 184, 0.18), transparent 70%),
+    radial-gradient(900px 560px at 100% 105%, rgba(110, 145, 210, 0.16), transparent 70%),
+    var(--bg);
+  background-attachment: fixed, scroll, scroll, scroll;
+}
+
+/* headings: bold and tight, with a waveform underneath like a bounced track */
+[data-skin='woozi'] .main h1 { color: #f3eff4; font-weight: 800; letter-spacing: -0.02em; }
+[data-skin='woozi'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(240px, 62%);
+  height: 18px;
+  margin-top: 8px;
+  background: url('/themes/woozi/wave.svg') left center / contain no-repeat;
+}
+[data-skin='woozi'] .main h2 { color: #f3eff4; }
+/* eyebrows read like a recording light */
+[data-skin='woozi'] .eyebrow {
+  font-family: 'Space Mono', monospace;
+  color: #f29bb8;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+[data-skin='woozi'] .eyebrow::before { content: '● '; color: #e0405a; }
+
+/* nav: smoked glass, thick black frames on the logo */
+[data-skin='woozi'] .nav {
+  background: rgba(20, 20, 27, 0.84);
+  border-color: rgba(243, 239, 244, 0.08);
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.85);
+}
+[data-skin='woozi'] .nav__links a { color: rgba(243, 239, 244, 0.65); }
+[data-skin='woozi'] .nav__links a:hover { color: #fff; }
+[data-skin='woozi'] .nav__links a.active { background: #f29bb8; color: #14141b; }
+[data-skin='woozi'] .nav__logo::after {
+  content: '';
+  width: 30px;
+  height: 14px;
+  margin-left: 4px;
+  background: url('/themes/woozi/glasses.svg') center / contain no-repeat;
+  filter: invert(1);
+}
+
+/* cards: black tees under stage light */
+[data-skin='woozi'] .main .card,
+[data-skin='woozi'] .auth {
+  background: rgba(28, 28, 38, 0.88);
+  border: 1px solid rgba(243, 239, 244, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 20px 44px -28px rgba(0, 0, 0, 0.9);
+}
+[data-skin='woozi'] .main .btn,
+[data-skin='woozi'] .acct--signin {
+  color: #14141b;
+  background: #f29bb8;
+  box-shadow: 0 10px 24px -12px rgba(242, 155, 184, 0.75);
+}
+[data-skin='woozi'] .main .btn:hover { background: #f7b6cb; }
+[data-skin='woozi'] .main .btn--ghost {
+  color: #f3eff4;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px rgba(143, 176, 217, 0.85);
+}
+[data-skin='woozi'] .main .chip { color: #f3eff4; background: rgba(242, 155, 184, 0.12); border: 1px solid rgba(242, 155, 184, 0.4); }
+
+/* ---------- home: the encore, confetti falling over the title ---------- */
+
+[data-skin='woozi'] .hero {
+  position: relative;
+  margin-top: 18px;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, #101016 0%, rgba(16, 16, 22, 0.92) 38%, rgba(16, 16, 22, 0.35) 70%, rgba(16, 16, 22, 0.15)),
+    url('/themes/woozi/confetti.jpg') right 38% / 62% auto no-repeat,
+    #101016;
+  box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.9);
+}
+/* a slow shower of petals over everything */
+[data-skin='woozi'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    url('/themes/woozi/petal.svg'),
+    url('/themes/woozi/confetti.svg'),
+    url('/themes/woozi/petal.svg');
+  background-size: 16px, 140px, 11px;
+  background-position: 12% 0, 40% 0, 78% 0;
+  background-repeat: repeat-y;
+  opacity: 0.55;
+  animation: wz-shower 26s linear infinite;
+}
+@keyframes wz-shower {
+  to { background-position: 12% 600px, 40% 700px, 78% 500px; }
+}
+/* his name in the corner, like a credit */
+[data-skin='woozi'] .hero::after {
+  content: 'prod. WOOZI · 우지';
+  position: absolute;
+  right: 22px;
+  top: 20px;
+  padding: 4px 12px;
+  font: 700 0.78rem/1.4 'Space Mono', monospace;
+  letter-spacing: 0.08em;
+  color: #14141b;
+  background: #f29bb8;
+  border-radius: 999px;
+}
+[data-skin='woozi'] .hero > * { position: relative; z-index: 1; }
+[data-skin='woozi'] .hero__title { background: linear-gradient(120deg, #ffffff 30%, #f29bb8 75%, #8fb0d9); -webkit-background-clip: text; background-clip: text; }
+[data-skin='woozi'] .hero__equation { color: #8fb0d9; -webkit-text-fill-color: #8fb0d9; background: none; }
+[data-skin='woozi'] .hero__lede { color: rgba(243, 239, 244, 0.85); }
+@media (max-width: 900px) {
+  [data-skin='woozi'] .hero {
+    background:
+      linear-gradient(180deg, rgba(16, 16, 22, 0.55), rgba(16, 16, 22, 0.92) 70%),
+      url('/themes/woozi/confetti.jpg') center 30% / cover,
+      #101016;
+  }
+  [data-skin='woozi'] .hero::after { right: 14px; top: 12px; font-size: 0.68rem; }
+}
+
+/* ---------- a print beside page titles, captioned like a track credit ---------- */
+
+[data-skin='woozi'] .page-head { position: relative; }
+[data-skin='woozi'] .page-head:has(~ .timeline) { --photo: url('/themes/woozi/spotlight.jpg'); --at: center 30%; --credit: 'live · spotlight'; }
+[data-skin='woozi'] .page-head:has(~ .game-list) { --photo: url('/themes/woozi/pout.jpg'); --at: center 30%; --credit: 'b-side · studio'; }
+[data-skin='woozi'] .page-head:has(.music__ctas) { --photo: url('/themes/woozi/arms-crossed.jpg'); --at: center 20%; --credit: 'prod. WOOZI'; }
+[data-skin='woozi'] .page-head:has(~ .unit),
+[data-skin='woozi'] .page-head:has(.tabs) { --photo: url('/themes/woozi/hoodie-smile.jpg'); --at: center 25%; --credit: 'interlude · 지훈'; }
+@media (min-width: 900px) {
+  [data-skin='woozi'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 320px;
+    padding-right: 250px;
+  }
+  [data-skin='woozi'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 22px;
+    top: -6px;
+    width: 190px;
+    height: 270px;
+    border-radius: 16px;
+    background: var(--photo) var(--at, center) / cover;
+    box-shadow: 0 0 0 1px rgba(243, 239, 244, 0.1), 0 24px 44px -20px rgba(0, 0, 0, 0.9);
+    transform: rotate(2deg);
+  }
+  [data-skin='woozi'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: '♪ ' var(--credit);
+    position: absolute;
+    z-index: 1;
+    right: 34px;
+    top: 236px;
+    padding: 3px 10px;
+    font: 700 0.7rem/1.4 'Space Mono', monospace;
+    color: #14141b;
+    background: #f29bb8;
+    border-radius: 999px;
+    transform: rotate(2deg);
+  }
+}
+
+/* ---------- tracklists become a session in the booth ---------- */
+
+[data-skin='woozi'] .main .tracks {
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 48px 16px 14px;
+  background: #0d0d12;
+  border: 1px solid rgba(243, 239, 244, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 22px 40px -24px rgba(0, 0, 0, 0.9);
+}
+[data-skin='woozi'] .main .tracks::before {
+  content: '● REC   session_woozi_final_FINAL.wav';
+  white-space: pre;
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  right: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font: 700 0.72rem/1.4 'Space Mono', monospace;
+  color: rgba(243, 239, 244, 0.6);
+}
+[data-skin='woozi'] .main .tracks .tracks__row {
+  margin: 5px 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(243, 239, 244, 0.04);
+}
+[data-skin='woozi'] .main .tracks button:hover { background: rgba(242, 155, 184, 0.1); }
+[data-skin='woozi'] .main .tracks .tracks__num { font-family: 'Space Mono', monospace; color: #8fb0d9; }
+[data-skin='woozi'] .main .tracks .chip { color: #14141b; background: #8fb0d9; border: 0; }
+[data-skin='woozi'] .main .tracks li.is-playing .tracks__title { color: #f29bb8; }
+[data-skin='woozi'] .main .tracks .like-btn.is-liked { color: #f29bb8; }
+
+/* ---------- sign in / register: the flash photo ---------- */
+
+[data-skin='woozi'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(16, 16, 22, 0), rgba(16, 16, 22, 0.35)),
+    url('/themes/woozi/flash-film.jpg') 42% center / cover,
+    #101016;
+}
+[data-skin='woozi'] .auth__glow { background: radial-gradient(circle, rgba(242, 155, 184, 0.3), transparent 65%); }
+[data-skin='woozi'] .auth__gem { content: url('/themes/woozi/mic.svg'); width: 40px; height: 80px; }
+[data-skin='woozi'] .auth__switch a { color: #f29bb8; }
+/* the photo is the picture here: the member circle steps back until you reach for it */
+[data-skin='woozi'] .auth__ring { opacity: 0.35; transition: opacity 0.3s; }
+[data-skin='woozi'] .auth__art:hover .auth__ring { opacity: 1; }
+
+/* ---------- Now Playing: crouched at the stage edge, smiling ---------- */
+
+[data-skin='woozi'] .np {
+  --np-bg: #101016;
+  --np-ink: #f3eff4;
+  --np-label: #f29bb8;
+  --np-label2: #8fb0d9;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(10, 10, 16, 0.8)),
+    url('/themes/woozi/crouch-smile.jpg') center 35% / cover,
+    #101016;
+}
+[data-skin='woozi'] .np__deck { background: #f3eff4; color: #14141b; box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.85); }
+/* keeps the words readable over the photo */
+[data-skin='woozi'] .np__text {
+  padding: 22px 26px;
+  border-radius: 22px;
+  background: rgba(14, 14, 20, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='woozi'] .np__title { color: #ffffff; letter-spacing: -0.02em; }
+[data-skin='woozi'] .np h1::after { display: none; }
+[data-skin='woozi'] .np__album { font-family: 'Space Mono', monospace; color: #f29bb8; }
+[data-skin='woozi'] .np__blurb { color: rgba(243, 239, 244, 0.85); }
+[data-skin='woozi'] .np__label { background: url('/themes/woozi/mic.svg') center / auto 62% no-repeat, #f29bb8; }
+[data-skin='woozi'] .np-wave span { background: linear-gradient(#f29bb8, #8fb0d9); }
+[data-skin='woozi'] .np-ctrl .np-ctrl__main { background: #14141b; color: #f3eff4; }
+
+/* ---------- footer: walking into the spotlight ---------- */
+
+[data-skin='woozi'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #ffffff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(20, 20, 27, 0) 30%, rgba(10, 10, 14, 0) 55%, rgba(10, 10, 14, 0.92) 92%),
+    url('/themes/woozi/spotlight.jpg') center 20% / cover;
+}
+[data-skin='woozi'] .footer a { color: #f29bb8; }
+
+/* ---------- the little cursor sparkles turn confetti pink and stage blue ---------- */
+
+[data-skin='woozi'] .sparkle { color: #f29bb8; }
+[data-skin='woozi'] .sparkle:nth-child(odd) { color: #8fb0d9; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='confetti'] .bg-pattern::before,
+  [data-pattern='confetti'] .bg-pattern::after,
+  [data-skin='woozi'] .hero::before { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--confetti::before {
+  background-image: url('/themes/woozi/confetti.svg'), url('/themes/woozi/petal.svg');
+  background-size: 48px, 12px;
+  background-position: 88% 20%, 12% 76%;
+  background-repeat: no-repeat;
+  opacity: 0.85;
+}
+.tp--woozi::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 56px;
+  width: 50px;
+  height: 24px;
+  background: url('/themes/woozi/glasses.svg') center / contain no-repeat;
+  filter: invert(1);
+}
+.tp--woozi .tp__title { font-weight: 800; }

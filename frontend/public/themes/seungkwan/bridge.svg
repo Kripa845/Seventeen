@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 40' fill='none' stroke='#7FD3BE' stroke-linecap='round'>
+  <path d='M4 32h232' stroke-width='2.5'/>
+  <path d='M60 32V6M180 32V6' stroke-width='3'/>
+  <path d='M4 24C30 26 50 14 60 6c22 22 98 22 120 0 10 8 30 20 56 18' stroke-width='1.6'/>
+  <path d='M76 32V17M92 32V22M108 32V24M120 32V25M132 32V24M148 32V22M164 32V17M24 32V25M40 32V19M200 32V19M216 32V25' stroke-width='1' opacity='0.8'/>
+  <g fill='#FF9B3D' stroke='none'><circle cx='60' cy='5' r='2.4'/><circle cx='180' cy='5' r='2.4'/></g>
+</svg>

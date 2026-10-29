@@ -48,7 +48,7 @@ export function Members() {
       <header className="page-head">
         <p className="eyebrow">13 members · 3 units</p>
         <h1>The members</h1>
-        <p className="muted">Open a member to see their full profile; the site changes into their colour.</p>
+        <p className="muted">Open a member to see their full profile, songs and unit-mates.</p>
         <div className="tabs" role="tablist">
           {(['all', 'hiphop', 'vocal', 'performance'] as const).map((k) => (
             <button key={k} role="tab" aria-selected={filter === k} className={filter === k ? 'is-active' : ''} onClick={() => setFilter(k)}>

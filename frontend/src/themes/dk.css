@@ -1,0 +1,332 @@
+/* ============================================================
+   "DK Aesthetics" skin: a black-and-white photo show. Gallery
+   white and ink black, denim blue (the cap, the denim shirt,
+   the beanie, the summer sky) and tortoiseshell brown from his
+   round glasses, matted prints with wall labels, white roses
+   and camera apertures (public/themes/dk/).
+   Switched on by theme tokens with skin: 'dk'
+   (data-skin on <html>, set in lib/theme.tsx).
+   ============================================================ */
+
+/* ---------- the "roses" background pattern (works with any theme) ---------- */
+
+[data-pattern='roses'] .bg-pattern {
+  opacity: 0.4;
+  background-image:
+    url('/themes/dk/rose.svg'),
+    url('/themes/dk/aperture.svg'),
+    url('/themes/dk/focus.svg'),
+    url('/themes/dk/rose.svg'),
+    url('/themes/dk/aperture.svg'),
+    url('/themes/dk/focus.svg');
+  background-size: 34px 41px, 30px, 44px, 26px 31px, 22px, 30px;
+  background-position: 6% 18%, 92% 12%, 88% 80%, 11% 84%, 94% 50%, 4% 52%;
+  background-repeat: no-repeat;
+}
+/* one aperture slowly turning, as if focusing */
+[data-pattern='roses'] .bg-pattern::before {
+  content: '';
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  right: 6%;
+  top: 28%;
+  background: url('/themes/dk/aperture.svg') center / contain no-repeat;
+  filter: drop-shadow(0 8px 10px rgba(20, 20, 22, 0.18));
+  animation: dk-focus 30s linear infinite;
+}
+@keyframes dk-focus {
+  to { transform: rotate(360deg); }
+}
+[data-dark='true'][data-pattern='roses'] .bg-pattern { opacity: 0.22; filter: invert(1); }
+@media (max-width: 720px) {
+  [data-pattern='roses'] .bg-pattern::before { width: 32px; height: 32px; right: 4%; }
+}
+
+/* ---------- the skin ---------- */
+
+/* a gallery wall under one soft spotlight */
+[data-skin='dk'] body {
+  background:
+    radial-gradient(1000px 560px at 50% -12%, rgba(255, 255, 255, 0.95), transparent 70%),
+    radial-gradient(760px 520px at 100% 100%, rgba(63, 106, 153, 0.1), transparent 70%),
+    var(--bg);
+}
+
+/* headings: bold and tight, on a fine ink line that starts in a focus bracket */
+[data-skin='dk'] .main h1 { color: #141416; font-weight: 800; letter-spacing: -0.025em; }
+[data-skin='dk'] .main h1::after {
+  content: '';
+  display: block;
+  width: min(240px, 60%);
+  height: 18px;
+  margin-top: 6px;
+  background:
+    url('/themes/dk/focus.svg') left center / 18px 18px no-repeat,
+    linear-gradient(#141416, #141416) right center / calc(100% - 26px) 1px no-repeat;
+}
+[data-skin='dk'] .eyebrow { color: #3f6a99; letter-spacing: 0.24em; text-transform: uppercase; }
+
+/* nav: white wall, round glasses on the logo */
+[data-skin='dk'] .nav {
+  background: rgba(255, 255, 255, 0.84);
+  border-color: rgba(20, 20, 22, 0.1);
+  box-shadow: 0 14px 34px -22px rgba(20, 20, 22, 0.4);
+}
+[data-skin='dk'] .nav__logo::after {
+  content: '';
+  width: 30px;
+  height: 15px;
+  margin-left: 4px;
+  background: url('/themes/dk/glasses.svg') center / contain no-repeat;
+}
+
+/* cards: white, crisp, a thin ink rule */
+[data-skin='dk'] .main .card,
+[data-skin='dk'] .auth {
+  background: #ffffff;
+  border: 1px solid rgba(20, 20, 22, 0.12);
+  box-shadow: 0 18px 40px -30px rgba(20, 20, 22, 0.55);
+}
+[data-skin='dk'] .main .btn,
+[data-skin='dk'] .acct--signin {
+  color: #ffffff;
+  background: #141416;
+  box-shadow: 0 10px 22px -12px rgba(20, 20, 22, 0.6);
+}
+[data-skin='dk'] .main .btn:hover { background: #2c2c30; }
+[data-skin='dk'] .main .btn--ghost {
+  color: #141416;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 0 0 1.5px #3f6a99;
+}
+[data-skin='dk'] .main .chip { border-color: rgba(63, 106, 153, 0.3); background: rgba(63, 106, 153, 0.08); }
+
+/* ---------- home: a slow slideshow in black and white that develops into colour on hover ---------- */
+
+[data-skin='dk'] .hero {
+  position: relative;
+  margin-top: 18px;
+  padding: 170px 24px 56px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #f3f2ef;
+  box-shadow: 0 30px 60px -34px rgba(20, 20, 22, 0.55);
+}
+[data-skin='dk'] .hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  --shade: linear-gradient(180deg, rgba(243, 242, 239, 0) 22%, rgba(243, 242, 239, 0.9) 74%, #f3f2ef);
+  background: var(--shade), url('/themes/dk/beach-camera.jpg') center 22% / cover;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 1.2s ease;
+  animation: dk-show 40s infinite;
+}
+[data-skin='dk'] .hero:hover::before { filter: none; }
+@keyframes dk-show {
+  0%, 18%   { background-image: var(--shade), url('/themes/dk/beach-camera.jpg'); }
+  20%, 38%  { background-image: var(--shade), url('/themes/dk/park-cap.jpg'); }
+  40%, 58%  { background-image: var(--shade), url('/themes/dk/mirror-selfie.jpg'); }
+  60%, 78%  { background-image: var(--shade), url('/themes/dk/glasses-smile.jpg'); }
+  80%, 98%  { background-image: var(--shade), url('/themes/dk/rose-camera.jpg'); }
+  100%      { background-image: var(--shade), url('/themes/dk/beach-camera.jpg'); }
+}
+/* a handwritten signature in the corner */
+[data-skin='dk'] .hero::after {
+  content: 'DK · 도겸 ❀';
+  position: absolute;
+  right: 28px;
+  top: 22px;
+  padding: 4px 14px;
+  font: 700 1.35rem/1.2 'Caveat', cursive;
+  color: #141416;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  transform: rotate(-3deg);
+  box-shadow: 0 8px 18px -10px rgba(20, 20, 22, 0.5);
+}
+[data-skin='dk'] .hero > * { position: relative; z-index: 1; }
+[data-skin='dk'] .hero__title { background: linear-gradient(120deg, #141416 30%, #3f6a99); -webkit-background-clip: text; background-clip: text; }
+[data-skin='dk'] .hero__equation { color: #9c7a5b; -webkit-text-fill-color: #9c7a5b; background: none; }
+[data-skin='dk'] .hero__lede { color: #2c2c30; }
+@media (max-width: 720px) {
+  [data-skin='dk'] .hero { padding: 120px 18px 40px; }
+  [data-skin='dk'] .hero::after { right: 14px; top: 14px; font-size: 1.05rem; }
+}
+
+/* ---------- framed, matted prints beside page titles, each with a wall label ---------- */
+
+[data-skin='dk'] .page-head { position: relative; }
+[data-skin='dk'] .page-head:has(~ .timeline) {
+  --photo: url('/themes/dk/budapest-night.jpg');
+  --caption: 'Untitled (Budapest at night)';
+}
+[data-skin='dk'] .page-head:has(~ .game-list) {
+  --photo: url('/themes/dk/mirror-selfie.jpg');
+  --caption: 'Self-portrait in a round mirror';
+}
+[data-skin='dk'] .page-head:has(.music__ctas) {
+  --photo: url('/themes/dk/stage-tie.jpg');
+  --caption: 'On stage, white shirt';
+}
+[data-skin='dk'] .page-head:has(~ .unit),
+[data-skin='dk'] .page-head:has(.tabs) {
+  --photo: url('/themes/dk/beanie-mirror.jpg');
+  --caption: 'Self-portrait with camera';
+}
+@media (min-width: 900px) {
+  [data-skin='dk'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs) {
+    min-height: 340px;
+    padding-right: 250px;
+  }
+  /* hung straight: thin black frame, white mat, printed in black and white */
+  [data-skin='dk'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    top: -4px;
+    width: 190px;
+    height: 254px;
+    border: 16px solid #ffffff;
+    outline: 3px solid #141416;
+    background: var(--photo) center 25% / cover;
+    filter: grayscale(1);
+    box-shadow: 0 24px 40px -24px rgba(20, 20, 22, 0.6);
+  }
+  /* the wall label underneath */
+  [data-skin='dk'] .page-head:has(~ .timeline, ~ .game-list, .music__ctas, ~ .unit, .tabs)::before {
+    content: 'DK (Lee Seokmin)\A' var(--caption) '\A gelatin silver print';
+    white-space: pre;
+    position: absolute;
+    right: 20px;
+    top: 266px;
+    width: 190px;
+    padding: 6px 0 0;
+    font: 500 0.68rem/1.45 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: #55555b;
+    text-align: left;
+    border-top: 1px solid rgba(20, 20, 22, 0.25);
+  }
+}
+
+/* ---------- tracklists become the exhibition checklist ---------- */
+
+[data-skin='dk'] .main .tracks {
+  --ink: #141416;
+  position: relative;
+  margin: 8px 2px 16px;
+  padding: 50px 18px 14px;
+  color: var(--ink);
+  background: #ffffff;
+  border: 1px solid rgba(20, 20, 22, 0.12);
+  border-top: 3px solid #141416;
+  border-radius: 4px;
+  box-shadow: 0 16px 30px -24px rgba(20, 20, 22, 0.5);
+}
+[data-skin='dk'] .main .tracks::before {
+  content: 'Checklist · works on view';
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  padding-left: 22px;
+  font: 700 0.72rem/1.4 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #141416;
+  background: url('/themes/dk/rose.svg') left center / 14px 17px no-repeat;
+}
+[data-skin='dk'] .main .tracks .tracks__row,
+[data-skin='dk'] .main .tracks button { border-bottom-color: rgba(20, 20, 22, 0.1); }
+[data-skin='dk'] .main .tracks button:hover { background: rgba(63, 106, 153, 0.07); }
+[data-skin='dk'] .main .tracks .tracks__num { color: #3f6a99; font-variant-numeric: tabular-nums; }
+[data-skin='dk'] .main .tracks .tracks__title { color: var(--ink); }
+[data-skin='dk'] .main .tracks .chip { color: #3f6a99; background: transparent; border: 1.5px solid rgba(63, 106, 153, 0.5); }
+[data-skin='dk'] .main .tracks li.is-playing .tracks__title { color: #3f6a99; }
+[data-skin='dk'] .main .tracks .like-btn.is-liked { color: #c4536b; }
+
+/* ---------- sign in / register: the reflection and the white orchids ---------- */
+
+[data-skin='dk'] .auth__art {
+  background:
+    linear-gradient(180deg, rgba(243, 242, 239, 0), rgba(20, 20, 22, 0.25)),
+    url('/themes/dk/orchids.jpg') 42% center / cover;
+}
+[data-skin='dk'] .auth__glow { background: radial-gradient(circle, rgba(63, 106, 153, 0.3), transparent 65%); }
+[data-skin='dk'] .auth__gem { content: url('/themes/dk/rose.svg'); width: 74px; height: 89px; }
+[data-skin='dk'] .auth__switch a { color: #3f6a99; }
+
+/* ---------- Now Playing: hand in his hair, the dark hotel mirror ---------- */
+
+[data-skin='dk'] .np {
+  --np-bg: #141416;
+  --np-ink: #ffffff;
+  --np-label: #a9c3df;
+  --np-label2: #d8bfa3;
+  background:
+    radial-gradient(70% 70% at 50% 50%, transparent 35%, rgba(20, 20, 22, 0.75)),
+    url('/themes/dk/hair-touch.jpg') center 30% / cover,
+    #141416;
+}
+[data-skin='dk'] .np__deck { background: rgba(255, 255, 255, 0.94); color: #141416; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6); }
+/* keeps the words readable over the photo */
+[data-skin='dk'] .np__text {
+  padding: 22px 26px;
+  border-radius: 26px;
+  background: rgba(20, 20, 22, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+[data-skin='dk'] .np__title { color: #ffffff; letter-spacing: -0.02em; }
+[data-skin='dk'] .np__album { font-family: 'Caveat', cursive; font-size: clamp(1.3rem, 2.4vw, 1.8rem); color: #a9c3df; }
+[data-skin='dk'] .np__blurb { color: rgba(255, 255, 255, 0.85); }
+[data-skin='dk'] .np__label { background: url('/themes/dk/aperture.svg') center / 56% no-repeat, #ffffff; }
+[data-skin='dk'] .np-wave span { background: linear-gradient(#a9c3df, #d8bfa3); }
+[data-skin='dk'] .np-ctrl .np-ctrl__main { background: #ffffff; color: #141416; }
+
+/* ---------- footer: under the warm streetlight ---------- */
+
+[data-skin='dk'] .footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 440px;
+  margin-top: 60px;
+  padding: 0 16px 60px;
+  color: #ffffff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgba(243, 242, 239, 0) 30%, rgba(20, 16, 10, 0) 56%, rgba(14, 12, 10, 0.9) 92%),
+    url('/themes/dk/streetlight.jpg') center 28% / cover;
+}
+[data-skin='dk'] .footer a { color: #d8bfa3; }
+
+/* ---------- the little cursor sparkles turn denim and ink ---------- */
+
+[data-skin='dk'] .sparkle { color: #3f6a99; }
+[data-skin='dk'] .sparkle:nth-child(odd) { color: #141416; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-pattern='roses'] .bg-pattern::before,
+  [data-skin='dk'] .hero::before { animation: none; }
+}
+
+/* ---------- Studio theme preview ---------- */
+
+.tp--roses::before {
+  background-image: url('/themes/dk/rose.svg'), url('/themes/dk/aperture.svg'), url('/themes/dk/focus.svg');
+  background-size: 16px 19px, 16px, 22px;
+  background-position: 90% 26%, 12% 74%, 70% 84%;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+}
+.tp--dk::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 56px;
+  width: 52px;
+  height: 26px;
+  background: url('/themes/dk/glasses.svg') center / contain no-repeat;
+}
+.tp--dk .tp__title { color: #141416; font-weight: 800; }

@@ -32,7 +32,7 @@
      {"no": 10, "title": "Love Letter", "native": "사랑쪽지", "youtube": "https://www.youtube.com/watch?v=fJquWD13T0I"}
    ]},
   {"slug": "love-and-letter-repackage", "title": "Love & Letter Repackage", "kind": "repackage", "release_date": "2016-07-04", "era_mood": "Summer encore — very nice, very bright", "title_track": "Very Nice", "language": "ko",
-   "theme": {"bg": "#FFF6EC", "surface": "#FFFFFF", "text": "#3E2A22", "accent": "#E86A5C", "accent2": "#4FA3C7", "font": "sans", "pattern": "sparkle", "dark": false},
+   "theme": {"bg": "#EAF6FB", "surface": "#FFFDF7", "text": "#1F3442", "accent": "#1FA9C0", "accent2": "#FF7A3D", "font": "display", "pattern": "hoops", "dark": false, "skin": "ajunice"},
    "tracks": [
      {"no": 1, "title": "Chuck", "native": "엄지척", "youtube": "https://www.youtube.com/watch?v=6w0H-PBke38"},
      {"no": 2, "title": "Pretty U", "native": "예쁘다", "youtube": "https://www.youtube.com/watch?v=J5juKw-mnGw"},
@@ -298,7 +298,7 @@
      {"no": 8, "title": "God of Music (Instrumental)"}
    ]},
   {"slug": "17-is-right-here", "title": "17 Is Right Here", "kind": "best", "release_date": "2024-04-29", "title_track": "Maestro", "era_mood": "The maestro — black and gold, classical", "language": "ko",
-   "theme": {"bg": "#0E0D0B", "surface": "#1A1814", "text": "#F4ECD8", "accent": "#C9A44C", "accent2": "#A38A55", "font": "serif", "pattern": "stars", "dark": true},
+   "theme": {"bg": "#0B0D12", "surface": "#13161D", "text": "#EEF2F7", "accent": "#E3263A", "accent2": "#8FB8D8", "font": "serif", "pattern": "staves", "dark": true, "skin": "maestro"},
    "tracks": [
      {"no": 1, "title": "Maestro", "note": "New", "lead": true, "youtube": "https://www.youtube.com/watch?v=ThI0pBAbFnk"},
      {"no": 2, "title": "Lalali", "note": "New · Hip-Hop Team"},

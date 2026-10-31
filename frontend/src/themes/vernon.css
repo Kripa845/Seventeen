@@ -283,7 +283,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.75);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(244, 247, 250, 0) 30%, rgba(20, 40, 20, 0) 56%, rgba(16, 30, 18, 0.8) 94%),
-    url('/themes/vernon/fence-sky.jpg') 30% 80% / cover;
+    url('/themes/vernon/footer.jpg') center / cover;
 }
 [data-skin='vernon'] .footer a { color: #f4cf45; }
 

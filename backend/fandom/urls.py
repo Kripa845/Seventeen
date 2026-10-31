@@ -3,9 +3,12 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     AlbumViewSet,
+    BinderView,
     ContentVersionView,
     DiaryPageViewSet,
+    EventViewSet,
     GameScoreViewSet,
+    LetterViewSet,
     LikeDetailView,
     LikesView,
     LoginView,
@@ -14,6 +17,7 @@ from .views import (
     MeView,
     MyScoresView,
     PasswordView,
+    PhotoCardViewSet,
     ProfileView,
     RegisterView,
     SiteSettingsView,
@@ -28,6 +32,9 @@ router.register("songs", SongViewSet, basename="song")
 router.register("scores", GameScoreViewSet, basename="score")
 router.register("diary", DiaryPageViewSet, basename="diary")
 router.register("users", UserAdminViewSet, basename="user")
+router.register("events", EventViewSet, basename="event")
+router.register("cards", PhotoCardViewSet, basename="card")
+router.register("letters", LetterViewSet, basename="letter")
 
 urlpatterns = router.urls + [
     path("site/", SiteSettingsView.as_view(), name="site"),
@@ -41,4 +48,5 @@ urlpatterns = router.urls + [
     path("me/likes/", LikesView.as_view(), name="my-likes"),
     path("me/likes/<int:song_id>/", LikeDetailView.as_view(), name="my-like"),
     path("me/scores/", MyScoresView.as_view(), name="my-scores"),
+    path("me/binder/", BinderView.as_view(), name="my-binder"),
 ]

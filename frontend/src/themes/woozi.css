@@ -307,7 +307,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(20, 20, 27, 0) 30%, rgba(10, 10, 14, 0) 55%, rgba(10, 10, 14, 0.92) 92%),
-    url('/themes/woozi/spotlight.jpg') center 20% / cover;
+    url('/themes/woozi/footer.jpg') center / cover;
 }
 [data-skin='woozi'] .footer a { color: #f29bb8; }
 

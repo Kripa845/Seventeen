@@ -2,7 +2,8 @@ import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useStat
 import type { ReactNode } from 'react'
 import { BASE } from './api'
 import { CARAT_THEME, deepen, mix, readableOn, THEME_FONTS as FONTS } from './color'
-import type { SiteSettings, ThemeTokens } from './types'
+import { birthdayDismissed, birthdayStar, dismissBirthday, MEMBER_THEMES } from '../fan/birthday'
+import type { Member, SiteSettings, ThemeTokens } from './types'
 import '../themes/heaven.css'
 import '../themes/darling.css'
 import '../themes/leftright.css'
@@ -31,6 +32,8 @@ import '../themes/hoshi.css'
  * album's button, saved in localStorage), else the site's theme (set in the Studio).
  * Member, album and song pages don't change it; they only tint their own content.
  *  - override: the Studio's live preview while an admin edits the site theme
+ *  - birthday: on a member's birthday (if the Studio allows it) the site wears that member's
+ *    theme for the day, over the visitor's own choice, until they turn it off for the day
  */
 interface Pinned {
   label: string
@@ -44,6 +47,11 @@ interface ThemeCtx {
   active: ThemeTokens
   site: SiteSettings | null
   setSite: (s: SiteSettings) => void
+  /** Whose birthday theme is on today (null: nobody's, or turned off) */
+  birthday: Member | null
+  /** The member whose birthday it is, even when the visitor turned the theme off */
+  birthdayMember: Member | null
+  setBirthdayOn: (on: boolean) => void
 }
 
 const Ctx = createContext<ThemeCtx | null>(null)
@@ -87,7 +95,27 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [pinned, setPinned] = useState<Pinned | null>(loadPinned)
   const [override, setOverride] = useState<ThemeTokens | null>(null)
   const [site, setSite] = useState<SiteSettings | null>(null)
-  const active = override ?? pinned?.tokens ?? site?.theme ?? CARAT_THEME
+  const [members, setMembers] = useState<Member[]>([])
+  const [now, setNow] = useState(() => new Date())
+  const [dismissTick, setDismissTick] = useState(0)
+  const birthdayOn = site?.birthday_themes ?? false
+  const birthdayMember = useMemo(() => (birthdayOn ? birthdayStar(members, now) : null), [birthdayOn, members, now])
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- dismissTick re-reads the saved choice
+  const birthday = useMemo(() => (birthdayMember && !birthdayDismissed(birthdayMember.slug, now) ? birthdayMember : null), [birthdayMember, now, dismissTick])
+  const active = override ?? (birthday ? MEMBER_THEMES[birthday.slug] : null) ?? pinned?.tokens ?? site?.theme ?? CARAT_THEME
+
+  useEffect(() => {
+    if (!birthdayOn) return
+    fetch(`${BASE}/members/`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list: Member[]) => setMembers(list))
+      .catch(() => {
+        /* no members, no birthday theme */
+      })
+    // the day (and a shared birthday's half) can change while the tab stays open
+    const timer = setInterval(() => setNow(new Date()), 5 * 60_000)
+    return () => clearInterval(timer)
+  }, [birthdayOn])
 
   useEffect(() => {
     fetch(`${BASE}/site/`)
@@ -109,6 +137,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       site,
       setSite,
       setOverride,
+      birthday,
+      birthdayMember,
+      setBirthdayOn: (on) => {
+        if (!birthdayMember) return
+        dismissBirthday(on ? null : birthdayMember.slug)
+        setDismissTick((t) => t + 1)
+      },
       pin: (p) => {
         setPinned(p)
         try {
@@ -119,7 +154,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         }
       },
     }),
-    [pinned, active, site],
+    [pinned, active, site, birthday, birthdayMember],
   )
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>

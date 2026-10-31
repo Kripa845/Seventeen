@@ -51,6 +51,7 @@ export interface Song {
   album_slug: string
   album_spotify_url: string
   album_cover?: string | null // the album's uploaded cover
+  lyrics?: string // only on one song (GET /songs/<id>/): [chant] is CARAT's part, "# Chorus" names a part
 }
 
 export interface Album {
@@ -74,6 +75,7 @@ export interface SiteSettings {
   hero_eyebrow: string
   hero_lede: string
   disabled_games: GameKey[]
+  birthday_themes: boolean // on a member's birthday the site wears their theme
   updated_at: string
 }
 
@@ -161,4 +163,53 @@ export interface DiaryPage {
   videos: Record<string, string> // video id -> url
   created_at: string
   updated_at: string
+}
+
+// ---------- For CARATs: the calendar, photocards and letters ----------
+
+export type EventKind = 'comeback' | 'concert' | 'fanmeeting' | 'broadcast' | 'other'
+
+export interface SvtEvent {
+  id: number
+  title: string
+  date: string // YYYY-MM-DD
+  kind: EventKind
+  kind_label: string
+  note: string
+  link: string
+}
+
+export type CardRarity = 'common' | 'rare' | 'special'
+
+export interface PhotoCard {
+  id: number
+  title: string
+  member: string | null // slug; null is a group card
+  member_name: string
+  album: string | null // slug
+  image: string
+  rarity: CardRarity
+  order: number
+}
+
+export interface Binder {
+  counts: Record<string, number> // card id -> how many I have
+  pack_ready: boolean
+  today: number[] // card ids pulled today
+  pack_size: number
+  pulled?: PhotoCard[] // only right after opening a pack
+}
+
+export type LetterPaper = 'rose' | 'serenity' | 'cream' | 'mint' | 'lilac' | 'night'
+
+export interface Letter {
+  id: number
+  member: string | null // slug; null is to all of SEVENTEEN
+  member_name: string
+  body: string
+  paper: LetterPaper
+  status: 'pending' | 'approved' | 'hidden'
+  author_name: string
+  is_mine: boolean
+  created_at: string
 }

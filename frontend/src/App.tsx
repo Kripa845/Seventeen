@@ -1,26 +1,33 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
+import { BrowserRouter, Link, Navigate, Route, Routes, useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { LoginPage, RegisterPage } from './auth/AuthPages'
-import { AuthProvider } from './auth/AuthProvider'
+import { AuthProvider, homeFor, useAuth } from './auth/AuthProvider'
 import { Dashboard } from './auth/Dashboard'
+import { BirthdayBanner } from './components/BirthdayBanner'
 import { MiniPlayer } from './components/MiniPlayer'
 import { Nav } from './components/Nav'
 import { RequireViewer } from './components/RequireViewer'
+import { Loading } from './components/Status'
 import { Diary, Memories } from './diary/Diary'
 import { SparkleTrail } from './components/SparkleTrail'
 import { useContentSync } from './lib/api'
 import { PlayerProvider } from './lib/player'
 import { ThemeProvider } from './lib/theme'
 import { AlbumDetail } from './pages/AlbumDetail'
+import { Binder } from './pages/Binder'
+import { Calendar } from './pages/Calendar'
 import { Discography } from './pages/Discography'
 import { Games } from './pages/Games'
 import { Home } from './pages/Home'
+import { Letters } from './pages/Letters'
 import { MemberDetail } from './pages/MemberDetail'
 import { Music } from './pages/Music'
 import { NowPlaying } from './pages/NowPlaying'
 import { SongDetail } from './pages/SongDetail'
 import { Members } from './pages/Members'
 import { Themes } from './pages/Themes'
+import { Timeline } from './pages/Timeline'
+import { UnitDetail, Units } from './pages/Units'
 import { Studio } from './studio/Studio'
 
 function ScrollToTop() {
@@ -35,6 +42,30 @@ function ScrollToTop() {
 function AlbumAlias() {
   const { slug = '' } = useParams()
   return <Navigate to={`/discography/${slug}`} replace />
+}
+
+/** The landing page is for visitors. Signed in, / takes you to your own dashboard
+ *  (viewer or admin); /?preview=landing still shows the landing page, under a banner. */
+function Landing() {
+  const { account } = useAuth()
+  const [params] = useSearchParams()
+  if (account === undefined) return <Loading />
+  if (account && params.get('preview') !== 'landing') return <Navigate to={homeFor(account, null)} replace />
+  return (
+    <>
+      {account && (
+        <div className="preview-bar card">
+          <span>
+            <b>Previewing the landing page</b> · this is what signed-out visitors see
+          </span>
+          <Link className="btn" to={homeFor(account, null)}>
+            Back to my {account.is_staff ? 'admin' : 'viewer'} dashboard
+          </Link>
+        </div>
+      )}
+      <Home />
+    </>
+  )
 }
 
 function NotFound() {
@@ -68,10 +99,11 @@ function Layout() {
       <SparkleTrail />
       <div className="bg-pattern" aria-hidden />
       <Nav />
+      <BirthdayBanner />
       <main className="main">
         <Routes>
           {/* the landing page: open to everyone */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           {/* the viewer dashboard: any signed-in account (admins too) */}
@@ -89,14 +121,18 @@ function Layout() {
           <Route path="/games/:game" element={<RequireViewer><Games /></RequireViewer>} />
           <Route path="/diary" element={<RequireViewer><Diary /></RequireViewer>} />
           <Route path="/memories" element={<RequireViewer><Memories /></RequireViewer>} />
+          <Route path="/calendar" element={<RequireViewer><Calendar /></RequireViewer>} />
+          <Route path="/units" element={<RequireViewer><Units /></RequireViewer>} />
+          <Route path="/units/:slug" element={<RequireViewer><UnitDetail /></RequireViewer>} />
+          <Route path="/timeline" element={<RequireViewer><Timeline /></RequireViewer>} />
+          <Route path="/binder" element={<RequireViewer><Binder /></RequireViewer>} />
+          <Route path="/letters" element={<RequireViewer><Letters /></RequireViewer>} />
           {/* the admin dashboard (/studio) is above, with its own layout */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <footer className="footer">
         Made with ◆ by a CARAT · Unofficial fan site · Music via YouTube & Spotify embeds · SEVENTEEN © PLEDIS Entertainment
-        {' · '}
-        <Link to="/studio" className="footer__studio">Admin</Link>
       </footer>
       <MiniPlayer />
     </>

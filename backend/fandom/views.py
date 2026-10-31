@@ -1,15 +1,16 @@
 from django.contrib.auth import authenticate, get_user_model, login, logout, update_session_auth_hash
 from django.db.models import Count, Max, Q
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Album, DiaryPage, GameScore, Like, Member, Profile, SiteSettings, Song
+from .models import Album, CardPull, DiaryPage, Event, GameScore, Letter, Like, Member, PhotoCard, Profile, SiteSettings, Song
 from .serializers import (
     AdminCreateUserSerializer,
     AdminScoreSerializer,
@@ -20,9 +21,12 @@ from .serializers import (
     can_edit_page,
     DiaryPhotoSerializer,
     DiaryVideoSerializer,
+    EventSerializer,
     GameScoreSerializer,
+    LetterSerializer,
     MemberSerializer,
     PasswordChangeSerializer,
+    PhotoCardSerializer,
     ProfileSerializer,
     RegisterSerializer,
     SiteSettingsSerializer,
@@ -97,6 +101,10 @@ class SongViewSet(viewsets.ModelViewSet):
         if self.request.query_params.get("title_tracks"):
             qs = qs.filter(is_title_track=True)
         return qs
+
+    def get_serializer_context(self):
+        # one song (and the Studio's saves) come with lyrics; lists of songs don't
+        return {**super().get_serializer_context(), "with_lyrics": self.action != "list"}
 
     def perform_destroy(self, instance):
         album = instance.album
@@ -188,7 +196,7 @@ class ContentVersionView(APIView):
 
     def get(self, request):
         parts = []
-        for model in (Album, Member, Song):
+        for model in (Album, Member, Song, Event, PhotoCard):
             agg = model.objects.aggregate(n=Count("id"), t=Max("updated_at"))
             parts.append(f"{agg['n']}@{agg['t'].timestamp() if agg['t'] else 0:.6f}")
         parts.append(f"{SiteSettings.load().updated_at.timestamp():.6f}")
@@ -433,3 +441,130 @@ class UserAdminViewSet(
         user.set_password(password)
         user.save()
         return Response({"password": password})
+
+
+# ---------- For CARATs: the calendar, photocards and letters ----------
+
+
+class EventViewSet(viewsets.ModelViewSet):
+    """GET /api/events/ : comebacks, concerts and other dates for the calendar
+    (birthdays and the anniversary are added by the page itself). Staff add, edit and delete."""
+
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = [IsStaffOrReadOnly]
+
+
+class SignedInReadsStaffWrites(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        if not (user and user.is_authenticated):
+            return False
+        return request.method in permissions.SAFE_METHODS or user.is_staff
+
+
+class PhotoCardViewSet(viewsets.ModelViewSet):
+    """GET /api/cards/ : every photocard (signed in). Staff upload (multipart: image, title,
+    member, album, rarity), edit and delete them."""
+
+    queryset = PhotoCard.objects.select_related("member", "album")
+    serializer_class = PhotoCardSerializer
+    permission_classes = [SignedInReadsStaffWrites]
+
+    def perform_destroy(self, card):
+        card.image.delete(save=False)
+        card.delete()
+
+
+PACK_SIZE = 3
+RARITY_WEIGHT = {PhotoCard.Rarity.COMMON: 10, PhotoCard.Rarity.RARE: 4, PhotoCard.Rarity.SPECIAL: 1}
+
+
+def binder_payload(user):
+    today = timezone.localdate()
+    pulls = CardPull.objects.filter(user=user)
+    counts = {}
+    for card_id in pulls.values_list("card_id", flat=True):
+        counts[str(card_id)] = counts.get(str(card_id), 0) + 1
+    return {
+        "counts": counts,
+        "pack_ready": not pulls.filter(pulled_on=today).exists(),
+        "today": list(pulls.filter(pulled_on=today).values_list("card_id", flat=True)),
+        "pack_size": PACK_SIZE,
+    }
+
+
+class BinderView(APIView):
+    """GET /api/me/binder/ : which cards I have (with duplicates) and whether today's pack is waiting.
+    POST /api/me/binder/ opens today's pack: PACK_SIZE random cards, rarer ones less often."""
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        return Response(binder_payload(request.user))
+
+    def post(self, request):
+        import random
+
+        today = timezone.localdate()
+        if CardPull.objects.filter(user=request.user, pulled_on=today).exists():
+            return Response({"detail": "You've opened today's pack. A new one comes tomorrow."}, status=status.HTTP_400_BAD_REQUEST)
+        cards = list(PhotoCard.objects.select_related("member", "album"))
+        if not cards:
+            return Response({"detail": "There are no photocards yet."}, status=status.HTTP_400_BAD_REQUEST)
+        picked = random.choices(cards, weights=[RARITY_WEIGHT.get(c.rarity, 1) for c in cards], k=PACK_SIZE)
+        CardPull.objects.bulk_create([CardPull(user=request.user, card=c, pulled_on=today) for c in picked])
+        return Response({
+            **binder_payload(request.user),
+            "pulled": PhotoCardSerializer(picked, many=True).data,
+        }, status=status.HTTP_201_CREATED)
+
+
+MAX_PENDING_LETTERS = 5
+
+
+class LetterViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    """Letters to SEVENTEEN, for signed-in accounts.
+
+    GET /api/letters/ : approved letters plus my own (any status); ?member=<slug> for one member's
+    mailbox, ?member=all for letters to the whole team. Admins: ?all=1 lists every letter.
+    POST {member?, body, paper} sends one; a viewer's waits for an admin, an admin's is approved.
+    DELETE: my own letters (admins: any). POST /api/letters/<id>/review/ {status} (admins).
+    """
+
+    serializer_class = LetterSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        qs = Letter.objects.select_related("author__profile", "member")
+        user = self.request.user
+        # viewers see approved letters and their own; admins see every letter except in the plain list
+        if not user.is_staff or (self.action == "list" and not self.request.query_params.get("all")):
+            qs = qs.filter(Q(status=Letter.Status.APPROVED) | Q(author=user))
+        member = self.request.query_params.get("member")
+        if member == "all":
+            qs = qs.filter(member__isnull=True)
+        elif member:
+            qs = qs.filter(member__slug=member)
+        return qs
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        if not user.is_staff and user.letters.filter(status=Letter.Status.PENDING).count() >= MAX_PENDING_LETTERS:
+            raise ValidationError({"detail": f"You have {MAX_PENDING_LETTERS} letters waiting for review. Send more once they're read."})
+        serializer.save(author=user, status=Letter.Status.APPROVED if user.is_staff else Letter.Status.PENDING)
+
+    def perform_destroy(self, letter):
+        if not (self.request.user.is_staff or letter.author_id == self.request.user.id):
+            raise PermissionDenied("You can only take back your own letters.")
+        letter.delete()
+
+    @action(detail=True, methods=["post"], permission_classes=[permissions.IsAdminUser])
+    def review(self, request, pk=None):
+        letter = self.get_object()
+        value = request.data.get("status")
+        if value not in Letter.Status.values:
+            raise ValidationError({"status": f"Use one of: {', '.join(Letter.Status.values)}."})
+        letter.status = value
+        letter.save(update_fields=["status", "updated_at"])
+        return Response(self.get_serializer(letter).data)

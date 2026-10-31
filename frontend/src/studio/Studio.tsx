@@ -1,7 +1,10 @@
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { AlbumsEditor } from './AlbumsEditor'
+import { CardsAdmin } from './CardsAdmin'
+import { EventsAdmin } from './EventsAdmin'
 import { GamesAdmin } from './GamesAdmin'
+import { LettersAdmin } from './LettersAdmin'
 import { MembersEditor } from './MembersEditor'
 import { Overview } from './Overview'
 import { PhotoAlbumsAdmin } from './PhotoAlbumsAdmin'
@@ -15,9 +18,12 @@ const NAV: { group?: string; to: string; label: string; icon: string; end?: bool
   { group: 'Content', to: '/studio/members', label: 'Members', icon: '☺' },
   { to: '/studio/music', label: 'Music management', icon: '♫' },
   { to: '/studio/photo-albums', label: 'Album management', icon: '▣' },
+  { to: '/studio/calendar', label: 'Calendar', icon: '📅' },
+  { to: '/studio/photocards', label: 'Photocards', icon: '🃏' },
   { group: 'Look', to: '/studio/themes', label: 'Themes management', icon: '✦' },
   { group: 'Community', to: '/studio/users', label: 'User management', icon: '♡' },
   { to: '/studio/games', label: 'Games management', icon: '🎮' },
+  { to: '/studio/letters', label: 'Letters', icon: '💌' },
 ]
 
 /** Old Studio links (before the sections were renamed) still work. */
@@ -37,8 +43,7 @@ function AdminsOnly({ name }: { name: string }) {
         <p className="muted">
           Hi {name}! This is where admins run the site. Your own playlist, bias and scores live on your dashboard.
         </p>
-        <Link className="btn studio-login__go" to="/me">Go to my dashboard</Link>
-        <Link className="link-arrow small" to="/">← Back to the site</Link>
+        <Link className="btn studio-login__go" to="/me">Go to my viewer dashboard</Link>
       </div>
     </div>
   )
@@ -82,8 +87,8 @@ export function Studio() {
             ))}
           </nav>
           <div className="studio__foot">
-            <Link to="/me" className="studio__site">My fan dashboard</Link>
-            <a href="/" target="_blank" rel="noreferrer" className="studio__site">View site ↗</a>
+            <Link to="/me" className="studio__site">Viewer dashboard</Link>
+            <a href="/?preview=landing" target="_blank" rel="noreferrer" className="studio__site">Landing page ↗</a>
             <div className="studio__user">
               <span className="studio__avatar" aria-hidden>{account.display_name[0]?.toUpperCase()}</span>
               <span className="studio__username">
@@ -112,6 +117,9 @@ export function Studio() {
             <Route path="themes" element={<ThemesAdmin />} />
             <Route path="users" element={<UserManagement me={account.username} />} />
             <Route path="games" element={<GamesAdmin />} />
+            <Route path="calendar" element={<EventsAdmin />} />
+            <Route path="photocards" element={<CardsAdmin />} />
+            <Route path="letters" element={<LettersAdmin />} />
             <Route path="albums/:slug?" element={<OldAlbumLink />} />
             <Route path="look" element={<Navigate to="/studio/themes" replace />} />
             <Route path="fans" element={<Navigate to="/studio/users" replace />} />

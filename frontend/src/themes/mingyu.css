@@ -303,7 +303,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(241, 238, 230, 0) 30%, rgba(20, 34, 18, 0) 55%, rgba(16, 28, 14, 0.85) 92%),
-    url('/themes/mingyu/grass.jpg') center 42% / cover;
+    url('/themes/mingyu/footer.jpg') center / cover;
 }
 [data-skin='mingyu'] .footer a { color: #e4f2d6; }
 

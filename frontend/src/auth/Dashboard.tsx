@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Countdown } from '../components/Countdown'
 import { MemberAvatar } from '../components/MemberAvatar'
 import { Loading } from '../components/Status'
 import { useMembers } from '../lib/api'
@@ -41,6 +42,11 @@ const SECTIONS = [
   { to: '/games', icon: '🎮', title: 'Games', text: 'Play and climb the leaderboard' },
   { to: '/diary', icon: '📔', title: 'Diary', text: 'The CARAT scrapbook' },
   { to: '/memories', icon: '▣', title: 'Memories', text: 'Photo albums and videos' },
+  { to: '/calendar', icon: '📅', title: 'Calendar', text: 'Birthdays, comebacks, concerts' },
+  { to: '/units', icon: '⬡', title: 'Units', text: 'The teams and the sub-units' },
+  { to: '/timeline', icon: '⟿', title: 'The story', text: 'Debut to today, try on every era' },
+  { to: '/binder', icon: '🃏', title: 'Binder', text: 'A photocard pack every day' },
+  { to: '/letters', icon: '💌', title: 'Letters', text: 'Write to the members' },
 ]
 
 /* ---------- playlist ---------- */
@@ -323,6 +329,8 @@ export function Dashboard() {
           </Link>
         )}
       </section>
+
+      <Countdown />
 
       <nav className="dash-sections" aria-label="Your CARAT space">
         {SECTIONS.map((s) => (

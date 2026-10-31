@@ -7,7 +7,7 @@ from django.db.models import Max
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from .models import Album, DiaryPage, DiaryPhoto, DiaryVideo, GameScore, Member, Profile, SiteSettings, Song
+from .models import Album, DiaryPage, DiaryPhoto, DiaryVideo, Event, GameScore, Letter, Member, PhotoCard, Profile, SiteSettings, Song
 
 HEX = re.compile(r"^#[0-9A-Fa-f]{6}$")
 FONTS = {"serif", "sans", "display", "mono", "marker"}
@@ -108,7 +108,21 @@ class SongSerializer(serializers.ModelSerializer):
         fields = [
             "id", "album", "title", "native_title", "note", "is_title_track", "disc", "track_number",
             "youtube_url", "spotify_url", "album_title", "album_slug", "album_spotify_url", "album_cover",
+            "lyrics",
         ]
+
+    def to_representation(self, song):
+        """Lyrics come with one song (GET /api/songs/<id>/), not with every list of songs."""
+        data = super().to_representation(song)
+        if not self.context.get("with_lyrics"):
+            data.pop("lyrics", None)
+        return data
+
+    def validate_lyrics(self, value):
+        value = value.replace("\r\n", "\n").strip()
+        if len(value) > 20000:
+            raise serializers.ValidationError("Lyrics up to 20,000 characters, please.")
+        return value
 
     def get_album_cover(self, song):
         """The album's uploaded cover, so song lists (playlists, the dashboard) show the same art."""
@@ -156,7 +170,7 @@ class AlbumDetailSerializer(AlbumListSerializer):
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
-        fields = ["theme", "hero_eyebrow", "hero_lede", "disabled_games", "updated_at"]
+        fields = ["theme", "hero_eyebrow", "hero_lede", "disabled_games", "birthday_themes", "updated_at"]
         read_only_fields = ["updated_at"]
 
     def validate_theme(self, value):
@@ -548,3 +562,85 @@ class AdminCreateUserSerializer(serializers.Serializer):
         user = User.objects.create_user(username=data["username"], password=data["password"], is_staff=data["is_staff"])
         Profile.objects.create(user=user, display_name=data.get("display_name", "").strip())
         return user
+
+
+# ---------- For CARATs: the calendar, photocards and letters ----------
+
+
+class EventSerializer(serializers.ModelSerializer):
+    kind_label = serializers.CharField(source="get_kind_display", read_only=True)
+
+    class Meta:
+        model = Event
+        fields = ["id", "title", "date", "kind", "kind_label", "note", "link"]
+
+    def validate_title(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("Give the date a name.")
+        return value
+
+
+class PhotoCardSerializer(ReplacesFilesMixin, serializers.ModelSerializer):
+    file_fields = ("image",)
+    image = MediaImageField()
+    member = serializers.SlugRelatedField(slug_field="slug", queryset=Member.objects.all(), allow_null=True, required=False)
+    album = serializers.SlugRelatedField(slug_field="slug", queryset=Album.objects.all(), allow_null=True, required=False)
+    member_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PhotoCard
+        fields = ["id", "title", "member", "member_name", "album", "image", "rarity", "order"]
+
+    def get_member_name(self, card):
+        return card.member.stage_name if card.member else "SEVENTEEN"
+
+    def validate_image(self, value):
+        if value and value.size > MAX_PHOTO_MB * 1024 * 1024:
+            raise serializers.ValidationError(f"Images up to {MAX_PHOTO_MB} MB, please.")
+        return value
+
+    def validate_title(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("Give the card a name.")
+        return value
+
+
+LETTER_PAPERS = {"rose", "serenity", "cream", "mint", "lilac", "night"}
+
+
+class LetterSerializer(serializers.ModelSerializer):
+    member = serializers.SlugRelatedField(slug_field="slug", queryset=Member.objects.all(), allow_null=True, required=False)
+    member_name = serializers.SerializerMethodField()
+    author_name = serializers.SerializerMethodField()
+    is_mine = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Letter
+        fields = ["id", "member", "member_name", "body", "paper", "status", "author_name", "is_mine", "created_at"]
+        read_only_fields = ["status", "created_at"]
+
+    def get_member_name(self, letter):
+        return letter.member.stage_name if letter.member else "SEVENTEEN"
+
+    def get_author_name(self, letter):
+        profile = getattr(letter.author, "profile", None)
+        return profile.name if profile else letter.author.get_username()
+
+    def get_is_mine(self, letter):
+        request = self.context.get("request")
+        return bool(request) and letter.author_id == request.user.id
+
+    def validate_body(self, value):
+        value = value.replace("\r\n", "\n").strip()
+        if len(value) < 5:
+            raise serializers.ValidationError("Write a little more than that.")
+        if len(value) > 2000:
+            raise serializers.ValidationError("Letters up to 2,000 characters, please.")
+        return value
+
+    def validate_paper(self, value):
+        if value not in LETTER_PAPERS:
+            raise serializers.ValidationError(f"Use one of: {', '.join(sorted(LETTER_PAPERS))}.")
+        return value

@@ -316,7 +316,7 @@
   text-shadow: 0 1px 8px rgba(10, 18, 34, 0.85);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(217, 236, 247, 0) 26%, rgba(217, 236, 247, 0) 56%, rgba(20, 24, 34, 0.85) 90%),
-    url('/themes/leftright/looking-up.jpg') center 60% / cover;
+    url('/themes/leftright/footer.jpg') center / cover;
 }
 [data-skin='leftright'] .footer a { color: #f6c22b; }
 

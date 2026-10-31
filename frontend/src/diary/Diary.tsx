@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
+import { toPng } from 'html-to-image'
 import { useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { useAlbums, useMembers, useSongs } from '../lib/api'
@@ -72,6 +73,8 @@ function Journal({ book }: { book: BookConfig }) {
   const dated = book.kind === 'diary' // photo album pages have no dates
   const [toast, setToast] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [snap, setSnap] = useState<DiaryPage | null>(null) // the page being saved as a picture
+  const snapRef = useRef<HTMLDivElement>(null)
 
   const members: MemberMap = useMemo(() => Object.fromEntries((membersApi.data ?? []).map((m) => [m.slug, m])), [membersApi.data])
   const music: DiaryMusic = useMemo(
@@ -130,6 +133,38 @@ function Journal({ book }: { book: BookConfig }) {
     setToast(msg)
     setTimeout(() => setToast(null), 2400)
   }
+
+  // Save as image: the page is drawn off screen at a fixed size, then turned into a PNG.
+  useEffect(() => {
+    if (!snap) return
+    let alive = true
+    const node = snapRef.current
+    const imgs = [...(node?.querySelectorAll('img') ?? [])]
+    Promise.all(imgs.map((img) => (img.complete ? null : new Promise((ok) => ((img.onload = ok), (img.onerror = ok))))))
+      .then(() => document.fonts?.ready)
+      .then(() => (node ? toPng(node, { pixelRatio: 1, cacheBust: true }) : Promise.reject(new Error('nothing to save'))))
+      .then((url) => {
+        if (!alive) return
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${pageName(snap).replace(/[^\w\- ]+/g, '').trim() || 'page'}.png`
+        a.click()
+        flash('Saved as a picture ♡')
+      })
+      .catch(() => alive && flash('Couldn’t make the picture. Try again?'))
+      .finally(() => alive && setSnap(null))
+    return () => {
+      alive = false
+    }
+  }, [snap])
+
+  // On this day: diary pages from the same day in earlier years.
+  const onThisDay = useMemo(() => {
+    if (!dated || !pages) return []
+    const t = todayIso()
+    return pages.filter((p) => p.date && p.date.slice(5) === t.slice(5) && p.date < t).sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
+  }, [dated, pages])
+  const [hideMemory, setHideMemory] = useState(false)
 
   // Arrow keys turn pages.
   useEffect(() => {
@@ -348,6 +383,36 @@ function Journal({ book }: { book: BookConfig }) {
             </div>
           </header>
 
+          {onThisDay.length > 0 && !hideMemory && !query && (
+            <div className="diary__memory" role="note">
+              <span aria-hidden>🕰️</span>
+              <span>
+                <b>On this day</b> ·{' '}
+                {onThisDay.slice(0, 3).map((p, k) => {
+                  const years = Number(todayIso().slice(0, 4)) - Number(p.date!.slice(0, 4))
+                  return (
+                    <button
+                      key={p.id}
+                      className="diary__memory-link"
+                      onClick={() => {
+                        const i = shown.findIndex((x) => x.id === p.id)
+                        if (i >= 0) go(i)
+                        setView('book')
+                      }}
+                    >
+                      {k > 0 && ', '}
+                      {years} year{years === 1 ? '' : 's'} ago{p.title ? `: “${p.title}”` : ''}
+                      {p.author_name && ` by ${p.author_name}`}
+                    </button>
+                  )
+                })}
+              </span>
+              <button className="diary__memory-close" onClick={() => setHideMemory(true)} aria-label="Hide">
+                <IconClose />
+              </button>
+            </div>
+          )}
+
           {error && (
             <div className="diary__empty">
               <p><b>Couldn’t reach the backend</b> ({error}).</p>
@@ -448,6 +513,7 @@ function Journal({ book }: { book: BookConfig }) {
                   {current.can_edit && (
                     <button onClick={() => togglePrivate(current)}>{current.is_private ? '◉ Make public' : '◌ Make private'}</button>
                   )}
+                  <button onClick={() => (setSnap(current), setPopup(null))} disabled={!!snap}>⤓ Save as image</button>
                   <button onClick={() => (setView(view === 'book' ? 'grid' : 'book'), setPopup(null))}>{view === 'book' ? '▦ All pages' : '📖 Book view'}</button>
                 </Pop>
               )}
@@ -503,6 +569,14 @@ function Journal({ book }: { book: BookConfig }) {
           </footer>
 
           {toast && <div className="dtoast" role="status">{toast}</div>}
+
+          {snap && (
+            <div className="diary__snap" aria-hidden>
+              <div ref={snapRef} className="diary__snap-sheet">
+                <Sheet page={snap} members={members} />
+              </div>
+            </div>
+          )}
 
           {editing && (
             <Editor

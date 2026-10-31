@@ -267,7 +267,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(20, 18, 16, 0) 28%, rgba(20, 18, 16, 0) 58%, rgba(12, 10, 9, 0.92) 92%),
-    url('/themes/scoups/milan-smile.jpg') center 40% / cover;
+    url('/themes/scoups/footer.jpg') center / cover;
 }
 [data-skin='scoups'] .footer a { color: #f2e8d8; text-decoration-color: #e8a04a; }
 

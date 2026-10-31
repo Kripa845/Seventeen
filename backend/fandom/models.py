@@ -28,6 +28,10 @@ def diary_video_path(instance, filename):
     return _unique_name("diary/videos", f"page{instance.page_id}", filename)
 
 
+def photocard_path(instance, filename):
+    return _unique_name("cards", instance.member.slug if instance.member_id else "ot13", filename)
+
+
 def default_site_theme():
     """CARAT's Rose Quartz & Serenity, the site's look until it's changed in the Studio."""
     return {
@@ -131,6 +135,8 @@ class Song(models.Model):
     track_number = models.PositiveSmallIntegerField(default=1)
     youtube_url = models.URLField(blank=True, help_text="Paste the official MV link")
     spotify_url = models.URLField(blank=True, help_text="Paste the Spotify track link")
+    # One line per lyric line. [like this] is what CARATs chant; a line starting with # names a part (# Chorus).
+    lyrics = models.TextField(blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -171,6 +177,8 @@ class SiteSettings(models.Model):
     )
     # Game keys (see GameScore.Game) an admin has paused; they can't be played or scored.
     disabled_games = models.JSONField(default=list, blank=True)
+    # On a member's birthday the site wears that member's theme for the day.
+    birthday_themes = models.BooleanField(default=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -295,3 +303,93 @@ class DiaryVideo(models.Model):
 
     def __str__(self):
         return self.file.name
+
+
+# ---------- For CARATs: the calendar, photocards and letters ----------
+
+
+class Event(models.Model):
+    """A date on the calendar that isn't a birthday or the anniversary: a comeback, a concert..."""
+
+    class Kind(models.TextChoices):
+        COMEBACK = "comeback", "Comeback"
+        CONCERT = "concert", "Concert"
+        FANMEETING = "fanmeeting", "Fan meeting"
+        BROADCAST = "broadcast", "Broadcast"
+        OTHER = "other", "Other"
+
+    title = models.CharField(max_length=100)
+    date = models.DateField()
+    kind = models.CharField(max_length=12, choices=Kind.choices, default=Kind.COMEBACK)
+    note = models.CharField(max_length=200, blank=True)
+    link = models.URLField(blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["date", "id"]
+
+    def __str__(self):
+        return f"{self.date} {self.title}"
+
+
+class PhotoCard(models.Model):
+    """A card admins upload; viewers collect them into their binder from a daily pack."""
+
+    class Rarity(models.TextChoices):
+        COMMON = "common", "Common"
+        RARE = "rare", "Rare"
+        SPECIAL = "special", "Special"
+
+    title = models.CharField(max_length=80)
+    member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.SET_NULL, related_name="cards",
+                               help_text="Leave empty for a group card")
+    album = models.ForeignKey(Album, null=True, blank=True, on_delete=models.SET_NULL, related_name="cards")
+    image = models.ImageField(upload_to=photocard_path)
+    rarity = models.CharField(max_length=8, choices=Rarity.choices, default=Rarity.COMMON)
+    order = models.PositiveIntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return self.title
+
+
+class CardPull(models.Model):
+    """One card out of a viewer's daily pack. Pulling a card again is a duplicate (kept as a count)."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="card_pulls")
+    card = models.ForeignKey(PhotoCard, on_delete=models.CASCADE, related_name="pulls")
+    pulled_on = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.user} pulled {self.card}"
+
+
+class Letter(models.Model):
+    """A fan letter to one member (or to all thirteen). Admins approve it before others see it."""
+
+    class Status(models.TextChoices):
+        PENDING = "pending", "Waiting for review"
+        APPROVED = "approved", "Approved"
+        HIDDEN = "hidden", "Hidden"
+
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="letters")
+    member = models.ForeignKey(Member, null=True, blank=True, on_delete=models.CASCADE, related_name="letters",
+                               help_text="Empty: to all of SEVENTEEN")
+    body = models.TextField(max_length=2000)
+    paper = models.CharField(max_length=10, default="rose")
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Letter from {self.author} to {self.member or 'SEVENTEEN'}"

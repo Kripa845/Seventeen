@@ -266,7 +266,7 @@
   text-shadow: 0 1px 8px rgba(60, 30, 10, 0.8);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(255, 246, 230, 0) 30%, rgba(255, 246, 230, 0) 58%, rgba(90, 50, 20, 0.85) 88%),
-    url('/themes/darling/field-line.jpg') center 30% / cover;
+    url('/themes/darling/footer.jpg') center / cover;
 }
 [data-skin='darling'] .footer a { color: #ffd27a; }
 

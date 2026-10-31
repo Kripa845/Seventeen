@@ -285,7 +285,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(242, 241, 238, 0) 30%, rgba(20, 40, 60, 0) 56%, rgba(14, 26, 40, 0.88) 92%),
-    url('/themes/the8/sea-boat.jpg') center 46% / cover;
+    url('/themes/the8/footer.jpg') center / cover;
 }
 [data-skin='the8'] .footer a { color: #efe6b8; }
 

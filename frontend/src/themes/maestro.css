@@ -292,7 +292,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(11, 13, 18, 0) 28%, rgba(11, 13, 18, 0) 60%, rgba(6, 7, 10, 0.92) 92%),
-    url('/themes/maestro/orchestra.jpg') center 45% / cover;
+    url('/themes/maestro/footer.jpg') center / cover;
 }
 [data-skin='maestro'] .footer a { color: #f4f6fa; text-decoration-color: #e3263a; }
 

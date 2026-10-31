@@ -822,3 +822,77 @@ class DiaryKitTests(StaffTestCase):
         saved = {i["id"]: i for i in res.data["items"]}
         self.assertEqual((saved["t1"]["font"], saved["t2"]["font"]), ("pen", "pixel"))
         self.assertEqual(saved["s1"]["sticker"], "shape:lightstick")
+
+
+class FanFeatureTests(StaffTestCase):
+    """The calendar's events, lyrics, birthday themes, the photocard binder and letters."""
+
+    def test_events_read_by_anyone_written_by_staff(self):
+        event = {"title": "Comeback", "date": "2026-11-20", "kind": "comeback"}
+        self.client.force_authenticate(self.fan)
+        self.assertEqual(self.client.post("/api/events/", event, format="json").status_code, 403)
+        self.client.force_authenticate(self.staff)
+        self.assertEqual(self.client.post("/api/events/", event, format="json").status_code, 201)
+        self.client.force_authenticate(None)
+        self.assertEqual(self.client.get("/api/events/").data[0]["kind_label"], "Comeback")
+
+    def test_lyrics_on_one_song_only(self):
+        song = Song.objects.first()
+        self.client.force_authenticate(self.staff)
+        res = self.client.patch(f"/api/songs/{song.id}/", {"lyrics": "# Chorus\r\nAju nice [AJU NICE!]"}, format="json")
+        self.assertEqual(res.data["lyrics"], "# Chorus\nAju nice [AJU NICE!]")
+        self.assertNotIn("lyrics", self.client.get("/api/songs/").data[0])
+
+    def test_birthday_themes_switch(self):
+        self.assertTrue(self.client.get("/api/site/").data["birthday_themes"])
+        self.client.force_authenticate(self.staff)
+        self.assertFalse(self.client.patch("/api/site/", {"birthday_themes": False}, format="json").data["birthday_themes"])
+
+    def make_card(self, **extra):
+        self.client.force_authenticate(self.staff)
+        res = self.client.post("/api/cards/", {"title": "Hoshi · FML", "member": "hoshi", "image": self.image(), **extra}, format="multipart")
+        self.assertEqual(res.status_code, 201, res.data)
+        return res.data
+
+    def test_cards_need_staff_to_upload(self):
+        self.client.force_authenticate(self.fan)
+        res = self.client.post("/api/cards/", {"title": "x", "image": self.image()}, format="multipart")
+        self.assertEqual(res.status_code, 403)
+        card = self.make_card()
+        self.assertTrue(card["image"].startswith("/media/cards/hoshi-"))
+        self.assertEqual(card["member_name"], "Hoshi")
+
+    def test_one_pack_a_day(self):
+        card = self.make_card()
+        self.client.force_authenticate(self.fan)
+        self.assertTrue(self.client.get("/api/me/binder/").data["pack_ready"])
+        res = self.client.post("/api/me/binder/")
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(len(res.data["pulled"]), 3)
+        self.assertEqual(res.data["counts"], {str(card["id"]): 3})
+        self.assertFalse(res.data["pack_ready"])
+        self.assertEqual(self.client.post("/api/me/binder/").status_code, 400)
+
+    def test_letters_wait_for_review(self):
+        self.client.force_authenticate(self.fan)
+        res = self.client.post("/api/letters/", {"member": "woozi", "body": "Thank you for every song.", "paper": "mint"}, format="json")
+        self.assertEqual((res.status_code, res.data["status"]), (201, "pending"))
+        letter = res.data["id"]
+        # someone else can't see it yet
+        from django.contrib.auth.models import User
+
+        other = User.objects.create_user("other", password="diamond-17")
+        self.client.force_authenticate(other)
+        self.assertEqual(self.client.get("/api/letters/").data, [])
+        self.assertEqual(self.client.post(f"/api/letters/{letter}/review/", {"status": "approved"}).status_code, 403)
+        self.assertEqual(self.client.delete(f"/api/letters/{letter}/").status_code, 404)
+        self.client.force_authenticate(self.staff)
+        self.client.post(f"/api/letters/{letter}/review/", {"status": "approved"})
+        self.client.force_authenticate(other)
+        self.assertEqual([x["member_name"] for x in self.client.get("/api/letters/?member=woozi").data], ["Woozi"])
+        self.assertEqual(self.client.get("/api/letters/?member=all").data, [])
+
+    def test_letter_paper_checked(self):
+        self.client.force_authenticate(self.fan)
+        res = self.client.post("/api/letters/", {"body": "Hello SEVENTEEN!", "paper": "glitter"}, format="json")
+        self.assertEqual(res.status_code, 400)

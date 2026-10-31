@@ -281,7 +281,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(238, 237, 233, 0) 30%, rgba(14, 18, 28, 0) 56%, rgba(10, 12, 20, 0.9) 92%),
-    url('/themes/jun/ginkgo-night.jpg') center 22% / cover;
+    url('/themes/jun/footer.jpg') center / cover;
 }
 [data-skin='jun'] .footer a { color: #d9b43f; }
 

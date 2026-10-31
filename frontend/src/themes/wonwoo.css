@@ -288,7 +288,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(18, 19, 20, 0) 30%, rgba(18, 19, 20, 0) 56%, rgba(12, 12, 13, 0.92) 92%),
-    url('/themes/wonwoo/crowd-blur.jpg') 60% 30% / cover;
+    url('/themes/wonwoo/footer.jpg') center / cover;
 }
 [data-skin='wonwoo'] .footer a { color: #b8c9b5; }
 

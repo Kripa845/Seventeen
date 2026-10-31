@@ -277,7 +277,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(17, 17, 17, 0.15) 30%, rgba(17, 17, 17, 0.15) 55%, rgba(10, 9, 7, 0.9) 92%),
-    url('/themes/dino/cap-diner.jpg') center 30% / cover;
+    url('/themes/dino/footer.jpg') center / cover;
 }
 [data-skin='dino'] .footer a { color: #ffba5c; }
 

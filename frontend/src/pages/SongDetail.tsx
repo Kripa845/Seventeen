@@ -3,6 +3,7 @@ import { LikeButton } from '../auth/LikeButton'
 import { MemberAvatar } from '../components/MemberAvatar'
 import { ApiError, Loading } from '../components/Status'
 import { TrackList } from '../components/TrackList'
+import { Fanchant } from '../fan/Fanchant'
 import { useApi, useMembers, useSong } from '../lib/api'
 import { creditFor } from '../lib/credits'
 import { formatDate } from '../lib/dates'
@@ -133,6 +134,8 @@ export function SongDetail() {
           )}
         </section>
       </div>
+
+      <Fanchant key={s.id} song={s} members={members} color={a?.theme.accent ?? '#F7CAC9'} color2={a?.theme.accent2 ?? '#92A8D1'} />
 
       {tracks.length > 0 && (
         <section className="card">

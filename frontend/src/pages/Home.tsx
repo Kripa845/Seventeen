@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { MemberAvatar } from '../components/MemberAvatar'
+import { Countdown } from '../components/Countdown'
 import { MemberDialog } from '../components/MemberDialog'
 import { ApiError, Loading } from '../components/Status'
 import { useAlbums, useMembers, useSongs } from '../lib/api'
@@ -23,6 +24,10 @@ const LOCKED = [
   { icon: '♫', title: 'Music & playlist', text: 'Every song with its MV, and a playlist of the ones you heart.' },
   { icon: '✦', title: 'Themes', text: 'Wear any era’s look across the whole site.' },
   { icon: '☺', title: 'Your bias', text: 'Pick a member and your dashboard shows their colour.' },
+  { icon: '📅', title: 'CARAT calendar', text: 'Every birthday, the anniversary and the comebacks, with countdowns.' },
+  { icon: '🃏', title: 'Photocard binder', text: 'Open a pack of cards every day and fill your binder.' },
+  { icon: '💌', title: 'Letters', text: 'Write to a member and read other CARATs’ letters.' },
+  { icon: '💡', title: 'Fanchant & concert mode', text: 'The chants for every song, and your phone as a lightstick.' },
 ]
 
 /** The landing page: open to everyone. The rest of the site is behind a free account. */
@@ -47,8 +52,8 @@ export function Home() {
   // Signed in: the buttons lead to your dashboard instead.
   const ctas = account ? (
     <>
-      <Link className="btn" to={account.is_staff ? '/studio' : '/me'}>{account.is_staff ? 'Open the admin dashboard' : 'Open my dashboard'}</Link>
-      {account.is_staff && <Link className="btn btn--ghost" to="/me">My fan dashboard</Link>}
+      <Link className="btn" to={account.is_staff ? '/studio' : '/me'}>{account.is_staff ? 'Open the admin dashboard' : 'Open my viewer dashboard'}</Link>
+      {account.is_staff && <Link className="btn btn--ghost" to="/me">Open the viewer dashboard</Link>}
     </>
   ) : (
     <>
@@ -106,6 +111,8 @@ export function Home() {
           </div>
         )}
       </section>
+
+      <Countdown link={!!account} />
 
       <section id="about" className="landing-about card">
         <div>

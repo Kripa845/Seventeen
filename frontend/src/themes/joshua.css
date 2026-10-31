@@ -278,7 +278,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(246, 243, 238, 0) 30%, rgba(30, 29, 27, 0) 56%, rgba(20, 19, 18, 0.9) 92%),
-    url('/themes/joshua/city-view.jpg') center 55% / cover;
+    url('/themes/joshua/footer.jpg') center / cover;
 }
 [data-skin='joshua'] .footer a { color: #d9b48f; }
 

@@ -285,7 +285,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(18, 8, 6, 0) 28%, rgba(18, 8, 6, 0) 62%, rgba(10, 4, 3, 0.9) 92%),
-    url('/themes/hot/skyline-solo.jpg') center 60% / cover;
+    url('/themes/hot/footer.jpg') center / cover;
 }
 [data-skin='hot'] .footer a { color: #ffd23f; }
 

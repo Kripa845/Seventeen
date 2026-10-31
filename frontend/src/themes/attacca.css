@@ -289,7 +289,7 @@
   text-shadow: 0 1px 8px rgba(5, 5, 12, 0.9);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(13, 15, 30, 0.2) 30%, rgba(13, 15, 30, 0.1) 55%, rgba(13, 15, 30, 0.9) 92%),
-    url('/themes/attacca/rooftop-group.jpg') center 40% / cover;
+    url('/themes/attacca/footer.jpg') center / cover;
 }
 [data-skin='attacca'] .footer a { color: #ff7aa2; }
 

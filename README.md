@@ -136,6 +136,19 @@ A dark photo theme from Hoshi's photos, the tiger in the pines: deep forest gree
 
 A light photo theme from Mingyu's photos, summer and a little out of focus: cream film paper with grass and vine green and the deep blue of the Capri sea. Italic serif headings sit on a fine green line that starts with a leaf, and leaves, sprigs and a little puppy are scattered in the background (one leaf blows across the page). Cards are linen white, buttons are grass green. The home page runs a slideshow (the bicycle on the country road, sitting on the grass, the vines and the cup, the boat at Capri) where each photo arrives blurry, sharpens, then blurs away, with a handwritten "mingyu ♡ 민규". Beside page titles hang white-bordered snapshots with handwritten captions. Tracklists become a "summer playlist ♡ mingyu" with the puppy in the corner. Sign-in shows the blurry mirror selfie, Now Playing sits out on the Capri sea, and the footer is the grass field. Photos and drawings live in `frontend/public/themes/mingyu/`, the styles in `frontend/src/themes/mingyu.css`. It isn't tied to an era: pick **🌿 Mingyu Aesthetics** under Studio → Themes management → "Start from a look", set it as the **Photo skin** on any theme, or wear it from **Themes** in the viewer dashboard. Its background pattern, **leaves**, also works with any other theme.
 
+## For CARATs: calendar, units, the story, photocards, letters and fanchants
+
+Everything here is for signed-in viewers (under **More** in the nav, and on the viewer dashboard).
+
+- **Calendar** (`/calendar`): every member's birthday, the debut anniversary (26 May) and the comebacks, concerts, fan meetings and broadcasts admins add in **Studio → Calendar**. Pick a day to see what's on; "Add to my calendar" downloads the year as an `.ics` file. The next date counts down to the second on the landing page and the viewer dashboard.
+- **Birthday themes**: on a member's birthday the whole site wears that member's theme for the day, with a ribbon under the nav. Fans can go back to their usual theme for the day; admins switch the feature off in Studio → Calendar. DK and Vernon share 18 February, so DK has the morning and Vernon the afternoon. Open `/me?birthday=<slug>` to preview a member's day (`/me?birthday=` stops the preview).
+- **Units** (`/units`, `/units/<slug>`): the Hip-hop, Vocal and Performance teams, plus SVT Leaders, BSS, Jeonghan × Wonwoo, Hoshi × Woozi and S.Coups × Mingyu. Each page lists the members, the songs credited to exactly that line-up (read from each song's note) and the albums they're on. The unit list lives in `frontend/src/fan/units.ts`.
+- **The story** (`/timeline`): debut to today on one line, every era plus enlistments and homecomings (from members' service dates) and past concerts. Pointing at an era previews its theme across the whole site; "Wear it" keeps it.
+- **Photocard binder** (`/binder`): admins upload cards in **Studio → Photocards** (drop several photos at once; pick the member, era and rarity). Every viewer opens one pack of 3 cards a day. Rare cards come up 4× less often than common ones, special cards 10× less. Duplicates are counted, and missing pockets show what's still to find.
+- **Letters** (`/letters`): write to one member or to all thirteen, on one of six papers. A viewer's letter waits in **Studio → Letters** until an admin posts it, and then every CARAT can open it from that member's mailbox. Letters admins write are posted straight away. A viewer can have 5 letters waiting at once.
+- **Fanchant guide & concert mode** (every song page): admins add the lyrics on the song page. `[square brackets]` mark what CARATs chant and `# Chorus` names a part. **Concert mode** turns the screen into a glowing CARAT bong in the era's colours (steady, pulse, wave, Rose Quartz & Serenity, or the 13 member colours), with the fanchant one line at a time: tap, press space or use the arrow keys. Colours never flash faster than once a second.
+- **Diary extras**: "On this day" shows pages written on today's date in earlier years. **More → Save as image** downloads the open page as a PNG (1600 × 1200).
+
 ## Accounts: viewers and admins
 
 The site has three separate areas:
@@ -145,6 +158,8 @@ The site has three separate areas:
 | **Landing page** (`/`) | Everyone, signed out | A welcome, who SEVENTEEN are (units, debut, CARAT), stat cards, the 13 members by unit, the latest eras, recent title tracks, and **Log in** / **Sign up** buttons. Games, the diary, memories, music, themes and the full member and era pages are locked here. |
 | **Viewer dashboard** (`/me` and its sections) | Any signed-in account | Dashboard, Members, Eras, Music (and Now Playing), Themes (wear any era site-wide), Games, Diary and Memories. Signed-out visitors who open one of these are sent to sign in and brought back afterwards, `?page=` and all. |
 | **Admin dashboard** (`/studio`) | Admins | All the management: members, music, album management, themes, users and games. Admins can use the viewer dashboard too (diary and memories pages are edited there). |
+
+Each area says which one it is: the viewer dashboard has a **Viewer dashboard** label beside the logo, and the admin dashboard has its own sidebar layout ("SVT Admin"). Signed in, `/` takes you to your own dashboard (admin or viewer), not the landing page. To see the landing page as visitors do, use **Landing page ↗** in the admin sidebar or open `/?preview=landing`; it shows under a "Previewing the landing page" banner with a button back. The only way into the admin dashboard is the **Admin dashboard** button, which only admins see.
 
 **One theme everywhere:** the theme a viewer wears (Themes page, or an album's "Wear this era" button) is used on every page, landing page included; with none chosen, every page uses the site theme from the Studio. Member, album and song pages no longer swap it for their own colours; they only tint their own header.
 
@@ -216,6 +231,13 @@ Starter data lives in `backend/fandom/seed/*.json`; `albums.json` holds every al
 | GET | `/api/diary/?book=album` | the photo albums' pages, undated (the diary is `book=diary`, the default, and its pages need a `date`) |
 | POST | `/api/diary/reorder/` | staff only; `{"ids": [...]}` with every photo album page id once, in the new order (new pages go last) |
 | POST | `/api/diary/<id>/videos/` | whoever can change that page; multipart `file` (MP4, WebM, MOV up to 100 MB) |
+| GET | `/api/songs/<id>/` | one song, with `lyrics` (lists of songs leave them out); staff PATCH `{"lyrics": "..."}` |
+| GET/POST/PATCH/DELETE | `/api/events/` · `/api/events/<id>/` | calendar dates; anyone reads, staff write `{title, date, kind, note, link}` (`kind`: comeback, concert, fanmeeting, broadcast, other) |
+| GET/POST/PATCH/DELETE | `/api/cards/` · `/api/cards/<id>/` | photocards; signed in to read, staff upload (multipart `image`, `title`, `member`, `album`, `rarity`) |
+| GET/POST | `/api/me/binder/` | signed in; GET: my cards (`counts`) and whether today's pack is waiting; POST opens today's pack (3 cards, once a day) |
+| GET/POST/DELETE | `/api/letters/` · `/api/letters/<id>/` | signed in; approved letters plus your own (`?member=<slug>`, `?member=all` for letters to the whole team); POST `{member, body, paper}`; delete your own |
+| POST | `/api/letters/<id>/review/` | staff; `{"status": "approved" \| "hidden" \| "pending"}` (staff list every letter with `?all=1`) |
+| PATCH | `/api/site/` | staff; also `{"birthday_themes": false}` switches off birthday themes |
 
 Tests: `python manage.py test fandom`
 
@@ -233,17 +255,15 @@ frontend/src/
   pages/             Home, Members, MemberDetail, Discography, AlbumDetail, Games
   pages/games/       MemoryMatch, UnitSorter, GuessMember
   diary/             Diary page, 3D Book, Editor, Sheet (renders a spread), kit (stickers, fonts, API)
+  fan/               calendar dates, birthday themes, units, lyrics/fanchant, fan.css (calendar, units, story, binder, letters, concert mode)
   index.css          all styles (driven by CSS variables)
 ```
 
 ## Ideas for next
 
-- Photocard gacha: one random card a day, collected in a binder
 - Guess the song from a short preview
 - "Which member are you?" quiz with a shareable result card
-- CARAT lightstick simulator
-- Concert / dark mode toggle
-- Member birthday banners on the home page
+- Trading duplicate photocards between CARATs
 
 ## Copyright
 

@@ -255,7 +255,7 @@
   text-shadow: 0 1px 8px rgba(10, 20, 50, 0.85);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(244, 247, 252, 0) 30%, rgba(244, 247, 252, 0) 55%, rgba(15, 25, 60, 0.85) 90%),
-    url('/themes/world/market-door.jpg') center 72% / cover;
+    url('/themes/world/footer.jpg') center / cover;
 }
 [data-skin='world'] .footer a { color: #ffd0de; }
 

@@ -297,7 +297,7 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
   background:
     linear-gradient(180deg, var(--bg) 0%, rgba(243, 242, 239, 0) 30%, rgba(20, 16, 10, 0) 56%, rgba(14, 12, 10, 0.9) 92%),
-    url('/themes/dk/streetlight.jpg') center 28% / cover;
+    url('/themes/dk/footer.jpg') center / cover;
 }
 [data-skin='dk'] .footer a { color: #d8bfa3; }
 

@@ -1387,3 +1387,30 @@
 
 /* who wrote the open page */
 .diary__by { font-weight: 500; opacity: 0.75; }
+
+/* ---------- on this day, and saving a page as a picture ---------- */
+.diary__memory {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: min(680px, 92%);
+  margin: 0 auto 14px;
+  padding: 8px 10px 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--d-ink);
+  font-size: 0.9rem;
+  backdrop-filter: blur(8px);
+  animation: diary-memory-in 0.6s ease both;
+}
+.diary__memory-link { background: none; border: 0; padding: 0; color: inherit; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.diary__memory-close { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.12); color: inherit; cursor: pointer; flex-shrink: 0; }
+.diary__memory-close svg { width: 14px; height: 14px; }
+@keyframes diary-memory-in { from { opacity: 0; transform: translateY(-8px); } }
+
+.diary__snap { position: fixed; left: -12000px; top: 0; pointer-events: none; }
+.diary__snap-sheet { width: 1600px; height: 1200px; }

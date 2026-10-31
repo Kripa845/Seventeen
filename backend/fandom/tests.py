@@ -992,3 +992,30 @@ class LaunchTests(StaffTestCase):
             self.assertEqual(res.status_code, 200)
             self.assertIn(b"root", b"".join(res.streaming_content))
             self.assertEqual(self.client.get("/api/nope/").status_code, 404)  # the API keeps its 404s
+
+
+class CloudinaryStorageTests(APITestCase):
+    """Uploads on Cloudinary keep their database names; images and videos go to the right kind."""
+
+    def test_names_kinds_and_urls(self):
+        from unittest import mock
+
+        import cloudinary
+        from django.core.files.base import ContentFile
+
+        from fandom.storage import CloudinaryStorage
+
+        cloudinary.config(cloud_name="demo", api_key="k", api_secret="s")
+        store = CloudinaryStorage(folder="svt")
+        with mock.patch("cloudinary.uploader.upload") as up, mock.patch("cloudinary.uploader.upload_large") as up_large, \
+                mock.patch("cloudinary.api.resource", side_effect=cloudinary.exceptions.NotFound):
+            self.assertEqual(store.save("members/w2.jpg", ContentFile(b"img")), "members/w2.jpg")
+            self.assertEqual(up.call_args.kwargs["public_id"], "svt/members/w2")
+            self.assertEqual(up.call_args.kwargs["resource_type"], "image")
+            store.save("diary/5/clip.MP4", ContentFile(b"vid"))
+            self.assertEqual(up_large.call_args.kwargs["resource_type"], "video")
+        self.assertTrue(store.url("members/w2.jpg").endswith("/image/upload/v1/svt/members/w2.jpg"))
+        self.assertIn("/video/upload/", store.url("diary/5/clip.mp4"))
+        with mock.patch("cloudinary.uploader.destroy") as destroy:
+            store.delete("diary/5/clip.mp4")
+            destroy.assert_called_once_with("svt/diary/5/clip", resource_type="video", invalidate=True)

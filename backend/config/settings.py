@@ -168,13 +168,20 @@ STORAGES = {
 if os.environ.get("AWS_STORAGE_BUCKET_NAME"):
     STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
     AWS_S3_ENDPOINT_URL = os.environ.get("AWS_S3_ENDPOINT_URL") or None  # R2 / B2; empty for AWS
+    if AWS_S3_ENDPOINT_URL:
+        # boto3 sends new checksum headers by default that some S3-compatible services reject
+        os.environ.setdefault("AWS_REQUEST_CHECKSUM_CALCULATION", "when_required")
+        os.environ.setdefault("AWS_RESPONSE_CHECKSUM_VALIDATION", "when_required")
     AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME") or None
     AWS_S3_CUSTOM_DOMAIN = os.environ.get("AWS_S3_CUSTOM_DOMAIN") or None  # a public bucket URL / CDN
     AWS_QUERYSTRING_AUTH = not AWS_S3_CUSTOM_DOMAIN  # signed links unless the bucket is public
     AWS_S3_FILE_OVERWRITE = False
     AWS_DEFAULT_ACL = None
+# Or Cloudinary (free, no card needed): set CLOUDINARY_URL=cloudinary://<key>:<secret>@<cloud name>.
+if os.environ.get("CLOUDINARY_URL"):
+    STORAGES["default"] = {"BACKEND": "fandom.storage.CloudinaryStorage"}
 # No bucket in production: Django serves MEDIA_ROOT itself (fine on a VPS or a host with a disk).
-SERVE_MEDIA = DEBUG or not os.environ.get("AWS_STORAGE_BUCKET_NAME")
+SERVE_MEDIA = DEBUG or STORAGES["default"]["BACKEND"].endswith("FileSystemStorage")
 
 # The Vite dev server, plus the real site's address in production,
 # e.g. DJANGO_TRUSTED_ORIGINS=https://carat.example.com

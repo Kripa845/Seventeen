@@ -9,7 +9,7 @@ from django.core.management.base import BaseCommand, CommandError
 class Command(BaseCommand):
     help = (
         "Copy the local uploads folder (backend/media) into the upload storage, keeping each file's name, "
-        "so the database's links keep working. Run it on your computer with the bucket's AWS_* variables set. "
+        "so the database's links keep working. Run it on your computer with CLOUDINARY_URL (or the bucket's AWS_* variables) set. "
         "Files already there are skipped."
     )
 
@@ -21,8 +21,8 @@ class Command(BaseCommand):
         root = Path(source)
         if not root.is_dir():
             raise CommandError(f"No folder at {root}")
-        if not settings.STORAGES["default"]["BACKEND"].endswith("S3Storage") and not dry_run:
-            raise CommandError("Uploads aren't set to a bucket: set AWS_STORAGE_BUCKET_NAME and its keys first.")
+        if settings.STORAGES["default"]["BACKEND"].endswith("FileSystemStorage") and not dry_run:
+            raise CommandError("Uploads aren't set to cloud storage: set CLOUDINARY_URL (or the AWS_* bucket variables) first.")
 
         copied = skipped = 0
         for path in sorted(p for p in root.rglob("*") if p.is_file()):

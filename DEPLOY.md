@@ -29,7 +29,14 @@ Required:
 | `SITE_URL` | `https://carat.example.com` | Used for the links in password-reset emails. |
 | `DATABASE_URL` | `postgres://user:pass@host:5432/db` | Your Postgres database. Without it the site uses SQLite. |
 
-Uploads (S3-compatible storage):
+Uploads, option 1: **Cloudinary** (free, no card needed). This one variable is all it takes:
+
+| Variable | Example |
+|---|---|
+| `CLOUDINARY_URL` | `cloudinary://123456789012345:abcDEF...@your-cloud-name` (Cloudinary dashboard → API Keys) |
+| `CLOUDINARY_FOLDER` | optional, default `svt`: the Cloudinary folder everything goes in |
+
+Uploads, option 2 (S3-compatible storage):
 
 | Variable | Example |
 |---|---|
@@ -76,14 +83,15 @@ Your edited members, themes, diary pages and accounts are in `backend/db.sqlite3
 $env:PYTHONUTF8 = "1"
 python manage.py dumpdata --natural-foreign --natural-primary --exclude contenttypes --exclude auth.permission --exclude sessions --exclude admin.logentry -o site-data.json
 
-# point this terminal at the live database (the host's *external* database URL) and bucket
+# point this terminal at the live database (the host's *external* database URL) and upload storage
 $env:DATABASE_URL = "postgres://..."
+$env:CLOUDINARY_URL = "cloudinary://..."   # with Cloudinary; or the AWS_* lines below for a bucket
 $env:AWS_STORAGE_BUCKET_NAME = "svt-uploads"; $env:AWS_ACCESS_KEY_ID = "..."; $env:AWS_SECRET_ACCESS_KEY = "..."
 $env:AWS_S3_ENDPOINT_URL = "https://<account>.r2.cloudflarestorage.com"; $env:AWS_S3_REGION_NAME = "auto"
 
 python manage.py migrate
 python manage.py loaddata site-data.json
-python manage.py push_media          # copies backend/media into the bucket, same file names
+python manage.py push_media          # copies backend/media to Cloudinary or the bucket, same file names
 Remove-Item site-data.json           # it holds accounts: don't commit or share it
 ```
 

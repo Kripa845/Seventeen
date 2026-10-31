@@ -25,8 +25,9 @@ export function AccountButton() {
   return (
     <div className="acct">
       {account.role === 'admin' && (
-        <Link to="/studio" className="acct__studio" title="Admin dashboard">
-          Admin dashboard
+        <Link to="/studio" className="acct__studio" title="Admin dashboard" aria-label="Admin dashboard">
+          <span className="acct__studio-icon" aria-hidden>⚙</span>
+          <span className="acct__studio-label">Admin</span>
         </Link>
       )}
       <NavLink to="/me" className="acct__me" title="My dashboard">

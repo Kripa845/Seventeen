@@ -7,7 +7,7 @@ from django.db.models import Max
 from django.utils.text import slugify
 from rest_framework import serializers
 
-from .models import Album, DiaryPage, DiaryPhoto, DiaryVideo, Event, GameScore, Letter, Member, PhotoCard, Profile, SiteSettings, Song
+from .models import Album, DiaryPage, DiaryPhoto, DiaryVideo, Event, GameScore, Letter, Member, PhotoCard, Profile, Report, SiteSettings, Song
 
 HEX = re.compile(r"^#[0-9A-Fa-f]{6}$")
 FONTS = {"serif", "sans", "display", "mono", "marker"}
@@ -463,15 +463,37 @@ def check_password(password, user):
     return password
 
 
+def clean_email(value, user=None):
+    """An optional email, used only for password resets. Two accounts can't share one,
+    or a reset link couldn't know whose password to change."""
+    value = (value or "").strip().lower()
+    if value and User.objects.filter(email__iexact=value).exclude(pk=getattr(user, "pk", None)).exists():
+        raise serializers.ValidationError("Another account already uses that email.")
+    return value
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     bias = serializers.SlugRelatedField(slug_field="slug", queryset=Member.objects.all(), allow_null=True, required=False)
+    email = serializers.EmailField(required=False, allow_blank=True, max_length=254)
 
     class Meta:
         model = Profile
-        fields = ["display_name", "bias"]
+        fields = ["display_name", "bias", "email"]
+
+    def to_representation(self, profile):
+        return {**super().to_representation(profile), "email": profile.user.email}
 
     def validate_display_name(self, value):
         return value.strip()
+
+    def validate_email(self, value):
+        return clean_email(value, self.instance.user)
+
+    def update(self, profile, data):
+        if "email" in data:
+            profile.user.email = data.pop("email")
+            profile.user.save(update_fields=["email"])
+        return super().update(profile, data)
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -481,6 +503,10 @@ class RegisterSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True, max_length=128)
     display_name = serializers.CharField(max_length=30, required=False, allow_blank=True)
     bias = serializers.SlugRelatedField(slug_field="slug", queryset=Member.objects.all(), allow_null=True, required=False)
+    email = serializers.EmailField(required=False, allow_blank=True, max_length=254)
+
+    def validate_email(self, value):
+        return clean_email(value)
 
     def validate_username(self, value):
         value = value.strip()
@@ -498,7 +524,7 @@ class RegisterSerializer(serializers.Serializer):
         return attrs
 
     def create(self, data):
-        user = User.objects.create_user(username=data["username"], password=data["password"])
+        user = User.objects.create_user(username=data["username"], password=data["password"], email=data.get("email", ""))
         Profile.objects.create(user=user, display_name=data.get("display_name", "").strip(), bias=data.get("bias"))
         return user
 
@@ -644,3 +670,51 @@ class LetterSerializer(serializers.ModelSerializer):
         if value not in LETTER_PAPERS:
             raise serializers.ValidationError(f"Use one of: {', '.join(sorted(LETTER_PAPERS))}.")
         return value
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True, max_length=128)
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    """A report as the admins see it, with a peek at what was reported."""
+
+    reason_label = serializers.CharField(source="get_reason_display", read_only=True)
+    reporter_name = serializers.SerializerMethodField()
+    target = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Report
+        fields = ["id", "kind", "target_id", "reason", "reason_label", "note", "reporter_name", "status", "outcome", "created_at", "resolved_at", "target"]
+        read_only_fields = ["status", "outcome", "created_at", "resolved_at"]
+
+    def get_reporter_name(self, report):
+        return Profile.for_user(report.reporter).name if report.reporter else "a deleted account"
+
+    def get_target(self, report):
+        """None once the post is gone."""
+        post = report.target()
+        if post is None:
+            return None
+        author = post.author
+        who = Profile.for_user(author).name if author else ""
+        if isinstance(post, DiaryPage):
+            return {"title": post.title or (post.date.isoformat() if post.date else "Untitled page"), "author_name": who,
+                    "is_private": post.is_private, "book": post.book}
+        return {"title": f"To {post.member.stage_name if post.member else 'SEVENTEEN'}", "author_name": who,
+                "body": post.body[:600], "status": post.status}
+
+    def validate(self, attrs):
+        post = Report(kind=attrs["kind"], target_id=attrs["target_id"]).target()
+        user = self.context["request"].user
+        # only what other fans can actually see: public diary pages and posted letters
+        hidden = post is not None and (post.is_private if isinstance(post, DiaryPage) else post.status != Letter.Status.APPROVED)
+        if post is None or hidden:
+            raise serializers.ValidationError({"target_id": "That post doesn't exist any more."})
+        if getattr(post, "author_id", None) == user.id:
+            raise serializers.ValidationError({"detail": "That's your own post: you can edit or delete it instead."})
+        if Report.objects.filter(reporter=user, kind=attrs["kind"], target_id=attrs["target_id"]).exists():
+            raise serializers.ValidationError({"detail": "You've already reported this. The admins will take a look."})
+        return attrs

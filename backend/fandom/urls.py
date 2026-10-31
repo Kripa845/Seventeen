@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from .views import (
+    AccountView,
     AlbumViewSet,
     BinderView,
     ContentVersionView,
@@ -16,10 +17,13 @@ from .views import (
     MemberViewSet,
     MeView,
     MyScoresView,
+    PasswordResetConfirmView,
+    PasswordResetView,
     PasswordView,
     PhotoCardViewSet,
     ProfileView,
     RegisterView,
+    ReportViewSet,
     SiteSettingsView,
     SongViewSet,
     UserAdminViewSet,
@@ -35,6 +39,7 @@ router.register("users", UserAdminViewSet, basename="user")
 router.register("events", EventViewSet, basename="event")
 router.register("cards", PhotoCardViewSet, basename="card")
 router.register("letters", LetterViewSet, basename="letter")
+router.register("reports", ReportViewSet, basename="report")
 
 urlpatterns = router.urls + [
     path("site/", SiteSettingsView.as_view(), name="site"),
@@ -43,6 +48,9 @@ urlpatterns = router.urls + [
     path("auth/login/", LoginView.as_view(), name="login"),
     path("auth/logout/", LogoutView.as_view(), name="logout"),
     path("auth/register/", RegisterView.as_view(), name="register"),
+    path("auth/password-reset/", PasswordResetView.as_view(), name="password-reset"),
+    path("auth/password-reset/confirm/", PasswordResetConfirmView.as_view(), name="password-reset-confirm"),
+    path("me/account/", AccountView.as_view(), name="my-account"),
     path("me/profile/", ProfileView.as_view(), name="my-profile"),
     path("me/password/", PasswordView.as_view(), name="my-password"),
     path("me/likes/", LikesView.as_view(), name="my-likes"),

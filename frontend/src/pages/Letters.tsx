@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { MemberAvatar } from '../components/MemberAvatar'
+import { ReportDialog } from '../components/ReportDialog'
 import { ApiError, Loading } from '../components/Status'
 import { useLetters } from '../fan/api'
 import { useMembers } from '../lib/api'
@@ -147,6 +148,8 @@ export function Letters() {
   const members = useMembers()
   const letters = useLetters(box)
   const [open, setOpen] = useState<Letter | null>(null)
+  const [reporting, setReporting] = useState<Letter | null>(null)
+  const stopReporting = useCallback(() => setReporting(null), [])
   const [sent, setSent] = useState<string | null>(null)
 
   useEffect(() => {
@@ -223,11 +226,15 @@ export function Letters() {
             <div className="letter-open__actions">
               {open.status === 'pending' && <span className="chip chip--small">Waiting for review</span>}
               {open.is_mine && <button className="btn btn--ghost btn--small" onClick={() => takeBack(open)}>Take it back</button>}
+              {!open.is_mine && open.status === 'approved' && (
+                <button className="btn btn--ghost btn--small" onClick={() => setReporting(open)}>⚑ Report</button>
+              )}
               <button className="btn btn--small" onClick={() => setOpen(null)}>Fold it up</button>
             </div>
           </div>
         </div>
       )}
+      {reporting && <ReportDialog kind="letter" targetId={reporting.id} what={`${reporting.author_name}'s letter`} onClose={stopReporting} />}
     </div>
   )
 }

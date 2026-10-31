@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,15 +23,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-import os
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-bu#q_jfrn9b^cljki4nmhu&8)+l_u+s+#ts&#m!jpb=4q9r4m)")
+def env_list(name, default=""):
+    """A comma-separated environment variable as a list ("a.com, b.com" -> ["a.com", "b.com"])."""
+    return [x.strip() for x in os.environ.get(name, default).split(",") if x.strip()]
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
+# Local development runs with the defaults. In production set DJANGO_DEBUG=0 and the variables
+# listed in DEPLOY.md; the site refuses to start without its own secret key.
 DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
+if not SECRET_KEY:
+    if not DEBUG:
+        raise ImproperlyConfigured("Set DJANGO_SECRET_KEY: production needs its own secret key.")
+    SECRET_KEY = "django-insecure-bu#q_jfrn9b^cljki4nmhu&8)+l_u+s+#ts&#m!jpb=4q9r4m)"
+
+# e.g. DJANGO_ALLOWED_HOSTS=carat.example.com,www.carat.example.com
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", *env_list("DJANGO_ALLOWED_HOSTS")]
 
 
 # Application definition
@@ -47,6 +60,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -79,11 +93,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# SQLite locally; in production DATABASE_URL (e.g. postgres://user:pass@host:5432/name) wins.
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 
@@ -122,6 +138,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"  # `manage.py collectstatic` gathers the admin's files here
+
+# The built React site (`npm run build`). When it's there, Django serves it too, so the whole
+# site deploys as one app: WhiteNoise serves its files and fandom.spa answers every other page.
+FRONTEND_DIST = Path(os.environ.get("FRONTEND_DIST", BASE_DIR.parent / "frontend" / "dist"))
+if FRONTEND_DIST.is_dir():
+    WHITENOISE_ROOT = FRONTEND_DIST
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -129,15 +152,71 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", BASE_DIR / "media"))
 
-# The Vite dev server
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
+# Uploads (diary photos, album videos, member photos). Locally they go to MEDIA_ROOT. Most hosts
+# wipe their disk on every deploy, so in production point them at S3-compatible storage
+# (AWS S3, Cloudflare R2, Backblaze B2...) by setting AWS_STORAGE_BUCKET_NAME and its keys.
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+        if DEBUG
+        else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    },
+}
+if os.environ.get("AWS_STORAGE_BUCKET_NAME"):
+    STORAGES["default"] = {"BACKEND": "storages.backends.s3.S3Storage"}
+    AWS_S3_ENDPOINT_URL = os.environ.get("AWS_S3_ENDPOINT_URL") or None  # R2 / B2; empty for AWS
+    AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME") or None
+    AWS_S3_CUSTOM_DOMAIN = os.environ.get("AWS_S3_CUSTOM_DOMAIN") or None  # a public bucket URL / CDN
+    AWS_QUERYSTRING_AUTH = not AWS_S3_CUSTOM_DOMAIN  # signed links unless the bucket is public
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = None
+# No bucket in production: Django serves MEDIA_ROOT itself (fine on a VPS or a host with a disk).
+SERVE_MEDIA = DEBUG or not os.environ.get("AWS_STORAGE_BUCKET_NAME")
+
+# The Vite dev server, plus the real site's address in production,
+# e.g. DJANGO_TRUSTED_ORIGINS=https://carat.example.com
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173", *env_list("DJANGO_TRUSTED_ORIGINS")]
 # The Studio signs in through the Vite proxy, so its origin must pass Django's CSRF check.
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+
+# Where the site lives, for links in emails (password resets).
+SITE_URL = os.environ.get("SITE_URL", "http://localhost:5173").rstrip("/")
+
+# Email: printed to the terminal locally; real SMTP (Brevo, Mailgun, Gmail app password...) when EMAIL_HOST is set.
+if os.environ.get("EMAIL_HOST"):
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.environ["EMAIL_HOST"]
+    EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+    EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "1") == "1"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "SEVENTEEN fan site <no-reply@localhost>")
+PASSWORD_RESET_TIMEOUT = 60 * 60 * 3  # reset links work for three hours
+
+# HTTPS-only cookies and redirects once it's live (the host's proxy terminates TLS).
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SSL_REDIRECT", "1") == "1"
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(os.environ.get("DJANGO_HSTS_SECONDS", "3600"))
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = "same-origin"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": os.environ.get("DJANGO_LOG_LEVEL", "INFO" if not DEBUG else "WARNING")},
+}
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": None,
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.AnonRateThrottle"],
-    "DEFAULT_THROTTLE_RATES": {"anon": "120/min", "login": "10/min", "register": "20/hour"},
+    "DEFAULT_THROTTLE_RATES": {"anon": "120/min", "login": "10/min", "register": "20/hour", "reset": "5/hour", "report": "30/hour"},
 }

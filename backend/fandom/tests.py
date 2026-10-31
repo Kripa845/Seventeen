@@ -1,7 +1,7 @@
 from django.core.management import call_command
 from rest_framework.test import APITestCase
 
-from fandom.models import Song
+from fandom.models import DiaryPage, Song
 
 
 class ApiTests(APITestCase):
@@ -896,3 +896,99 @@ class FanFeatureTests(StaffTestCase):
         self.client.force_authenticate(self.fan)
         res = self.client.post("/api/letters/", {"body": "Hello SEVENTEEN!", "paper": "glitter"}, format="json")
         self.assertEqual(res.status_code, 400)
+
+
+class LaunchTests(StaffTestCase):
+    """What a public site needs: email resets, deleting your account, and reporting posts."""
+
+    def setUp(self):
+        super().setUp()
+        from django.core.cache import cache
+
+        cache.clear()  # throttles count in the cache
+
+    def test_password_reset_by_email(self):
+        import re
+
+        from django.core import mail
+
+        self.client.force_authenticate(self.fan)
+        res = self.client.patch("/api/me/profile/", {"email": "Fan@Example.com"}, format="json")
+        self.assertEqual(res.data["user"]["email"], "fan@example.com")
+        self.client.force_authenticate(self.staff)
+        self.assertIn("email", self.client.patch("/api/me/profile/", {"email": "fan@example.com"}, format="json").data)  # taken
+        self.client.force_authenticate(None)
+
+        same = self.client.post("/api/auth/password-reset/", {"email": "nobody@example.com"}, format="json").data
+        self.assertEqual(len(mail.outbox), 0)
+        res = self.client.post("/api/auth/password-reset/", {"email": "fan@example.com"}, format="json")
+        self.assertEqual(res.data, same)  # no hint about who has an account
+        self.assertEqual(len(mail.outbox), 1)
+        uid, token = re.search(r"uid=([^&\s]+)&token=(\S+)", mail.outbox[0].body).groups()
+
+        weak = self.client.post("/api/auth/password-reset/confirm/", {"uid": uid, "token": token, "new_password": "12345678"}, format="json")
+        self.assertIn("new_password", weak.data)
+        ok = self.client.post("/api/auth/password-reset/confirm/", {"uid": uid, "token": token, "new_password": "brand-new-diamond-17"}, format="json")
+        self.assertEqual(ok.status_code, 200)
+        again = self.client.post("/api/auth/password-reset/confirm/", {"uid": uid, "token": token, "new_password": "another-one-17-x"}, format="json")
+        self.assertEqual(again.status_code, 400)  # links work once
+        self.assertEqual(self.client.post("/api/auth/login/", {"username": "fan", "password": "brand-new-diamond-17"}, format="json").status_code, 200)
+
+    def test_register_with_email(self):
+        res = self.client.post("/api/auth/register/", {"username": "mailcarat", "password": "seventeen-right-here", "email": "m@example.com"}, format="json")
+        self.assertEqual(res.data["user"]["email"], "m@example.com")
+
+    def test_delete_account_takes_its_posts(self):
+        from django.contrib.auth.models import User
+
+        self.client.force_authenticate(self.fan)
+        page = self.client.post("/api/diary/", {"date": "2025-05-26", "title": "mine"}, format="json").data["id"]
+        self.assertIn("password", self.client.delete("/api/me/account/", {"password": "nope"}, format="json").data)
+        self.assertEqual(self.client.delete("/api/me/account/", {"password": "diamond-17"}, format="json").status_code, 204)
+        self.assertFalse(User.objects.filter(username="fan").exists())
+        self.assertFalse(DiaryPage.objects.filter(pk=page).exists())
+
+    def test_the_only_admin_cant_delete_themselves(self):
+        self.client.force_authenticate(self.staff)
+        res = self.client.delete("/api/me/account/", {"password": "diamond-17"}, format="json")
+        self.assertEqual(res.status_code, 400)
+
+    def test_reporting_and_resolving(self):
+        from django.contrib.auth.models import User
+
+        other = User.objects.create_user("other", password="diamond-17")
+        self.client.force_authenticate(other)
+        page = self.client.post("/api/diary/", {"date": "2025-05-26", "title": "rude"}, format="json").data["id"]
+        secret = self.client.post("/api/diary/", {"date": "2025-05-27", "is_private": True}, format="json").data["id"]
+        own = self.client.post("/api/reports/", {"kind": "diary", "target_id": page, "reason": "spam"}, format="json")
+        self.assertEqual(own.status_code, 400)  # not your own
+
+        self.client.force_authenticate(self.fan)
+        self.assertEqual(self.client.post("/api/reports/", {"kind": "diary", "target_id": secret, "reason": "spam"}, format="json").status_code, 400)
+        res = self.client.post("/api/reports/", {"kind": "diary", "target_id": page, "reason": "unkind", "note": "mean words"}, format="json")
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(self.client.post("/api/reports/", {"kind": "diary", "target_id": page, "reason": "spam"}, format="json").status_code, 400)
+        self.assertEqual(self.client.get("/api/reports/").status_code, 403)
+
+        self.client.force_authenticate(self.staff)
+        open_reports = self.client.get("/api/reports/?status=open").data
+        self.assertEqual([(r["target"]["title"], r["reporter_name"]) for r in open_reports], [("rude", "fan")])
+        done = self.client.post(f"/api/reports/{open_reports[0]['id']}/resolve/", {"action": "hide"}, format="json").data
+        self.assertEqual((done["status"], done["outcome"]), ("resolved", "hidden"))
+        self.assertTrue(DiaryPage.objects.get(pk=page).is_private)
+        self.assertEqual(self.client.get("/api/reports/?status=open").data, [])
+
+    def test_spa_pages_fall_back_to_the_react_site(self):
+        import tempfile
+        from pathlib import Path
+
+        from django.test import override_settings
+
+        dist = Path(tempfile.mkdtemp())
+        self.addCleanup(__import__("shutil").rmtree, dist, True)
+        (dist / "index.html").write_text("<div id=root></div>")
+        with override_settings(FRONTEND_DIST=dist):
+            res = self.client.get("/members/hoshi")
+            self.assertEqual(res.status_code, 200)
+            self.assertIn(b"root", b"".join(res.streaming_content))
+            self.assertEqual(self.client.get("/api/nope/").status_code, 404)  # the API keeps its 404s

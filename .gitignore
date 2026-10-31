@@ -15,3 +15,11 @@ frontend/dist/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Backend environment and build output
+backend/venv/
+venv/
+backend/staticfiles/
+.env
+*.env
+site-data.json

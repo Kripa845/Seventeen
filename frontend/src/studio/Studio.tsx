@@ -8,6 +8,7 @@ import { LettersAdmin } from './LettersAdmin'
 import { MembersEditor } from './MembersEditor'
 import { Overview } from './Overview'
 import { PhotoAlbumsAdmin } from './PhotoAlbumsAdmin'
+import { ReportsAdmin } from './ReportsAdmin'
 import { ThemesAdmin } from './ThemesAdmin'
 import { ToastProvider } from './ui'
 import { UserManagement } from './UserManagement'
@@ -24,6 +25,7 @@ const NAV: { group?: string; to: string; label: string; icon: string; end?: bool
   { group: 'Community', to: '/studio/users', label: 'User management', icon: '♡' },
   { to: '/studio/games', label: 'Games management', icon: '🎮' },
   { to: '/studio/letters', label: 'Letters', icon: '💌' },
+  { to: '/studio/reports', label: 'Reports', icon: '⚑' },
 ]
 
 /** Old Studio links (before the sections were renamed) still work. */
@@ -120,6 +122,7 @@ export function Studio() {
             <Route path="calendar" element={<EventsAdmin />} />
             <Route path="photocards" element={<CardsAdmin />} />
             <Route path="letters" element={<LettersAdmin />} />
+            <Route path="reports" element={<ReportsAdmin />} />
             <Route path="albums/:slug?" element={<OldAlbumLink />} />
             <Route path="look" element={<Navigate to="/studio/themes" replace />} />
             <Route path="fans" element={<Navigate to="/studio/users" replace />} />

@@ -90,6 +90,7 @@ export interface Account extends StudioUser {
   display_name: string
   bias: string | null // member slug
   date_joined: string
+  email: string // optional, only for password resets ('' when not set)
 }
 
 export interface AdminUser {

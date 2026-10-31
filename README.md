@@ -20,6 +20,10 @@ An aesthetic, unofficial fan site for SEVENTEEN and CARATs.
 - **Home**: days since debut, anniversary countdown, next member birthday, member of the day.
 - **Small touches**: sparkle cursor trail and glassy cards. It works on phones and respects "reduce motion".
 
+## Deploying
+
+See [DEPLOY.md](DEPLOY.md): one app, environment variables, Postgres, upload storage and email.
+
 ## Run it (Windows)
 
 You need **Python 3.10+** and **Node 18+**. Use two terminals.

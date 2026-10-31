@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Link, Navigate, Route, Routes, useLocation, useParams, useSearchParams } from 'react-router-dom'
-import { LoginPage, RegisterPage } from './auth/AuthPages'
+import { ForgotPasswordPage, LoginPage, RegisterPage, ResetPasswordPage } from './auth/AuthPages'
 import { AuthProvider, homeFor, useAuth } from './auth/AuthProvider'
 import { Dashboard } from './auth/Dashboard'
 import { BirthdayBanner } from './components/BirthdayBanner'
@@ -13,6 +13,7 @@ import { SparkleTrail } from './components/SparkleTrail'
 import { useContentSync } from './lib/api'
 import { PlayerProvider } from './lib/player'
 import { ThemeProvider } from './lib/theme'
+import { About } from './pages/About'
 import { AlbumDetail } from './pages/AlbumDetail'
 import { Binder } from './pages/Binder'
 import { Calendar } from './pages/Calendar'
@@ -20,6 +21,7 @@ import { Discography } from './pages/Discography'
 import { Games } from './pages/Games'
 import { Home } from './pages/Home'
 import { Letters } from './pages/Letters'
+import { LightStickPage } from './pages/LightStickPage'
 import { MemberDetail } from './pages/MemberDetail'
 import { Music } from './pages/Music'
 import { NowPlaying } from './pages/NowPlaying'
@@ -106,6 +108,9 @@ function Layout() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/about" element={<About />} />
           {/* the viewer dashboard: any signed-in account (admins too) */}
           <Route path="/me" element={<RequireViewer><Dashboard /></RequireViewer>} />
           <Route path="/members" element={<RequireViewer><Members /></RequireViewer>} />
@@ -127,12 +132,18 @@ function Layout() {
           <Route path="/timeline" element={<RequireViewer><Timeline /></RequireViewer>} />
           <Route path="/binder" element={<RequireViewer><Binder /></RequireViewer>} />
           <Route path="/letters" element={<RequireViewer><Letters /></RequireViewer>} />
+          <Route path="/lightstick" element={<RequireViewer><LightStickPage /></RequireViewer>} />
           {/* the admin dashboard (/studio) is above, with its own layout */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <footer className="footer">
-        Made with ◆ by a CARAT · Unofficial fan site · Music via YouTube & Spotify embeds · SEVENTEEN © PLEDIS Entertainment
+        <p>Made with ◆ by a CARAT · Unofficial fan site · Music via YouTube & Spotify embeds · SEVENTEEN © PLEDIS Entertainment</p>
+        <nav className="footer__links" aria-label="About the site">
+          <Link to="/about#unofficial">About</Link>
+          <Link to="/about#privacy">Privacy</Link>
+          <Link to="/about#rules">Community rules</Link>
+        </nav>
       </footer>
       <MiniPlayer />
     </>

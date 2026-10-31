@@ -37,10 +37,20 @@
 .acct__me .avatar { width: 30px !important; height: 30px !important; }
 .acct__initial { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; color: var(--on-accent); background: linear-gradient(140deg, var(--accent), var(--accent2)); }
 .acct__name { max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-@media (max-width: 720px) {
+.acct__studio { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background 0.2s, transform 0.2s; }
+.acct__studio:hover { transform: translateY(-1px); }
+.acct__studio-icon { font-size: 0.95rem; line-height: 1; }
+/* the bar is tight: just the face, not the name, until there's room */
+.acct__name { display: none; }
+.acct__me { padding: 3px; transition: box-shadow 0.2s, transform 0.2s; }
+.acct__me:hover { transform: translateY(-1px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+@media (max-width: 1179px) {
   .acct { margin-left: auto; }
-  .acct__name { display: none; }
-  .acct__me { padding: 3px; }
+}
+@media (max-width: 520px) {
+  .acct__studio { width: 38px; height: 38px; padding: 0; justify-content: center; }
+  .acct__studio-label { display: none; }
+  .acct__login { padding: 8px 8px; }
 }
 
 /* ---------- ♥ ---------- */
@@ -288,3 +298,14 @@ a.dash-stat:hover { transform: translateY(-3px); }
 
 /* your bias's colour, as a tint on the welcome card (the site keeps its chosen theme) */
 .dash-hero[style] { background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--m) 26%, transparent), transparent 60%), color-mix(in srgb, var(--surface) 85%, transparent); }
+
+/* ---------- password reset + leaving ---------- */
+.auth__forgot { align-self: flex-end; margin-top: 2px; font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+.auth__forgot:hover { color: var(--accent-strong); }
+.auth__done { display: grid; gap: 10px; justify-items: start; padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: color-mix(in srgb, var(--accent) 7%, transparent); animation: fan-pop 0.3s ease both; }
+.auth__done p { margin: 0; }
+.auth__done-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; font-size: 1.3rem; color: var(--on-accent); background: linear-gradient(140deg, var(--accent), var(--accent2)); }
+.dash-danger { margin-top: 6px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.link-danger { padding: 0; border: 0; background: none; color: #d33b4c; font: inherit; font-weight: 600; cursor: pointer; }
+.link-danger:hover { text-decoration: underline; }
+.btn.btn--danger, [data-skin] .btn.btn--danger { background: #d33b4c; color: #fff; border-color: transparent; box-shadow: 0 8px 18px -10px #d33b4c; }

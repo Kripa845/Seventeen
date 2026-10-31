@@ -5,12 +5,12 @@ import { useEvents } from '../fan/api'
 import { useAlbums, useMembers } from '../lib/api'
 import { formatDate } from '../lib/dates'
 import { useTheme } from '../lib/theme'
-import type { Album, ThemeTokens } from '../lib/types'
+import type { Album, Member, ThemeTokens } from '../lib/types'
 import '../fan/fan.css'
 
 type Moment =
   | { kind: 'era'; date: string; album: Album }
-  | { kind: 'milestone'; date: string; emoji: string; title: string; text: string; color?: string }
+  | { kind: 'milestone'; date: string; emoji: string; title: string; text: string; color?: string; member?: Member }
 
 const PREVIEW_KEY = 'svt-timeline-preview'
 
@@ -66,10 +66,10 @@ export function Timeline() {
     ...albums.data.map((a): Moment => ({ kind: 'era', date: a.release_date, album: a })),
     ...(members.data ?? []).flatMap((m): Moment[] => [
       ...(m.enlistment_date && m.enlistment_date <= today
-        ? [{ kind: 'milestone' as const, date: m.enlistment_date, emoji: '🎖️', title: `${m.stage_name} enlists`, text: m.service_note || m.service_label || 'Military service begins.', color: m.color }]
+        ? [{ kind: 'milestone' as const, date: m.enlistment_date, emoji: '🎖️', title: `${m.stage_name} enlists`, text: m.service_note || m.service_label || 'Military service begins.', color: m.color, member: m }]
         : []),
       ...(m.discharge_date && m.discharge_date <= today
-        ? [{ kind: 'milestone' as const, date: m.discharge_date, emoji: '🏠', title: `${m.stage_name} is back`, text: 'Service done. Welcome home!', color: m.color }]
+        ? [{ kind: 'milestone' as const, date: m.discharge_date, emoji: '🏠', title: `${m.stage_name} is back`, text: 'Service done. Welcome home!', color: m.color, member: m }]
         : []),
     ]),
     ...(events.data ?? [])
@@ -137,7 +137,8 @@ export function Timeline() {
               ) : (
                 <li className={`story__item story__item--milestone ${side}`} style={m.color ? { ['--a' as string]: m.color } : undefined}>
                   <span className="story__dot story__dot--milestone" aria-hidden>{m.emoji}</span>
-                  <div className="story__note card">
+                  <div className={`story__note card ${m.member?.photo ? 'story__note--photo' : ''}`}>
+                    {m.member?.photo && <img className="story__face" src={m.member.photo} alt={m.member.stage_name} loading="lazy" />}
                     <span className="story__date">{formatDate(m.date)}</span>
                     <b>{m.title}</b>
                     <span className="muted small">{m.text}</span>

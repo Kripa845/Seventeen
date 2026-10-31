@@ -13,7 +13,7 @@ function readError(data: unknown, status: number): string {
     if (typeof d.detail === 'string') return d.detail
     const parts = Object.entries(d).map(([field, v]) => {
       const msg = Array.isArray(v) ? v.join(' ') : typeof v === 'object' && v ? Object.values(v).flat().join(' ') : String(v)
-      return field === 'non_field_errors' ? msg : `${field.replace(/_/g, ' ')}: ${msg}`
+      return field === 'non_field_errors' || field === 'detail' ? msg : `${field.replace(/_/g, ' ')}: ${msg}`
     })
     if (parts.length) return parts.join(' · ')
   }

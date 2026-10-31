@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Album, CardPull, Event, Letter, Like, PhotoCard, Profile, DiaryPage, DiaryPhoto, DiaryVideo, GameScore, Member, SiteSettings, Song
+from .models import Album, CardPull, Event, Letter, Like, PhotoCard, Profile, DiaryPage, DiaryPhoto, DiaryVideo, GameScore, Member, Report, SiteSettings, Song
 
 
 @admin.register(Member)
@@ -96,3 +96,9 @@ class CardPullAdmin(admin.ModelAdmin):
 class LetterAdmin(admin.ModelAdmin):
     list_display = ["author", "member", "status", "created_at"]
     list_filter = ["status", "member"]
+
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ["__str__", "reporter", "status", "outcome", "created_at"]
+    list_filter = ["status", "kind", "reason"]

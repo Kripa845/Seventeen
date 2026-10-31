@@ -393,3 +393,46 @@ class Letter(models.Model):
 
     def __str__(self):
         return f"Letter from {self.author} to {self.member or 'SEVENTEEN'}"
+
+
+class Report(models.Model):
+    """A fan flagging someone else's diary page or letter for the admins to look at."""
+
+    class Kind(models.TextChoices):
+        DIARY = "diary", "Diary page"
+        LETTER = "letter", "Letter"
+
+    class Reason(models.TextChoices):
+        UNKIND = "unkind", "Mean or hurtful"
+        SPAM = "spam", "Spam or ads"
+        PRIVATE = "private", "Shares someone's private info"
+        STOLEN = "stolen", "Uses someone else's photos or work"
+        OTHER = "other", "Something else"
+
+    class Status(models.TextChoices):
+        OPEN = "open", "Open"
+        RESOLVED = "resolved", "Resolved"
+
+    kind = models.CharField(max_length=10, choices=Kind.choices)
+    target_id = models.PositiveIntegerField()
+    reason = models.CharField(max_length=10, choices=Reason.choices)
+    note = models.CharField(max_length=300, blank=True)
+    # Kept when the reporter deletes their account, so the report still counts.
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="reports")
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.OPEN)
+    outcome = models.CharField(max_length=20, blank=True, help_text="What the admin did: dismissed, hidden or deleted")
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["reporter", "kind", "target_id"], name="one_report_per_post"),
+        ]
+
+    def __str__(self):
+        return f"{self.get_kind_display()} {self.target_id}: {self.get_reason_display()}"
+
+    def target(self):
+        model = DiaryPage if self.kind == self.Kind.DIARY else Letter
+        return model.objects.filter(pk=self.target_id).first()

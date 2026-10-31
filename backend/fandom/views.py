@@ -1,4 +1,10 @@
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout, update_session_auth_hash
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.db import transaction
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.db.models import Count, Max, Q
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -10,7 +16,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Album, CardPull, DiaryPage, Event, GameScore, Letter, Like, Member, PhotoCard, Profile, SiteSettings, Song
+from .models import Album, CardPull, DiaryPage, Event, GameScore, Letter, Like, Member, PhotoCard, Profile, Report, SiteSettings, Song
 from .serializers import (
     AdminCreateUserSerializer,
     AdminScoreSerializer,
@@ -26,12 +32,18 @@ from .serializers import (
     LetterSerializer,
     MemberSerializer,
     PasswordChangeSerializer,
+    PasswordResetConfirmSerializer,
     PhotoCardSerializer,
     ProfileSerializer,
     RegisterSerializer,
+    ReportSerializer,
+    check_password,
     SiteSettingsSerializer,
     SongSerializer,
 )
+
+
+User = get_user_model()
 
 
 class IsStaffOrReadOnly(permissions.BasePermission):
@@ -216,6 +228,7 @@ def user_payload(user):
             "display_name": profile.name,
             "bias": profile.bias.slug if profile.bias else None,
             "date_joined": user.date_joined.date().isoformat(),
+            "email": user.email,
         }
     }
 
@@ -360,6 +373,97 @@ class PasswordView(APIView):
         request.user.save()
         update_session_auth_hash(request, request.user)
         return Response({"detail": "Password changed."})
+
+
+def scoped_throttles(view):
+    """The view's throttle_scope rate from DEFAULT_THROTTLE_RATES (like LoginView's)."""
+    from rest_framework.throttling import ScopedRateThrottle
+
+    return [ScopedRateThrottle()]
+
+
+@method_decorator(csrf_protect, name="dispatch")
+class PasswordResetView(APIView):
+    """POST /api/auth/password-reset/ {email}: emails a link to set a new password.
+    The answer is the same whether or not the email has an account, so it can't be used to
+    find out who's registered."""
+
+    permission_classes = [permissions.AllowAny]
+    throttle_scope = "reset"
+
+    def get_throttles(self):
+        return scoped_throttles(self)
+
+    def post(self, request):
+        email = str(request.data.get("email", "")).strip()
+        user = User.objects.filter(email__iexact=email, is_active=True).first() if email else None
+        if user and user.has_usable_password():
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            link = f"{settings.SITE_URL}/reset-password?uid={uid}&token={token}"
+            name = Profile.for_user(user).name
+            send_mail(
+                "Set a new password ◆ SEVENTEEN fan site",
+                f"Hi {name},\n\nSomeone (hopefully you) asked to reset the password for @{user.get_username()}.\n"
+                f"Choose a new one here (the link works for 3 hours):\n\n{link}\n\n"
+                "If it wasn't you, ignore this email: your password stays the same.\n",
+                None,
+                [user.email],
+            )
+        return Response({"detail": "If that email belongs to an account, a reset link is on its way."})
+
+
+@method_decorator(csrf_protect, name="dispatch")
+class PasswordResetConfirmView(APIView):
+    """POST /api/auth/password-reset/confirm/ {uid, token, new_password}"""
+
+    permission_classes = [permissions.AllowAny]
+    throttle_scope = "reset"
+
+    def get_throttles(self):
+        return scoped_throttles(self)
+
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        try:
+            user = User.objects.get(pk=force_str(urlsafe_base64_decode(data["uid"])), is_active=True)
+        except (User.DoesNotExist, ValueError, TypeError, OverflowError):
+            user = None
+        if user is None or not default_token_generator.check_token(user, data["token"]):
+            raise ValidationError({"detail": "This reset link has expired or was already used. Ask for a new one."})
+        try:
+            check_password(data["new_password"], user)
+        except ValidationError as e:
+            raise ValidationError({"new_password": e.detail})
+        user.set_password(data["new_password"])
+        user.save()
+        return Response({"detail": "Password changed. Sign in with your new password."})
+
+
+@method_decorator(csrf_protect, name="dispatch")
+class AccountView(APIView):
+    """DELETE /api/me/account/ {password}: deletes the account and everything it made
+    (diary pages with their photos and videos, letters, likes, photocards). Game scores stay on
+    the leaderboards without a name. The last admin can't delete themselves."""
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+        if not user.check_password(str(request.data.get("password", ""))):
+            raise ValidationError({"password": "That isn't your password."})
+        if user.is_staff and not User.objects.filter(is_staff=True, is_active=True).exclude(pk=user.pk).exists():
+            raise ValidationError({"detail": "You're the only admin. Make someone else an admin first."})
+        with transaction.atomic():
+            for page in user.diary_pages.all():
+                page.delete_photos()
+                page.delete_videos()
+                page.delete()
+            logout(request)
+            user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class LikesView(APIView):
@@ -568,3 +672,60 @@ class LetterViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Destr
         letter.status = value
         letter.save(update_fields=["status", "updated_at"])
         return Response(self.get_serializer(letter).data)
+
+
+class ReportViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+    """Reports on diary pages and letters.
+
+    POST /api/reports/ {kind, target_id, reason, note?}: any signed-in account, about someone else's post.
+    GET /api/reports/?status=open (admins). POST /api/reports/<id>/resolve/ {action} (admins):
+    "dismiss" keeps the post, "hide" makes it private (diary) or hides it (letter), "delete" removes it.
+    Resolving one report resolves every open report on the same post.
+    """
+
+    serializer_class = ReportSerializer
+    pagination_class = None
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [permissions.IsAuthenticated()]
+        return [permissions.IsAdminUser()]
+
+    throttle_scope = "report"
+
+    def get_throttles(self):
+        return scoped_throttles(self) if self.action == "create" else super().get_throttles()
+
+    def get_queryset(self):
+        qs = Report.objects.select_related("reporter__profile")
+        value = self.request.query_params.get("status")
+        return qs.filter(status=value) if value in Report.Status.values else qs
+
+    def perform_create(self, serializer):
+        serializer.save(reporter=self.request.user)
+
+    @action(detail=True, methods=["post"])
+    def resolve(self, request, pk=None):
+        report = self.get_object()
+        what = request.data.get("action")
+        if what not in ("dismiss", "hide", "delete"):
+            raise ValidationError({"action": "Use dismiss, hide or delete."})
+        post = report.target()
+        if post is not None and what == "hide":
+            if isinstance(post, DiaryPage):
+                post.is_private = True
+                post.save(update_fields=["is_private", "updated_at"])
+            else:
+                post.status = Letter.Status.HIDDEN
+                post.save(update_fields=["status", "updated_at"])
+        elif post is not None and what == "delete":
+            if isinstance(post, DiaryPage):
+                post.delete_photos()
+                post.delete_videos()
+            post.delete()
+        outcome = {"dismiss": "dismissed", "hide": "hidden", "delete": "deleted"}[what]
+        Report.objects.filter(kind=report.kind, target_id=report.target_id, status=Report.Status.OPEN).update(
+            status=Report.Status.RESOLVED, outcome=outcome, resolved_at=timezone.now()
+        )
+        report.refresh_from_db()
+        return Response(self.get_serializer(report).data)

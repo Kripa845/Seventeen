@@ -3,6 +3,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { toPng } from 'html-to-image'
 import { useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
+import { ReportDialog } from '../components/ReportDialog'
 import { useAlbums, useMembers, useSongs } from '../lib/api'
 import { usePlayer } from '../lib/player'
 import type { DiaryPage } from '../lib/types'
@@ -74,6 +75,8 @@ function Journal({ book }: { book: BookConfig }) {
   const [toast, setToast] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [snap, setSnap] = useState<DiaryPage | null>(null) // the page being saved as a picture
+  const [reporting, setReporting] = useState<DiaryPage | null>(null) // someone else's page, being reported
+  const stopReporting = useCallback(() => setReporting(null), [])
   const snapRef = useRef<HTMLDivElement>(null)
 
   const members: MemberMap = useMemo(() => Object.fromEntries((membersApi.data ?? []).map((m) => [m.slug, m])), [membersApi.data])
@@ -500,6 +503,8 @@ function Journal({ book }: { book: BookConfig }) {
             </div>
           )}
 
+          {reporting && <ReportDialog kind="diary" targetId={reporting.id} what={`“${pageName(reporting)}”`} onClose={stopReporting} />}
+
           <footer className="diary__bar">
             <div className="dpop-anchor">
               <button className="dcircle" aria-label="More" disabled={!current} onClick={() => setPopup(popup === 'more' ? null : 'more')}>
@@ -515,6 +520,10 @@ function Journal({ book }: { book: BookConfig }) {
                   )}
                   <button onClick={() => (setSnap(current), setPopup(null))} disabled={!!snap}>⤓ Save as image</button>
                   <button onClick={() => (setView(view === 'book' ? 'grid' : 'book'), setPopup(null))}>{view === 'book' ? '▦ All pages' : '📖 Book view'}</button>
+                  {/* someone else's public diary page: tell the admins if something's wrong with it */}
+                  {book.kind === 'diary' && !current.can_edit && !current.is_private && (
+                    <button onClick={() => (setReporting(current), setPopup(null))}>⚑ Report page</button>
+                  )}
                 </Pop>
               )}
             </div>

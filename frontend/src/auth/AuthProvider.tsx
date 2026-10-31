@@ -9,6 +9,7 @@ interface RegisterInput {
   password: string
   display_name?: string
   bias?: string | null
+  email?: string
 }
 
 interface AuthCtx {
@@ -19,7 +20,7 @@ interface AuthCtx {
   login: (username: string, password: string) => Promise<Account>
   register: (input: RegisterInput) => Promise<Account>
   logout: () => Promise<void>
-  saveProfile: (patch: { display_name?: string; bias?: string | null }) => Promise<void>
+  saveProfile: (patch: { display_name?: string; bias?: string | null; email?: string }) => Promise<void>
   /** Returns false (and changes nothing) when signed out, so the caller can send them to sign in. */
   toggleLike: (song: Song) => Promise<boolean>
 }

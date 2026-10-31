@@ -47,6 +47,7 @@ const SECTIONS = [
   { to: '/timeline', icon: '⟿', title: 'The story', text: 'Debut to today, try on every era' },
   { to: '/binder', icon: '🃏', title: 'Binder', text: 'A photocard pack every day' },
   { to: '/letters', icon: '💌', title: 'Letters', text: 'Write to the members' },
+  { to: '/lightstick', icon: '💡', title: 'Light stick', text: 'Concert mode, in your hand' },
 ]
 
 /* ---------- playlist ---------- */
@@ -203,8 +204,35 @@ function AccountSettings({ account }: { account: Account }) {
   const [oldPw, setOldPw] = useState('')
   const [newPw, setNewPw] = useState('')
   const [pwNote, setPwNote] = useState<{ ok: boolean; text: string } | null>(null)
+  const [email, setEmail] = useState(account.email)
+  const [emailNote, setEmailNote] = useState<{ ok: boolean; text: string } | null>(null)
+  const [leaving, setLeaving] = useState(false)
+  const [leavePw, setLeavePw] = useState('')
+  const [leaveNote, setLeaveNote] = useState<string | null>(null)
 
   useEffect(() => setName(account.display_name), [account.display_name])
+  useEffect(() => setEmail(account.email), [account.email])
+
+  const saveEmail = async (e: FormEvent) => {
+    e.preventDefault()
+    try {
+      await saveProfile({ email: email.trim() })
+      setEmailNote({ ok: true, text: email.trim() ? 'Saved ✓ You can reset your password by email now.' : 'Email removed.' })
+    } catch (err) {
+      setEmailNote({ ok: false, text: (err as Error).message.replace(/^email: /, '') })
+    }
+  }
+
+  const deleteAccount = async (e: FormEvent) => {
+    e.preventDefault()
+    try {
+      await send('DELETE', '/me/account/', { password: leavePw })
+      // the session is gone: go to the landing page and let the app notice
+      window.location.assign('/')
+    } catch (err) {
+      setLeaveNote((err as Error).message.replace(/^password: /, ''))
+    }
+  }
 
   const saveName = async (e: FormEvent) => {
     e.preventDefault()
@@ -242,6 +270,17 @@ function AccountSettings({ account }: { account: Account }) {
         {nameNote && <p className="small muted">{nameNote}</p>}
       </form>
 
+      <form className="dash-form" onSubmit={saveEmail}>
+        <label>
+          <span>Email <small className="muted">(only for resetting a forgotten password)</small></span>
+          <span className="dash-form__row">
+            <input type="email" value={email} maxLength={254} placeholder="you@example.com" autoComplete="email" onChange={(e) => { setEmail(e.target.value); setEmailNote(null) }} />
+            <button className="btn btn--small" disabled={email.trim().toLowerCase() === account.email}>Save</button>
+          </span>
+        </label>
+        {emailNote && <p className={`small ${emailNote.ok ? 'muted' : 'error-text'}`}>{emailNote.text}</p>}
+      </form>
+
       <form className="dash-form" onSubmit={changePw}>
         <span className="dash-form__label">Change password</span>
         <input type="password" placeholder="Current password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} autoComplete="current-password" required />
@@ -262,6 +301,26 @@ function AccountSettings({ account }: { account: Account }) {
         >
           Sign out
         </button>
+      </div>
+
+      <div className="dash-danger">
+        {leaving ? (
+          <form className="dash-form" onSubmit={deleteAccount}>
+            <span className="dash-form__label">Delete my account</span>
+            <p className="small muted">
+              This deletes your account, your diary pages (with their photos and videos), letters, playlist and photocards. Game scores stay on the
+              leaderboards without your name. It can't be undone.
+            </p>
+            <input type="password" placeholder="Your password, to confirm" value={leavePw} onChange={(e) => { setLeavePw(e.target.value); setLeaveNote(null) }} autoComplete="current-password" required />
+            {leaveNote && <p className="small error-text">{leaveNote}</p>}
+            <span className="dash-form__row">
+              <button type="button" className="btn btn--small btn--ghost" onClick={() => (setLeaving(false), setLeavePw(''), setLeaveNote(null))}>Keep my account</button>
+              <button className="btn btn--small btn--danger" disabled={!leavePw}>Delete for good</button>
+            </span>
+          </form>
+        ) : (
+          <button className="link-danger small" onClick={() => setLeaving(true)}>Delete my account…</button>
+        )}
       </div>
     </section>
   )

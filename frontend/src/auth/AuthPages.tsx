@@ -3,6 +3,7 @@ import type { FormEvent, ReactNode } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { MemberAvatar } from '../components/MemberAvatar'
 import { useMembers } from '../lib/api'
+import { send } from '../lib/studio'
 import { homeFor, useAuth } from './AuthProvider'
 
 /** Split screen: a little welcome poster on one side, the form on the other. */
@@ -59,7 +60,7 @@ function PasswordInput({ value, onChange, autoComplete }: { value: string; onCha
 function splitErrors(message: string): Record<string, string> {
   const out: Record<string, string> = {}
   for (const part of message.split(' · ')) {
-    const m = part.match(/^(username|password|display name|bias): (.*)$/)
+    const m = part.match(/^(username|password|display name|bias|email|new password): (.*)$/)
     if (m) out[m[1]] = m[2]
     else out.form = out.form ? `${out.form} ${part}` : part
   }
@@ -105,6 +106,7 @@ export function LoginPage() {
         <label className="auth__field">
           <span>Password</span>
           <PasswordInput value={password} onChange={setPassword} autoComplete="current-password" />
+          <Link className="auth__forgot" to="/forgot-password">Forgot your password?</Link>
         </label>
         {error && <p className="auth__error" role="alert">{error}</p>}
         <button className="btn auth__submit" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
@@ -126,6 +128,7 @@ export function RegisterPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [bias, setBias] = useState<string | null>(null)
+  const [email, setEmail] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [busy, setBusy] = useState(false)
 
@@ -143,7 +146,7 @@ export function RegisterPage() {
     setBusy(true)
     setErrors({})
     try {
-      const a = await register({ username: username.trim(), password, display_name: displayName.trim(), bias })
+      const a = await register({ username: username.trim(), password, display_name: displayName.trim(), bias, email: email.trim() })
       navigate(homeFor(a, next), { replace: true })
     } catch (err) {
       setErrors(splitErrors((err as Error).message))
@@ -187,6 +190,11 @@ export function RegisterPage() {
           </span>
           {errors.password && <em className="auth__field-error">{errors.password}</em>}
         </label>
+        <label className="auth__field">
+          <span>Email <small className="muted">(optional, only to reset a forgotten password)</small></span>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" maxLength={254} placeholder="you@example.com" />
+          {errors.email && <em className="auth__field-error">{errors.email}</em>}
+        </label>
 
         <div className="auth__field">
           <span>Your bias <small className="muted">(optional, you can change it later)</small></span>
@@ -209,11 +217,112 @@ export function RegisterPage() {
         </div>
 
         {errors.form && <p className="auth__error" role="alert">{errors.form}</p>}
+        <p className="auth__terms small muted">
+          By joining you agree to the <Link to="/about#rules">community rules</Link> and how we <Link to="/about#privacy">handle your data</Link>.
+        </p>
         <button className="btn auth__submit" disabled={busy}>{busy ? 'Creating your account…' : 'Create account'}</button>
       </form>
       <p className="auth__switch">
         Already have an account? <Link to={`/login${next ? `?next=${encodeURIComponent(next)}` : ''}`}>Sign in</Link>
       </p>
+    </AuthShell>
+  )
+}
+
+/** /forgot-password : asks for the account's email and sends a reset link. */
+export function ForgotPasswordPage() {
+  const [email, setEmail] = useState('')
+  const [sent, setSent] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault()
+    setBusy(true)
+    setError(null)
+    try {
+      const res = await send<{ detail: string }>('POST', '/auth/password-reset/', { email: email.trim() })
+      setSent(res.detail)
+    } catch (err) {
+      setError((err as Error).message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <AuthShell title="Forgot your password?" lede="Type the email on your account and we'll send a link to choose a new password." art={<MemberRing />}>
+      {sent ? (
+        <div className="auth__done" role="status">
+          <span className="auth__done-icon" aria-hidden>✉</span>
+          <p>{sent}</p>
+          <p className="muted small">Check your spam folder too. No email on your account? Ask an admin to reset your password.</p>
+        </div>
+      ) : (
+        <form className="auth__form" onSubmit={submit}>
+          <label className="auth__field">
+            <span>Email</span>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" autoFocus required />
+          </label>
+          {error && <p className="auth__error" role="alert">{error}</p>}
+          <button className="btn auth__submit" disabled={busy}>{busy ? 'Sending…' : 'Send reset link'}</button>
+        </form>
+      )}
+      <p className="auth__switch">
+        Remembered it? <Link to="/login">Back to sign in</Link>
+      </p>
+    </AuthShell>
+  )
+}
+
+/** /reset-password?uid=…&token=… : the link from the email. */
+export function ResetPasswordPage() {
+  const [params] = useSearchParams()
+  const [password, setPassword] = useState('')
+  const [done, setDone] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const uid = params.get('uid') ?? ''
+  const token = params.get('token') ?? ''
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault()
+    setBusy(true)
+    setError(null)
+    try {
+      await send('POST', '/auth/password-reset/confirm/', { uid, token, new_password: password })
+      setDone(true)
+    } catch (err) {
+      setError((err as Error).message.replace(/^new password: /, ''))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <AuthShell title="Choose a new password" lede="Pick something you haven't used here before: 8 or more characters, not only numbers." art={<MemberRing />}>
+      {done ? (
+        <div className="auth__done" role="status">
+          <span className="auth__done-icon" aria-hidden>✓</span>
+          <p>Password changed.</p>
+          <Link className="btn auth__submit" to="/login">Sign in</Link>
+        </div>
+      ) : !uid || !token ? (
+        <p className="auth__error" role="alert">This link is incomplete. Open the whole link from the email, or <Link to="/forgot-password">ask for a new one</Link>.</p>
+      ) : (
+        <form className="auth__form" onSubmit={submit}>
+          <label className="auth__field">
+            <span>New password</span>
+            <PasswordInput value={password} onChange={setPassword} autoComplete="new-password" />
+          </label>
+          {error && (
+            <p className="auth__error" role="alert">
+              {error} {/expired|already used/.test(error) && <Link to="/forgot-password">Send a new link</Link>}
+            </p>
+          )}
+          <button className="btn auth__submit" disabled={busy || password.length < 8}>{busy ? 'Saving…' : 'Save new password'}</button>
+        </form>
+      )}
     </AuthShell>
   )
 }
